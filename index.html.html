@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOLT LOCK | 3D Overdrive + Tracking</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* ========================================================
+           VARIÁVEIS DE TEMA E OVERDRIVE
+           ======================================================== */
+        :root {
+            --bolt-yellow: #facc15;
+            --bolt-dark: #050505;
+            --text-main: #ffffff;
+            --text-muted: #888888;
+            --border-color: #333333;
+            
+            --ki-intensity: 0; 
+            --s: 1; /* Escala base */
+        }
+
+        body.overdrive-mode {
+            --bolt-dark: #facc15;
+            --bolt-yellow: #000000;
+            --text-main: #000000;
+            --text-muted: #333333;
+            --border-color: #000000;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bolt-dark);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.15s ease-out;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .bg-grid {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(var(--border-color) 1px, transparent 1px), linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
+            background-size: 50px 50px; opacity: 0.1; z-index: -1; transition: opacity 0.3s;
+        }
+        body.overdrive-mode .bg-grid { opacity: 0.3; animation: grid-shake 0.2s infinite; }
+
+        /* ========================================================
+           RAIOS PROCEDURAIS (FULL SCREEN SVG)
+           ======================================================== */
+        #lightning-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none; /* Para não bloquear cliques na página */
+            z-index: 9998; /* Fica logo atrás do botão */
+        }
+
+        .bolt-lightning-path {
+            fill: none;
+            stroke: var(--bolt-yellow);
+            stroke-width: 2;
+            filter: drop-shadow(0 0 8px var(--bolt-yellow));
+            opacity: 0; /* Controlado via JS */
+            transition: opacity 0.1s;
+        }
+
+        /* ========================================================
+           O SOQUETE E O REATOR 3D
+           ======================================================== */
+        .axon-socket-base {
+            position: fixed; bottom: 35px; right: 35px; width: 50px; height: 50px;
+            border-radius: 50%; background: #000;
+            box-shadow: inset 0 0 15px rgba(0,0,0,1), 0 0 10px rgba(250, 204, 21, 0.2);
+            border: 2px solid #222; z-index: 9990; pointer-events: none; 
+        }
+
+        .bolt-widget-trigger {
+            position: fixed; bottom: 35px; right: 35px; width: 50px; height: 50px;
+            border-radius: 50%; cursor: pointer; z-index: 10000;
+            transform-style: preserve-3d;
+            
+            /* A MÁGICA: Mistura o Tracking 3D com a Escala do Overdrive */
+            transform: perspective(600px) 
+                       rotateX(var(--rx, 0deg)) 
+                       rotateY(var(--ry, 0deg)) 
+                       scale(calc(var(--s) + (var(--ki-intensity) * 0.3))) 
+                       translateZ(8px);
+            transition: transform 0.1s ease-out;
+        }
+
+        .bolt-widget-trigger:hover { --s: 1.1; }
+
+        /* Camadas de Profundidade Metálica */
+        .depth-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            border-radius: 50%; background: #111; border: 1px solid #333;
+            transform-style: preserve-3d;
+        }
+        
+        .depth-layer.connector {
+            border: 2px solid var(--bolt-yellow); background: #2a2200;
+            box-shadow: 0 0 calc(20px + (var(--ki-intensity) * 50px)) var(--bolt-yellow);
+            transition: box-shadow 0.1s;
+        }
+
+        /* Face Frontal e Aura */
+        .front-face {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            border-radius: 50%; background: #0a0a0a; border: 2px solid var(--bolt-yellow);
+            box-shadow: inset 0 0 10px #000, 0 0 calc(var(--ki-intensity) * 40px) var(--bolt-yellow);
+            transform: translateZ(1.5px); display: flex; align-items: center; justify-content: center;
+            transform-style: preserve-3d;
+        }
+
+        .widget-ring {
+            position: absolute; width: 130%; height: 130%; border-radius: 50%;
+            border: 1px dashed var(--bolt-yellow); animation: spin 10s linear infinite;
+            opacity: calc(0.3 + (var(--ki-intensity) * 0.7)); transform: translateZ(4px);
+        }
+
+        /* O Núcleo (Olho rastreador) */
+        .widget-core {
+            width: 26px; height: 26px; border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #444 0%, #000 80%);
+            border: 1.5px solid var(--bolt-yellow);
+            display: flex; align-items: center; justify-content: center;
+            animation: pulse-mini 2s infinite alternate; position: absolute;
+            
+            /* Tracking do Olho */
+            transform: translate3d(var(--tx, 0px), var(--ty, 0px), 8px);
+            transition: transform 0.1s ease-out;
+            box-shadow: 0 0 calc(8px + (var(--ki-intensity) * 20px)) var(--bolt-yellow);
+        }
+
+        .bolt-icon-mini { filter: drop-shadow(0 0 5px var(--bolt-yellow)); color: var(--bolt-yellow); }
+
+        /* ========================================================
+           O CLARÃO (FLASH)
+           ======================================================== */
+        .flash-bang {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #ffffff; z-index: 10001; opacity: 0; pointer-events: none;
+        }
+        .flash-bang.explode { animation: flash-anim 1s cubic-bezier(0.1, 0.8, 0.2, 1); }
+
+        /* Animações */
+        @keyframes spin { 100% { transform: translateZ(4px) rotate(360deg); } }
+        @keyframes pulse-mini { 0% { opacity: 0.8; } 100% { opacity: 1; } }
+        @keyframes flash-anim { 0% { opacity: 0; } 5% { opacity: 1; } 100% { opacity: 0; } }
+        @keyframes grid-shake { 0% { transform: translate(2px, 2px); } 50% { transform: translate(-2px, -2px); } 100% { transform: translate(2px, -2px); } }
+        
+        body.overdrive-mode .bolt-widget-trigger { animation: grid-shake 0.1s infinite; }
+
+        /* Estilos Base da Landing Page (Resumido para a estrutura) */
+        section { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 50px 20px; border-bottom: 1px solid var(--border-color); text-align: center; }
+        h1, h2 { font-family: 'Orbitron', sans-serif; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; }
+        h1 { font-size: 5vw; } h2 { font-size: 3vw; }
+        p { font-family: 'Share Tech Mono', monospace; font-size: 1.2rem; max-width: 600px; color: var(--text-muted); line-height: 1.6; }
+        .highlight { color: var(--bolt-yellow); text-shadow: 0 0 10px rgba(250, 204, 21, 0.5); }
+        body.overdrive-mode .highlight { color: #fff; text-shadow: 0 0 20px #fff; }
+    </style>
+</head>
+<body>
+
+    <div class="bg-grid"></div>
+    <div class="flash-bang" id="flash"></div>
+
+    <svg id="lightning-canvas">
+        <path class="bolt-lightning-path" id="lightning-1"></path>
+        <path class="bolt-lightning-path" id="lightning-2"></path>
+    </svg>
+
+    <div class="axon-socket-base"></div>
+
+    <div class="bolt-widget-trigger" id="axon-trigger">
+        <div class="depth-layer connector" style="transform: translateZ(-15px)"></div>
+        <div class="depth-layer" style="transform: translateZ(-13.5px)"></div>
+        <div class="depth-layer" style="transform: translateZ(-12px)"></div>
+        <div class="depth-layer" style="transform: translateZ(-10.5px)"></div>
+        <div class="depth-layer" style="transform: translateZ(-9px)"></div>
+        <div class="depth-layer" style="transform: translateZ(-7.5px)"></div>
+        <div class="depth-layer" style="transform: translateZ(-6px)"></div>
+        <div class="depth-layer" style="transform: translateZ(-4.5px)"></div>
+        <div class="depth-layer" style="transform: translateZ(-3px)"></div>
+        <div class="depth-layer" style="transform: translateZ(-1.5px)"></div>
+
+        <div class="front-face">
+            <div class="widget-ring"></div>
+            <div class="widget-core" id="axon-core">
+                <svg class="bolt-icon-mini" width="10" height="16" viewBox="0 0 24 36" fill="none">
+                    <path d="M13.5 0L1.5 19.5H12L9 36L22.5 13.5H12L13.5 0Z" fill="currentColor"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <section id="s1">
+        <h2 style="font-size: 1rem; color: var(--bolt-yellow);">01 // O FIM DO AMADORISMO</h2>
+        <h1>O Exoesqueleto<br><span class="highlight">Comercial</span></h1>
+        <p>Aproxime o seu rato. Sinta o sistema rastrear o cursor e puxar a energia. Clique no reator para libertar o Overdrive Protocol.</p>
+    </section>
+    <section id="s2"><h2><span class="highlight">IA</span> de Acessibilidade</h2><p>O Axon funde-se ao seu WhatsApp e prevê objeções.</p></section>
+    <section id="s3"><h2>Potência de <span class="highlight">Disparo</span></h2><p>Atravesse os filtros de SPAM com protocolos militares de PNL.</p></section>
+    <section id="s4"><h2>Hardware <span class="highlight">Homologado</span></h2><p>Smartphone e Notebook já configurados. Vista a armadura.</p></section>
+    <section id="s5"><h2>Design <span class="highlight">Titânio</span></h2><p>Zero latência e feedback mecânico a cada clique.</p></section>
+    <section id="s6"><h2>Módulo <span class="highlight">Cockpit</span></h2><p>Se o vendedor esquecer o follow-up, a IA cobra pelo WhatsApp.</p></section>
+    <section id="s7"><h2>A Blindagem do <span class="highlight">Deal</span></h2><p>Travamento mecânico. Matriz de conversão cerca o cliente.</p></section>
+    <section id="s8"><h1>O Último <span class="highlight">Passo</span></h1><p>Ative o reator no canto da tela. Pressione para Overdrive.</p></section>
+
+    <script>
+        const trigger = document.getElementById('axon-trigger');
+        const core = document.getElementById('axon-core');
+        const flash = document.getElementById('flash');
+        const body = document.body;
+        
+        const path1 = document.getElementById('lightning-1');
+        const path2 = document.getElementById('lightning-2');
+
+        let mouseX = 0, mouseY = 0;
+        let lastLightningUpdate = 0;
+
+        // 1. ATUALIZAR POSIÇÃO DO MOUSE
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+
+            if(body.classList.contains('overdrive-mode')) return;
+
+            const rect = trigger.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            const deltaX = e.clientX - centerX;
+            const deltaY = e.clientY - centerY;
+            const distance = Math.hypot(deltaX, deltaY);
+
+            // RASTREAMENTO 3D (Com limite de junta mecânica 35deg)
+            let rx = -(deltaY / window.innerHeight) * 100;
+            let ry = (deltaX / window.innerWidth) * 100;
+            rx = Math.max(-35, Math.min(35, rx));
+            ry = Math.max(-35, Math.min(35, ry));
+
+            const tx = (deltaX / window.innerWidth) * 8; 
+            const ty = (deltaY / window.innerHeight) * 8;
+
+            trigger.style.setProperty('--rx', `${rx}deg`);
+            trigger.style.setProperty('--ry', `${ry}deg`);
+            core.style.setProperty('--tx', `${tx}px`);
+            core.style.setProperty('--ty', `${ty}px`);
+
+            // ACUMULAÇÃO DE ENERGIA (Começa aos 500px)
+            const maxDistance = 500;
+            let intensity = 0;
+            if (distance < maxDistance) {
+                // Curva exponencial: cresce muito rápido quando chega perto
+                intensity = Math.pow(1 - (distance / maxDistance), 3);
+            }
+            document.documentElement.style.setProperty('--ki-intensity', intensity);
+        });
+
+        // 2. MOTOR DE RAIOS PROCEDURAIS (60FPS Frame Loop)
+        function generateJaggedPath(startX, startY, endX, endY, segments, variance) {
+            let path = `M ${startX} ${startY}`;
+            for (let i = 1; i < segments; i++) {
+                // Ponto intermediário na linha reta
+                let px = startX + ((endX - startX) * (i / segments));
+                let py = startY + ((endY - startY) * (i / segments));
+                
+                // Adiciona caos (ruído) ao ponto
+                px += (Math.random() - 0.5) * variance;
+                py += (Math.random() - 0.5) * variance;
+                
+                path += ` L ${px} ${py}`;
+            }
+            path += ` L ${endX} ${endY}`;
+            return path;
+        }
+
+        function drawLightningLoop() {
+            requestAnimationFrame(drawLightningLoop);
+
+            if(body.classList.contains('overdrive-mode')) {
+                path1.style.opacity = 0; path2.style.opacity = 0;
+                return;
+            }
+
+            const rect = trigger.getBoundingClientRect();
+            const startX = rect.left + rect.width / 2;
+            const startY = rect.top + rect.height / 2;
+            const distance = Math.hypot(mouseX - startX, mouseY - startY);
+
+            // Só desenha raios se estiver entre 500px e 30px (para não desenhar dentro do botão)
+            if (distance < 500 && distance > 30) {
+                // Atualiza a forma do raio a cada 60ms para criar o efeito estroboscópico de choque
+                const now = Date.now();
+                if (now - lastLightningUpdate > 60) {
+                    lastLightningUpdate = now;
+                    // Raio 1 (Mais direto)
+                    path1.setAttribute('d', generateJaggedPath(startX, startY, mouseX, mouseY, 4, 30));
+                    // Raio 2 (Mais errático, se espalha mais)
+                    path2.setAttribute('d', generateJaggedPath(startX, startY, mouseX, mouseY, 5, 60));
+                }
+                
+                // A opacidade do raio é ligada à proximidade
+                const opacity = Math.pow(1 - (distance / 500), 2);
+                path1.style.opacity = opacity;
+                path2.style.opacity = opacity * 0.7; // O segundo raio é mais fraco
+            } else {
+                path1.style.opacity = 0;
+                path2.style.opacity = 0;
+            }
+        }
+        
+        // Inicia o motor gráfico de raios
+        drawLightningLoop();
+
+        // 3. O CLIQUE DE EXPLOSÃO
+        trigger.addEventListener('click', () => {
+            if(body.classList.contains('overdrive-mode')) {
+                body.classList.remove('overdrive-mode');
+                document.documentElement.style.setProperty('--ki-intensity', 0);
+                trigger.style.setProperty('--rx', `0deg`);
+                trigger.style.setProperty('--ry', `0deg`);
+                return;
+            }
+
+            document.documentElement.style.setProperty('--ki-intensity', 1.5);
+
+            flash.classList.remove('explode');
+            void flash.offsetWidth; 
+            flash.classList.add('explode');
+
+            setTimeout(() => {
+                body.classList.add('overdrive-mode');
+                // Quando explode, desliga os raios guias e tranca o olho no centro
+                path1.style.opacity = 0; path2.style.opacity = 0;
+                trigger.style.setProperty('--rx', `0deg`);
+                trigger.style.setProperty('--ry', `0deg`);
+                core.style.setProperty('--tx', `0px`);
+                core.style.setProperty('--ty', `0px`);
+            }, 100);
+        });
+    </script>
+</body>
+</html>
