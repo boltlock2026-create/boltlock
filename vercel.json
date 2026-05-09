@@ -1,7 +1,5 @@
 {
   "version": 2,
-  "buildCommand": "cd backend && npm install",
-  "installCommand": "npm install && cd backend && npm install",
   "public": "frontend",
   "env": {
     "FIREBASE_DATABASE_URL": "@firebase_database_url",
@@ -9,18 +7,7 @@
     "JWT_SECRET": "@jwt_secret",
     "NODE_ENV": "production"
   },
-  "functions": {
-    "backend/server.js": {
-      "runtime": "nodejs18.x",
-      "memory": 1024,
-      "maxDuration": 60
-    }
-  },
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/backend/server.js"
-    },
     {
       "source": "/creditscore",
       "destination": "/frontend/index.html"
