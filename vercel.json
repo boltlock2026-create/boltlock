@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "public": "frontend",
+  "buildCommand": "cp -r frontend .vercel/output/static 2>/dev/null || true",
   "env": {
     "FIREBASE_DATABASE_URL": "@firebase_database_url",
     "FIREBASE_SERVICE_ACCOUNT": "@firebase_service_account",
@@ -19,7 +19,7 @@
   ],
   "headers": [
     {
-      "source": "/frontend/(.*)",
+      "source": "/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
