@@ -1,12 +1,26 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
+  "buildCommand": "cd backend && npm install",
+  "installCommand": "npm install && cd backend && npm install",
+  "public": "frontend",
   "env": {
     "FIREBASE_DATABASE_URL": "@firebase_database_url",
     "FIREBASE_SERVICE_ACCOUNT": "@firebase_service_account",
-    "JWT_SECRET": "@jwt_secret"
+    "JWT_SECRET": "@jwt_secret",
+    "NODE_ENV": "production"
+  },
+  "functions": {
+    "backend/server.js": {
+      "runtime": "nodejs18.x",
+      "memory": 1024,
+      "maxDuration": 60
+    }
   },
   "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/backend/server.js"
+    },
     {
       "source": "/creditscore",
       "destination": "/frontend/index.html"
@@ -14,10 +28,17 @@
     {
       "source": "/creditscore/(.*)",
       "destination": "/frontend/index.html"
-    },
+    }
+  ],
+  "headers": [
     {
-      "source": "/api/(.*)",
-      "destination": "/backend/server.js"
+      "source": "/frontend/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
+        }
+      ]
     }
   ]
 }
