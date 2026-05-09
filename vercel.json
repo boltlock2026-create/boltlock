@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "cp -r frontend .vercel/output/static 2>/dev/null || true",
+  "buildCommand": "mkdir -p .vercel/output/static && cp -r frontend/* .vercel/output/static/",
   "env": {
     "FIREBASE_DATABASE_URL": "@firebase_database_url",
     "FIREBASE_SERVICE_ACCOUNT": "@firebase_service_account",
@@ -9,23 +9,16 @@
   },
   "rewrites": [
     {
+      "source": "/api/(.*)",
+      "destination": "/api"
+    },
+    {
       "source": "/creditscore",
-      "destination": "/frontend/index.html"
+      "destination": "/index.html"
     },
     {
       "source": "/creditscore/(.*)",
-      "destination": "/frontend/index.html"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=3600"
-        }
-      ]
+      "destination": "/index.html"
     }
   ]
 }
