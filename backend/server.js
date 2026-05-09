@@ -57,6 +57,20 @@ app.use(express.json());
 // ═══════════════════════════════════════════════════════════════
 
 const usuarios = {
+  'reginaldo@boltlock.com': {
+    senha: 'BOLTLOCK01',
+    nome: 'Reginaldo',
+    role: 'master',
+    creditos: 100000,
+    correspondente: 'BOLTLOCK - Master'
+  },
+  'bruno@boltlock.com': {
+    senha: 'BOLTLOCK01',
+    nome: 'Bruno',
+    role: 'master',
+    creditos: 100000,
+    correspondente: 'BOLTLOCK - Master'
+  },
   'admin@boltlock.com': {
     senha: 'Admin@123',
     nome: 'Administrador',
