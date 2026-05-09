@@ -1,0 +1,200 @@
+╔═══════════════════════════════════════════════════════════════╗
+║  🔒 CRÉDITO BOLTLOCK - Sistema de Consulta Unificada          ║
+║  Versão: 1.0.0 | Desenvolvido por Tenório Vivaz              ║
+╚═══════════════════════════════════════════════════════════════╝
+
+=====================================
+INÍCIO RÁPIDO (3 PASSOS)
+=====================================
+
+PASSO 1: Instalar Node.js
+─────────────────────────
+   1. Acesse: https://nodejs.org/
+   2. Baixe a versão 18+ (LTS recomendada)
+   3. Instale normalmente
+   4. Verifique: abra CMD e digite "node --version"
+
+PASSO 2: Iniciar o Sistema
+──────────────────────────
+   1. Duplo clique em "INICIAR.bat"
+   2. Aguarde a instalação de dependências
+   3. O Backend iniciará na porta 3001
+   4. O Frontend abrirá no navegador
+
+PASSO 3: Fazer Login
+───────────────────
+   Email: admin@boltlock.com
+   Senha: Admin@123
+
+   Ou:
+   Email: correspondent1@boltlock.com
+   Senha: Corresp@123
+
+=====================================
+FUNCIONALIDADES
+=====================================
+
+✅ Consulta Unificada de CPF
+   - Status na Receita Federal
+   - Histórico de mutuários
+   - Protestos encontrados
+   - Sanções públicas
+   - Chaves Pix registradas
+
+✅ Dashboard Executivo
+   - Visualizar créditos disponíveis
+   - Histórico de consultas
+   - KPIs de análise
+
+✅ Sistema de Créditos
+   - Cada consulta custa 5 créditos
+   - 10.000 créditos iniciais (admin)
+   - 500 créditos iniciais (correspondente)
+
+=====================================
+PRÓXIMOS PASSOS
+=====================================
+
+PARA ADICIONAR SUAS CREDENCIAIS:
+
+1. Edite o arquivo: backend/.env
+
+2. Adicione suas chaves (se tiver contrato):
+   SERPRO_API_KEY=sua_chave
+   INFOSIMPLES_API_KEY=sua_chave
+
+3. Reinicie o backend
+
+=====================================
+ESTRUTURA DE PASTAS
+=====================================
+
+Credito-Boltlock/
+├── frontend/          ← Interface (HTML + CSS + JS)
+├── backend/           ← API (Node.js/Express)
+├── INICIAR.bat        ← Clique para começar
+├── README.md          ← Documentação completa
+└── LEIA-ME-PRIMEIRO.txt ← Este arquivo
+
+=====================================
+PORTAS UTILIZADAS
+=====================================
+
+Frontend: file:// (local)
+Backend: http://localhost:3001
+
+Se a porta 3001 estiver em uso:
+   Edite backend/.env e mude PORT=3002
+
+=====================================
+SUPORTE A APIS
+=====================================
+
+Atualmente implementadas (gratuitas):
+✅ DICT (Bacen) - Chaves Pix
+✅ IEPTB - Protestos
+✅ Portal Transparência - Sanções
+
+Requer contrato:
+💰 Serpro (CPF-Light) - Receita Federal
+💰 Infosimples (CADMUT) - Histórico habitacional
+
+=====================================
+PRIMEIRO ACESSO - O QUE FAZER
+=====================================
+
+1. Abra o arquivo INICIAR.bat
+2. Aguarde a janela do Backend
+3. Clique na janela do Frontend que abrir
+4. Faça login com:
+   - Email: admin@boltlock.com
+   - Senha: Admin@123
+5. Vá para "Consultar CPF"
+6. Digite um CPF (teste com qualquer formato)
+7. Clique em "CONSULTAR"
+
+Pronto! Você verá:
+- Status do CPF
+- Protestos encontrados
+- Sanções públicas
+- Chaves Pix
+- Recomendação de crédito
+
+=====================================
+TROUBLESHOOTING
+=====================================
+
+❌ "Node.js não encontrado"
+✅ Solução: Instale Node.js em nodejs.org
+
+❌ "Porta 3001 já em uso"
+✅ Solução: Edite backend/.env, mude PORT
+
+❌ "Frontend não abre"
+✅ Solução: Acesse manualmente:
+   file:///C:/Users/SeuUser/Desktop/Credito-Boltlock/frontend/index.html
+
+❌ "API não responde"
+✅ Solução: Verifique se backend está rodando
+   http://localhost:3001/api/health
+
+=====================================
+CREDENCIAIS DE TESTE
+=====================================
+
+ADMIN (10.000 créditos):
+Email: admin@boltlock.com
+Senha: Admin@123
+
+CORRESPONDENTE (500 créditos):
+Email: correspondent1@boltlock.com
+Senha: Corresp@123
+
+Para adicionar mais usuários:
+Edite backend/server.js → seção "DADOS DE USUÁRIOS"
+
+=====================================
+CORES DO SISTEMA
+=====================================
+
+Primária:  #f5c518 (Amarelo Boltlock)
+Fundo:     #2b2b2b (Cinza escuro)
+Texto:     #9a9a9a (Cinza suave)
+Destaque:  #dedede (Branco suave)
+
+Design: Neumorphism + Dark Mode
+
+=====================================
+SEGURANÇA
+=====================================
+
+⚠️ AVISO: Versão desenvolvimento
+
+Em produção, adicione:
+✓ Criptografia de senhas (bcrypt)
+✓ JWT com expiração
+✓ HTTPS obrigatório
+✓ Rate limiting
+✓ Auditoria de consultas
+✓ Conformidade LGPD
+
+=====================================
+DOCUMENTAÇÃO COMPLETA
+=====================================
+
+Para mais detalhes, abra:
+C:\Users\{seu_usuario}\Desktop\Credito-Boltlock\README.md
+
+=====================================
+CONTATO
+=====================================
+
+Desenvolvido por: Tenório Vivaz
+Email: tenorio.vivaz@gmail.com
+
+Versão: 1.0.0
+Data: Maio 2026
+
+=====================================
+
+Bom uso! 🚀

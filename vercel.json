@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "buildCommand": "npm run build",
+  "env": {
+    "FIREBASE_DATABASE_URL": "@firebase_database_url",
+    "FIREBASE_SERVICE_ACCOUNT": "@firebase_service_account",
+    "JWT_SECRET": "@jwt_secret"
+  },
+  "rewrites": [
+    {
+      "source": "/creditscore",
+      "destination": "/frontend/index.html"
+    },
+    {
+      "source": "/creditscore/(.*)",
+      "destination": "/frontend/index.html"
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": "/backend/server.js"
+    }
+  ]
+}

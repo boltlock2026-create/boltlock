@@ -1,0 +1,130 @@
+{
+  "name": "credito-boltlock",
+  "version": "1.0.0",
+  "description": "Sistema SaaS completo de análise unificada de crédito para correspondentes",
+  "author": "Tenório Vivaz",
+  "email": "tenorio.vivaz@gmail.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/seu-usuario/credito-boltlock"
+  },
+  "keywords": [
+    "crédito",
+    "cpf",
+    "correspondente",
+    "cca",
+    "imóvel",
+    "financeiro",
+    "análise",
+    "saas",
+    "boltlock"
+  ],
+  "scripts": {
+    "start": "npm run start:backend",
+    "start:backend": "cd backend && npm install && npm run dev",
+    "start:frontend": "cd frontend && python -m http.server 3000",
+    "setup": "cd backend && npm install",
+    "dev": "concurrently 'npm run start:backend' 'npm run start:frontend'"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "structure": {
+    "frontend": {
+      "description": "Interface SPA (Single Page Application)",
+      "files": {
+        "index.html": "Página HTML principal",
+        "app.js": "Lógica da aplicação (login, consultas, etc)",
+        "styles.css": "Estilos (Neumorphism + cores Boltlock)"
+      },
+      "tecnologia": "Vanilla JavaScript (sem dependências)"
+    },
+    "backend": {
+      "description": "API REST com Express.js",
+      "files": {
+        "server.js": "Servidor principal com todos os endpoints",
+        "package.json": "Dependências do backend",
+        ".env": "Configurações e credenciais",
+        "integracao-apis.md": "Guia de integração com APIs reais"
+      },
+      "endpoints": {
+        "POST /api/auth/login": "Autenticação",
+        "POST /api/consultar/unificada": "Consulta consolidada de CPF",
+        "GET /api/dashboard": "Dashboard do usuário",
+        "GET /api/health": "Health check do sistema"
+      },
+      "dependencias": {
+        "express": "Framework HTTP",
+        "cors": "Cross-Origin Resource Sharing",
+        "axios": "HTTP client para APIs",
+        "cheerio": "Web scraping",
+        "node-cache": "Cache em memória"
+      }
+    }
+  },
+  "features": {
+    "autenticacao": "JWT token-based",
+    "consultas": "Unificadas de 6 fontes de dados",
+    "apis_gratuitas": [
+      "DICT (Bacen) - Chaves Pix",
+      "IEPTB - Protestos",
+      "Portal Transparência - Sanções"
+    ],
+    "apis_pagas": [
+      "CPF-Light (Serpro) - R$ 0,50-1,50/consulta",
+      "CADMUT (Infosimples) - R$ 500-2000/mês",
+      "Registrato (BigDataCorp) - R$ 1000-3000/mês"
+    ],
+    "sistema_creditos": "5 créditos por consulta",
+    "design": "Neumorphism Dark Mode",
+    "responsivo": "Desktop e Mobile"
+  },
+  "security": {
+    "autenticacao": "JWT tokens",
+    "armazenamento": "localStorage (frontend), variáveis env (backend)",
+    "comunicacao": "HTTP (dev), HTTPS obrigatório (prod)",
+    "dados_sensíveis": "Nunca em logs ou storage público"
+  },
+  "deployment": {
+    "frontend": [
+      "Vercel",
+      "Netlify",
+      "AWS S3 + CloudFront",
+      "GitHub Pages"
+    ],
+    "backend": [
+      "Heroku",
+      "AWS Lambda + API Gateway",
+      "AWS EC2",
+      "DigitalOcean",
+      "Railway"
+    ]
+  },
+  "roadmap": {
+    "v1.0": [
+      "Login e dashboard",
+      "Consulta unificada",
+      "Sistema de créditos"
+    ],
+    "v1.1": [
+      "Integração Infosimples",
+      "Exportação PDF",
+      "Histórico completo"
+    ],
+    "v2.0": [
+      "Mobile app nativo",
+      "Multi-tenant (múltiplas empresas)",
+      "Machine Learning scoring",
+      "Webhooks e integrações"
+    ]
+  },
+  "suporte": {
+    "documentacao": "README.md",
+    "guia_rapido": "LEIA-ME-PRIMEIRO.txt",
+    "integracao": "backend/integracao-apis.md",
+    "issues": "https://github.com/seu-usuario/credito-boltlock/issues"
+  },
+  "licenca": "MIT",
+  "data_criacao": "2026-05-08"
+}
