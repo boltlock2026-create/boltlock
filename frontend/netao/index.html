@@ -1271,6 +1271,7 @@ function scheduleWaMessage() {
   }, delay);
 }
 let liveWaStarted = false;
+const liveWaSection = document.getElementById('p2');
 const obsLiveWa = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting && !liveWaStarted && liveWa) {
@@ -1284,8 +1285,8 @@ const obsLiveWa = new IntersectionObserver(entries => {
     }
     if (entry.isIntersecting && liveWaStarted && !waTimer) scheduleWaMessage();
   });
-}, { threshold: 0.45 });
-if (liveWa) obsLiveWa.observe(liveWa);
+}, { threshold: 0.16 });
+if (liveWa) obsLiveWa.observe(liveWaSection || liveWa);
 
 // REVEAL on scroll
 const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-scale');
