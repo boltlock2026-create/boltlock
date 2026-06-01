@@ -1,12 +1,6 @@
 {
   "version": 2,
   "buildCommand": "mkdir -p .vercel/output/static && cp -r frontend/* .vercel/output/static/",
-  "env": {
-    "FIREBASE_DATABASE_URL": "@firebase_database_url",
-    "FIREBASE_SERVICE_ACCOUNT": "@firebase_service_account",
-    "JWT_SECRET": "@jwt_secret",
-    "NODE_ENV": "production"
-  },
   "rewrites": [
     {
       "source": "/api/(.*)",
