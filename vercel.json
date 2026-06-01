@@ -1,26 +1,47 @@
 {
   "version": 2,
-  "buildCommand": "mkdir -p .vercel/output/static && cp -r frontend/* .vercel/output/static/",
-  "rewrites": [
+  "builds": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api"
+      "src": "api/index.js",
+      "use": "@vercel/node"
     },
     {
-      "source": "/creditscore",
-      "destination": "/index.html"
+      "src": "frontend/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/index.js"
     },
     {
-      "source": "/creditscore/(.*)",
-      "destination": "/index.html"
+      "src": "/netao",
+      "dest": "/frontend/netao/index.html"
     },
     {
-      "source": "/netao",
-      "destination": "/netao/index.html"
+      "src": "/netao/",
+      "dest": "/frontend/netao/index.html"
     },
     {
-      "source": "/netao/(.*)",
-      "destination": "/netao/$1"
+      "src": "/netao/(.*)",
+      "dest": "/frontend/netao/$1"
+    },
+    {
+      "src": "/creditscore",
+      "dest": "/frontend/index.html"
+    },
+    {
+      "src": "/creditscore/(.*)",
+      "dest": "/frontend/index.html"
+    },
+    {
+      "src": "/",
+      "dest": "/frontend/index.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/frontend/$1"
     }
   ]
 }
