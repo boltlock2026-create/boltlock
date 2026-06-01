@@ -114,14 +114,20 @@ section{position:relative;min-height:100vh;padding:120px 32px;display:flex;align
 .visual-triptych .image-frame{min-height:260px;}
 .visual-triptych .image-frame:nth-child(2){min-height:320px;}
 @media(max-width:900px){.visual-triptych{grid-template-columns:1fr;}.visual-triptych .image-frame,.visual-triptych .image-frame:nth-child(2){min-height:240px;}}
-.pain-head{text-align:center;margin:85px auto 26px;max-width:780px;}
+.pain-scroll{position:relative;min-height:125vh;margin-top:70px;}
+.pain-pin{position:sticky;top:76px;transform:translateY(var(--pain-y,90px)) scale(var(--pain-scale,.9));opacity:var(--pain-opacity,.72);transition:transform .08s linear,opacity .08s linear;}
+.pain-head{text-align:center;margin:0 auto 26px;max-width:780px;}
 .pain-head h3{font-family:'Playfair Display',serif;font-size:clamp(30px,4vw,54px);font-weight:900;letter-spacing:-.04em;line-height:1.05;margin-bottom:14px;}
 .pain-head h3 span{color:var(--gold);}
 .pain-head p{font-family:'Playfair Display',serif;font-style:italic;font-size:18px;color:#e8c6a6;}
-.pain-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:28px;}
-.pain-grid .image-frame{min-height:230px;border-radius:14px;}
-@media(max-width:1120px){.pain-grid{grid-template-columns:repeat(3,1fr);}}
-@media(max-width:680px){.pain-grid{grid-template-columns:1fr;}.pain-grid .image-frame{min-height:260px;}}
+.pain-track-wrap{width:100vw;margin-left:calc(50% - 50vw);overflow:hidden;padding:8px 0 36px;}
+.pain-grid{display:flex;gap:12px;width:max-content;padding:0 6vw;transform:translateX(var(--pain-x,16vw));transition:transform .08s linear;will-change:transform;}
+.pain-grid .image-frame{width:226px;height:230px;min-height:230px;border-radius:14px;flex:0 0 auto;transform:translateY(var(--card-rise,0));}
+.pain-grid .image-frame:nth-child(2){--card-rise:22px;}
+.pain-grid .image-frame:nth-child(3){--card-rise:-10px;}
+.pain-grid .image-frame:nth-child(4){--card-rise:18px;}
+.pain-grid .image-frame:nth-child(5){--card-rise:-6px;}
+@media(max-width:680px){.pain-scroll{min-height:112vh}.pain-pin{top:62px}.pain-grid{padding:0 8vw}.pain-grid .image-frame{width:72vw;height:260px;min-height:260px}.pain-head p{font-size:16px;}}
 
 /* ===== SEÇÃO: MOVIMENTO NAS LOJAS ===== */
 .store-motion{min-height:150vh;padding:80px 32px 140px;background:radial-gradient(circle at 50% 24%,rgba(255,106,0,.13),transparent 42%),linear-gradient(180deg,#070301,#050302 58%,#090401);align-items:flex-start;}
@@ -287,6 +293,15 @@ body.auth-locked{overflow:hidden;}
 .phone-top span{font-family:'JetBrains Mono',monospace;font-size:9px;color:#9ca3af;letter-spacing:.18em;text-transform:uppercase;}
 .phone-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#ffb05c,#ff6a00);color:#150600;display:flex;align-items:center;justify-content:center;font-weight:900;}
 .widget-depth{background:linear-gradient(180deg,rgba(255,255,255,.045) 0%,rgba(255,255,255,.012) 100%);box-shadow:0 10px 20px rgba(0,0,0,.3),inset 0 1px 1px rgba(255,255,255,.05),inset 0 -1px 1px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.04);border-radius:16px;padding:14px;}
+.wa-chat{display:flex;flex-direction:column;gap:10px;overflow:hidden;}
+.wa-day{align-self:center;padding:5px 10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.06);font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#d8bea3;}
+.wa-bubble{max-width:88%;padding:10px 11px;border-radius:14px;font-size:11.5px;line-height:1.38;box-shadow:0 10px 20px rgba(0,0,0,.22);opacity:0;transform:translateY(12px);animation:waIn .52s cubic-bezier(.16,1,.3,1) forwards;}
+.wa-bubble strong{display:block;margin-bottom:3px;font-size:10px;letter-spacing:.04em;color:#fff;}
+.wa-bubble.in{align-self:flex-start;background:#1b2430;color:#e8eef5;border-top-left-radius:4px;}
+.wa-bubble.out{align-self:flex-end;background:#1f5f3b;color:#effff4;border-top-right-radius:4px;}
+.wa-bubble.system{align-self:center;max-width:96%;background:rgba(255,106,0,.12);border:1px solid rgba(255,122,26,.18);color:#ffd6a5;text-align:center;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;}
+.wa-bubble:nth-child(2){animation-delay:.15s}.wa-bubble:nth-child(3){animation-delay:.75s}.wa-bubble:nth-child(4){animation-delay:1.35s}.wa-bubble:nth-child(5){animation-delay:1.95s}.wa-bubble:nth-child(6){animation-delay:2.55s}.wa-bubble:nth-child(7){animation-delay:3.15s}
+@keyframes waIn{to{opacity:1;transform:translateY(0)}}
 .login-panel{position:relative;grid-column:2;align-self:end;width:100%;max-width:330px;z-index:5;padding:22px;background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.015));backdrop-filter:blur(24px);box-shadow:0 0 0 1px rgba(255,255,255,.1),0 25px 50px -12px rgba(0,0,0,.8),inset 0 1px 1px rgba(255,255,255,.18),inset 0 -1px 1px rgba(0,0,0,.5);}
 .login-panel h4{font-family:'Playfair Display',serif;font-size:28px;letter-spacing:-.03em;margin-bottom:6px;}
 .login-panel p{font-size:13px;color:#d8bea3;margin-bottom:18px;}
@@ -540,16 +555,22 @@ a,button,.cta-go,.fechar-cta,.login-button{touch-action:manipulation;-webkit-tap
       </div>
     </div>
 
-    <div class="pain-head reveal">
-      <h3>A escala fica linda por fora.<br><span>Mas pesa no balcão.</span></h3>
-      <p>É aqui que automação deixa de ser “tecnologia” e vira alívio operacional real.</p>
-    </div>
-    <div class="pain-grid reveal">
-      <figure class="image-frame"><img src="assets/img/web/01-dor-produto-vencido.jpg" alt="Produto vencido no balcão"><figcaption class="image-caption">Produto parado</figcaption></figure>
-      <figure class="image-frame"><img src="assets/img/web/02-dor-caos-estoque.jpg" alt="Caos de estoque no açougue"><figcaption class="image-caption">Estoque sem comando</figcaption></figure>
-      <figure class="image-frame"><img src="assets/img/web/03-dor-baixa-procura.jpg" alt="Baixa procura e excesso de mercadoria"><figcaption class="image-caption">Baixa procura</figcaption></figure>
-      <figure class="image-frame"><img src="assets/img/web/04-dor-margem-preco.jpg" alt="Margem e preço pressionados"><figcaption class="image-caption">Margem pressionada</figcaption></figure>
-      <figure class="image-frame"><img src="assets/img/web/05-dor-relatorios-perda.jpg" alt="Relatórios de perda operacional"><figcaption class="image-caption">Perda invisível</figcaption></figure>
+    <div class="pain-scroll" id="painScroll">
+      <div class="pain-pin" data-pain-pin>
+        <div class="pain-head reveal">
+          <h3>A escala fica linda por fora.<br><span>Mas pesa no balcão.</span></h3>
+          <p>É aqui que automação deixa de ser “tecnologia” e vira alívio operacional real.</p>
+        </div>
+        <div class="pain-track-wrap">
+          <div class="pain-grid reveal" data-pain-track>
+            <figure class="image-frame"><img src="assets/img/web/01-dor-produto-vencido.jpg" alt="Produto vencido no balcão"><figcaption class="image-caption">Produto parado</figcaption></figure>
+            <figure class="image-frame"><img src="assets/img/web/02-dor-caos-estoque.jpg" alt="Caos de estoque no açougue"><figcaption class="image-caption">Estoque sem comando</figcaption></figure>
+            <figure class="image-frame"><img src="assets/img/web/03-dor-baixa-procura.jpg" alt="Baixa procura e excesso de mercadoria"><figcaption class="image-caption">Baixa procura</figcaption></figure>
+            <figure class="image-frame"><img src="assets/img/web/04-dor-margem-preco.jpg" alt="Margem e preço pressionados"><figcaption class="image-caption">Margem pressionada</figcaption></figure>
+            <figure class="image-frame"><img src="assets/img/web/05-dor-relatorios-perda.jpg" alt="Relatórios de perda operacional"><figcaption class="image-caption">Perda invisível</figcaption></figure>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -649,20 +670,17 @@ a,button,.cta-go,.fechar-cta,.login-button{touch-action:manipulation;-webkit-tap
             <div class="dynamic-island"></div>
             <div class="phone-app">
               <div class="phone-top">
-                <div><span>Bom Beef OS</span><h4>Vendas hoje</h4></div>
+                <div><span>WhatsApp IA</span><h4>Atendimento loja</h4></div>
                 <div class="phone-avatar">N</div>
               </div>
-              <div class="widget-depth">
-                <small class="mono" style="color:#ffb05c;letter-spacing:.14em">WHATSAPP</small>
-                <p style="margin-top:8px;font-size:13px;color:#e8c6a6">Lead de franquia em Campinas respondeu. Capital validado. Próximo passo: entrevista.</p>
-              </div>
-              <div class="widget-depth">
-                <small class="mono" style="color:#46d9ff;letter-spacing:.14em">RECORRÊNCIA</small>
-                <p style="margin-top:8px;font-size:13px;color:#e8c6a6">Cliente comprou dry-aged há 31 dias. Mensagem de recompra pronta para envio.</p>
-              </div>
-              <div class="widget-depth">
-                <small class="mono" style="color:#48ff9b;letter-spacing:.14em">LOJA</small>
-                <p style="margin-top:8px;font-size:13px;color:#e8c6a6">Unidade Moema com baixa procura hoje. Campanha local sugerida.</p>
+              <div class="wa-chat" aria-label="Exemplo de atendimento automatizado no WhatsApp">
+                <div class="wa-day">Hoje · loja Moema</div>
+                <div class="wa-bubble in"><strong>Cliente</strong>Boa tarde. Vou fazer churrasco pra 10 pessoas. O que você indica?</div>
+                <div class="wa-bubble out"><strong>Bom Beef IA</strong>Salve! Para 10 pessoas eu montaria: picanha, ancho, linguiça artesanal, pão de alho e carvão. Quer que eu calcule as quantidades?</div>
+                <div class="wa-bubble in"><strong>Cliente</strong>Quero sim. Coloca também 20 pães de alho.</div>
+                <div class="wa-bubble out"><strong>Bom Beef IA</strong>Fechado: 20 pães de alho adicionados. Sugestão: 3,5kg de carne + 2 acompanhamentos. Retirada ou entrega?</div>
+                <div class="wa-bubble in"><strong>Cliente 2</strong>Tem dry-aged hoje? Quero pedir pro jantar.</div>
+                <div class="wa-bubble system">Pedido criado · alerta enviado para a loja</div>
               </div>
             </div>
           </div>
@@ -1169,6 +1187,31 @@ function updateStoreMotion() {
 window.addEventListener('scroll', updateStoreMotion, { passive: true });
 window.addEventListener('resize', updateStoreMotion);
 updateStoreMotion();
+
+// PAIN MOTION: imagens entram de baixo e correm para o lado no scroll.
+const painScroll = document.getElementById('painScroll');
+const painPin = document.querySelector('[data-pain-pin]');
+const painTrack = document.querySelector('[data-pain-track]');
+function updatePainMotion() {
+  if (!painScroll || !painPin || !painTrack) return;
+  const rect = painScroll.getBoundingClientRect();
+  const total = Math.max(1, rect.height - window.innerHeight);
+  const progress = clamp(-rect.top / total, 0, 1);
+  const isMobile = window.innerWidth <= 680;
+  const startX = isMobile ? 14 : 16;
+  const endX = isMobile ? -210 : -34;
+  const x = startX + (endX - startX) * progress;
+  const y = 95 * (1 - progress);
+  const scale = 0.88 + 0.16 * Math.sin(progress * Math.PI);
+  const opacity = 0.62 + 0.38 * Math.min(1, progress * 1.6);
+  painPin.style.setProperty('--pain-y', y.toFixed(1) + 'px');
+  painPin.style.setProperty('--pain-scale', scale.toFixed(3));
+  painPin.style.setProperty('--pain-opacity', opacity.toFixed(2));
+  painTrack.style.setProperty('--pain-x', x.toFixed(2) + 'vw');
+}
+window.addEventListener('scroll', updatePainMotion, { passive: true });
+window.addEventListener('resize', updatePainMotion);
+updatePainMotion();
 
 // REVEAL on scroll
 const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-scale');
