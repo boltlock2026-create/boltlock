@@ -1054,6 +1054,7 @@ function unlockPresentation(){
   document.body.classList.remove('auth-locked');
   if(loginGate) loginGate.classList.add('hide');
   sessionStorage.setItem('netao-auth-ok','1');
+  document.dispatchEvent(new Event('netao:unlocked'));
 }
 
 if(sessionStorage.getItem('netao-auth-ok') === '1'){
@@ -1272,13 +1273,15 @@ function scheduleWaMessage() {
 }
 let liveWaStarted = false;
 const liveWaSection = document.getElementById('p2');
+function startLiveWhatsApp() {
+  if (liveWaStarted || !liveWa) return;
+  liveWaStarted = true;
+  liveWa.classList.add('live-running');
+  scheduleWaMessage();
+}
 const obsLiveWa = new IntersectionObserver(entries => {
   entries.forEach(entry => {
-    if (entry.isIntersecting && !liveWaStarted && liveWa) {
-      liveWaStarted = true;
-      liveWa.classList.add('live-running');
-      scheduleWaMessage();
-    }
+    if (entry.isIntersecting) startLiveWhatsApp();
     if (!entry.isIntersecting && waTimer) {
       window.clearTimeout(waTimer);
       waTimer = null;
@@ -1287,6 +1290,8 @@ const obsLiveWa = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.16 });
 if (liveWa) obsLiveWa.observe(liveWaSection || liveWa);
+document.addEventListener('netao:unlocked', () => window.setTimeout(startLiveWhatsApp, 1200));
+if (!document.body.classList.contains('auth-locked')) window.setTimeout(startLiveWhatsApp, 1200);
 
 // REVEAL on scroll
 const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-scale');
