@@ -177,6 +177,17 @@ section{position:relative;min-height:100vh;padding:120px 32px;display:flex;align
 .proj-card li::before{content:"→";position:absolute;left:0;color:var(--gold);font-weight:900;}
 .proj-card.high{background:linear-gradient(180deg,rgba(255,106,0,.09),rgba(255,106,0,.018));border-color:rgba(255,122,26,.36);box-shadow:inset 0 1px 0 rgba(255,176,92,.08),0 22px 70px rgba(0,0,0,.22);}
 .proj-card.high p{font-family:'Playfair Display',serif;font-style:italic;font-size:17px;color:#edd1b4;line-height:1.55;}
+.commercial-phone-card{position:relative;min-height:600px;display:flex;align-items:center;justify-content:center;padding:28px;border:1px solid rgba(255,122,26,.28);background:radial-gradient(circle at 50% 8%,rgba(255,106,0,.18),transparent 36%),linear-gradient(180deg,rgba(255,122,26,.05),rgba(255,255,255,.006));box-shadow:inset 0 1px 0 rgba(255,176,92,.08),0 36px 90px rgba(0,0,0,.38);overflow:hidden;}
+.commercial-phone-card::before{content:"DIRETOR COMERCIAL · COO";position:absolute;left:22px;top:20px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.2em;color:rgba(255,189,122,.72);}
+.commercial-phone-card::after{content:"";position:absolute;inset:18px;border:1px solid rgba(255,122,26,.12);pointer-events:none;}
+.commercial-phone-shell{position:relative;width:min(292px,100%);height:590px;background:#111;border-radius:46px;box-shadow:inset 0 0 0 2px #4b4b50,inset 0 0 0 8px #000,0 38px 80px rgba(0,0,0,.78);transform:rotateY(-7deg) rotateX(4deg);transform-style:preserve-3d;}
+.commercial-phone-screen{position:absolute;inset:8px;border-radius:38px;background:radial-gradient(circle at 50% 0,rgba(255,106,0,.16),transparent 42%),linear-gradient(180deg,#080d17,#050302);overflow:hidden;padding:48px 18px 18px;color:#fff;}
+.commercial-status{display:flex;align-items:center;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:9px;color:#b8a694;letter-spacing:.12em;margin-bottom:18px;}
+.commercial-note{min-height:318px;padding:18px 16px;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.018));border:1px solid rgba(255,255,255,.08);box-shadow:inset 0 1px 1px rgba(255,255,255,.12),0 18px 36px rgba(0,0,0,.42);}
+.commercial-note small{display:block;margin-bottom:14px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#ffad61;}
+.commercial-note p{font-family:'Playfair Display',serif;font-style:italic;font-size:18px;line-height:1.48;color:#ffe1c0;}
+.commercial-kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+.commercial-kpis span{display:block;padding:12px 10px;background:rgba(255,106,0,.075);border:1px solid rgba(255,122,26,.14);font-family:'JetBrains Mono',monospace;font-size:9px;line-height:1.35;color:#f2caa5;text-transform:uppercase;letter-spacing:.08em;}
 
 /* ===== BRAINSTORM ===== */
 .brain{background:linear-gradient(180deg,#050302,#0b0502);}
@@ -335,6 +346,11 @@ a,button,.cta-go,.fechar-cta,.login-button{touch-action:manipulation;-webkit-tap
   .proj-body{gap:16px;margin-top:18px;}
   .proj-card{padding:24px 18px;}
   .proj-card li{font-size:14px;padding-left:22px;}
+  .commercial-phone-card{min-height:auto;padding:64px 18px 22px;}
+  .commercial-phone-shell{width:min(286px,84vw);height:auto;aspect-ratio:292/590;transform:none;border-radius:42px;}
+  .commercial-phone-screen{border-radius:34px;padding:44px 15px 16px;}
+  .commercial-note{min-height:300px;padding:16px 14px;}
+  .commercial-note p{font-size:16px;line-height:1.5;}
   .brain-head{margin-bottom:34px;}
   .brain-card{padding:24px 18px;}
   .fechar{min-height:auto;}
@@ -388,6 +404,10 @@ a,button,.cta-go,.fechar-cta,.login-button{touch-action:manipulation;-webkit-tap
   .visual-triptych{gap:12px;margin-bottom:46px;}
   .visual-triptych .image-frame,.visual-triptych .image-frame:nth-child(2){min-height:220px;}
   .project-visual,.project-visual.tall{height:clamp(240px,72vw,320px);}
+  .commercial-phone-card{padding-left:12px;padding-right:12px;}
+  .commercial-phone-shell{width:min(252px,78vw);}
+  .commercial-kpis{grid-template-columns:1fr;}
+  .commercial-kpis span{padding:9px 10px;font-size:8px;}
   .brain-grid{gap:12px;}
   footer{padding:24px 16px;font-size:9px;line-height:1.5;}
 }
@@ -400,6 +420,7 @@ a,button,.cta-go,.fechar-cta,.login-button{touch-action:manipulation;-webkit-tap
   .proj-card{padding:22px 15px;}
   .store-device{height:455px;}
   .iphone-bezel{width:244px;}
+  .commercial-phone-shell{width:238px;}
   .floating-badge,.login-panel{width:94vw;}
 }
 
@@ -863,9 +884,23 @@ a,button,.cta-go,.fechar-cta,.login-button{touch-action:manipulation;-webkit-tap
     </div>
     <figure class="project-visual image-frame reveal"><img src="assets/img/web/04-dor-margem-preco.jpg" alt="Painel de margem e preço"><figcaption class="image-caption">Comercial bom começa com margem clara</figcaption></figure>
     <div class="proj-body">
-      <div class="proj-card high reveal">
-        <h4>MEU BACKGROUND</h4>
-        <p>9 anos liderando comercial no Grupo Cyrela (uma das maiores incorporadoras do Brasil) e 2 anos atuando como COO. Construí time, processo, funil, treinamento, comissionamento, KPIs e gestão de meta. Levo essa visão de diretor e operação pra Bom Beef.</p>
+      <div class="commercial-phone-card reveal" aria-label="Celular digitando o background comercial">
+        <div class="commercial-phone-shell">
+          <div class="dynamic-island"></div>
+          <div class="commercial-phone-screen">
+            <div class="commercial-status"><span>09:41</span><span>BOLTLOCK</span></div>
+            <div class="commercial-note">
+              <small>MEU BACKGROUND</small>
+              <p id="commercialTyping"></p>
+            </div>
+            <div class="commercial-kpis">
+              <span>Diretor Comercial</span>
+              <span>COO por 2 anos</span>
+              <span>Funil + KPIs</span>
+              <span>Gestão de meta</span>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="proj-card reveal">
         <h4>POSSÍVEIS FRENTES</h4>
@@ -1095,6 +1130,20 @@ const obsIa = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.3 });
 obsIa.observe(s1);
+
+// PROJETO 9: celular digitando o background comercial
+let commercialTypingStarted = false;
+const p9 = document.getElementById('p9');
+const commercialText = '9 anos liderando comercial no Grupo Cyrela (uma das maiores incorporadoras do Brasil). Construí time, processo, funil, treinamento, comissionamento, KPIs, gestão de meta. Levo isso pra Bom Beef.';
+const obsCommercial = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting && !commercialTypingStarted) {
+      commercialTypingStarted = true;
+      typewrite('commercialTyping', commercialText, 24);
+    }
+  });
+}, { threshold: 0.28 });
+if (p9 && document.getElementById('commercialTyping')) obsCommercial.observe(p9);
 
 // STORE MOTION: efeito tipo ContainerScroll, sem React/Framer.
 const storeSection = document.getElementById('movimento');
