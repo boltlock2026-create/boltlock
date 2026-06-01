@@ -19,6 +19,14 @@
     {
       "source": "/creditscore/(.*)",
       "destination": "/index.html"
+    },
+    {
+      "source": "/netao",
+      "destination": "/netao/index.html"
+    },
+    {
+      "source": "/netao/(.*)",
+      "destination": "/netao/$1"
     }
   ]
 }

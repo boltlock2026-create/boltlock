@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Salve, Netão — Bruno Kvetik</title>
+<meta name="description" content="Uma apresentação cirúrgica em 10 projetos. Construída depois de ouvir o que o Alfredo te disse.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@500;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#050302; --ink2:#0b0502; --paper:#fff4e4;
+  --gold:#ff6a00; --gold2:#ffb05c; --gold-deep:#6f2400;
+  --beef:#c93400; --ember:#ff7a1a; --smoke:#2a1208;
+  --mut:#b8a694; --dim:#76523a;
+  --line:rgba(255,122,26,.13);
+  --line-strong:rgba(255,122,26,.24);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:Archivo,system-ui,sans-serif;background:var(--ink);color:var(--paper);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+.serif{font-family:'Playfair Display',serif;}
+.mono{font-family:'JetBrains Mono',monospace;}
+img{display:block;max-width:100%;}
+.image-frame{position:relative;overflow:hidden;border:1px solid rgba(255,122,26,.22);border-radius:18px;background:#120701;box-shadow:0 30px 90px rgba(0,0,0,.5),0 0 0 1px rgba(255,106,0,.04);}
+.image-frame img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s cubic-bezier(.16,1,.3,1),filter 1.2s cubic-bezier(.16,1,.3,1);}
+.image-frame::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 44%,rgba(5,3,2,.86));pointer-events:none;}
+.image-frame:hover img{transform:scale(1.045);filter:saturate(1.14) contrast(1.06);}
+.image-caption{position:absolute;left:18px;right:18px;bottom:16px;z-index:2;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#ffd6a5;text-shadow:0 2px 16px rgba(0,0,0,.9);}
+
+/* GLOBAL BG GRAIN */
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background-image:radial-gradient(circle at 18% 8%,rgba(255,106,0,.08),transparent 46%),radial-gradient(circle at 82% 90%,rgba(201,52,0,.07),transparent 52%),linear-gradient(90deg,rgba(255,122,26,.025),transparent 22%,rgba(255,122,26,.018));z-index:0;}
+
+/* PROGRESS BAR */
+.progress{position:fixed;top:0;left:0;height:2px;width:0;z-index:200;background:linear-gradient(90deg,var(--gold2),var(--gold),var(--beef));box-shadow:0 0 18px rgba(255,106,0,.62);transition:width .3s;}
+
+/* NAV FLOAT */
+.nav-float{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:100;display:flex;align-items:center;gap:6px;padding:8px 14px;background:rgba(5,3,2,.82);backdrop-filter:blur(20px);border:1px solid var(--line);border-radius:99px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--mut);box-shadow:0 12px 40px rgba(0,0,0,.36),inset 0 0 18px rgba(255,106,0,.04);}
+.nav-float .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold);}
+.nav-float b{color:var(--paper);font-weight:600;}
+
+/* ===== SECTION BASE ===== */
+section{position:relative;min-height:100vh;padding:120px 32px;display:flex;align-items:center;justify-content:center;}
+.container{max-width:1180px;width:100%;margin:0 auto;position:relative;z-index:2;}
+
+/* ===== INTRO COVER ===== */
+.cover{min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.cover .image-bg{position:absolute;inset:0;z-index:0;overflow:hidden;}
+.cover .image-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,3,2,.36),rgba(5,3,2,.9) 74%);}
+.cover .hero-photo{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,3,2,.1),rgba(5,3,2,.86) 78%),radial-gradient(ellipse at 42% 42%,rgba(255,106,0,.14),transparent 62%),url("assets/img/web/15-hero-burger-bom-beef.jpg") center/cover no-repeat;animation:heroBreath 16s ease-in-out infinite alternate;}
+@keyframes heroBreath{from{transform:scale(1);filter:saturate(1) contrast(1);}to{transform:scale(1.06);filter:saturate(1.12) contrast(1.05);}}
+@keyframes gradMove{from{filter:hue-rotate(0deg);}to{filter:hue-rotate(15deg);}}
+.cover-content{position:relative;z-index:5;text-align:center;max-width:920px;padding:0 24px;}
+.cover h1{font-family:'Playfair Display',serif;font-weight:900;letter-spacing:-.045em;line-height:.95;}
+
+.frase{display:block;opacity:0;transform:translateY(40px);transition:opacity 1.2s cubic-bezier(.16,1,.3,1),transform 1.2s cubic-bezier(.16,1,.3,1);}
+.frase.show{opacity:1;transform:translateY(0);}
+.frase-1{font-size:clamp(40px,7vw,88px);margin-bottom:30px;}
+.frase-2{font-size:clamp(22px,3vw,38px);font-style:italic;color:#e8c6a6;margin-bottom:22px;font-weight:500;}
+.frase-3{font-size:clamp(16px,1.6vw,22px);color:var(--mut);max-width:680px;margin:0 auto 36px;line-height:1.5;font-family:Inter;font-style:normal;font-weight:400;}
+.frase-4{font-size:clamp(14px,1.3vw,18px);color:var(--gold);font-family:'JetBrains Mono',monospace;letter-spacing:.3em;text-transform:uppercase;font-weight:700;}
+
+.scroll-hint{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);z-index:5;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:.3em;text-transform:uppercase;animation:bounce 2s infinite;}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(8px);}}
+
+/* ===== SEÇÃO 1: IA ESCREVENDO ===== */
+.ia-write{background:linear-gradient(180deg,#090401,#050302);}
+.terminal{max-width:880px;margin:0 auto;padding:40px 36px;background:linear-gradient(180deg,rgba(20,8,2,.78),rgba(0,0,0,.68));border:1px solid var(--line-strong);border-radius:18px;box-shadow:0 40px 100px rgba(0,0,0,.68),0 0 70px rgba(255,106,0,.06);font-family:'JetBrains Mono',monospace;}
+.terminal-head{display:flex;align-items:center;gap:8px;margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid var(--line);}
+.terminal-head .dots{display:flex;gap:6px;}
+.terminal-head .dots span{width:10px;height:10px;border-radius:50%;}
+.terminal-head .dots span:nth-child(1){background:#ff5555;}
+.terminal-head .dots span:nth-child(2){background:#ff8a1f;}
+.terminal-head .dots span:nth-child(3){background:#5dffb1;}
+.terminal-head .label{margin-left:auto;font-size:10px;color:var(--dim);letter-spacing:.15em;text-transform:uppercase;}
+.terminal-head .ia-icon{color:var(--gold);font-size:14px;font-weight:700;}
+.terminal-body{font-size:16px;line-height:1.7;color:#ead3bd;min-height:220px;}
+.terminal-body p{margin-bottom:18px;}
+.terminal-body p .gold{color:var(--gold);font-weight:700;}
+.terminal-body p .high{color:#fff;font-weight:700;}
+.typewriter{border-right:2px solid var(--gold);animation:blink 1s infinite;}
+@keyframes blink{50%{border-color:transparent;}}
+.cta-go{display:inline-flex;align-items:center;gap:10px;padding:14px 24px;background:linear-gradient(135deg,#ffbf70,var(--gold),#9c3100);color:#160600;font-weight:800;border-radius:99px;text-decoration:none;font-family:Archivo,system-ui,sans-serif;font-size:14px;margin-top:24px;letter-spacing:.04em;transition:.3s;opacity:0;transform:translateY(20px);}
+.cta-go.show{opacity:1;transform:translateY(0);}
+.cta-go:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(255,106,0,.42);}
+
+/* ===== SEÇÃO 2: DADOS DO NETÃO ===== */
+.dados{background:linear-gradient(180deg,#050302,#0b0502 55%,#070301);}
+.dados-head{text-align:center;margin-bottom:80px;}
+.dados-tag{display:inline-block;padding:7px 18px;border:1px solid var(--gold);border-radius:99px;color:#ffad61;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.25em;text-transform:uppercase;margin-bottom:24px;background:rgba(255,106,0,.07);}
+.dados h2{font-family:'Playfair Display',serif;font-size:clamp(40px,6vw,80px);font-weight:900;letter-spacing:-.04em;line-height:1.02;}
+.dados h2 .gold-text{background:linear-gradient(110deg,#ffe6c6,#ff8a1f,#8b2b00);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.dados .lead{font-family:'Playfair Display',serif;font-style:italic;font-size:22px;color:#e8c6a6;margin-top:24px;max-width:700px;margin-left:auto;margin-right:auto;}
+
+.metrics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:60px 0 80px;}
+@media(max-width:980px){.metrics-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:560px){.metrics-grid{grid-template-columns:1fr;}}
+.metric{padding:36px 24px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,rgba(255,122,26,.055),rgba(255,255,255,.006));text-align:center;transition:.4s;box-shadow:inset 0 1px 0 rgba(255,176,92,.06);}
+.metric:hover{transform:translateY(-4px);border-color:rgba(255,122,26,.36);box-shadow:0 22px 60px rgba(0,0,0,.35),0 0 34px rgba(255,106,0,.08);}
+.metric .v{font-family:'Playfair Display',serif;font-size:54px;font-weight:900;letter-spacing:-.04em;line-height:1;color:var(--gold);background:linear-gradient(120deg,#ffe6c6,#ff7a1a,#7a2500);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.metric .l{font-size:12px;color:var(--mut);letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-top:14px;}
+.metric .d{font-size:13px;color:#d7bca1;margin-top:10px;line-height:1.45;}
+
+.timeline{display:flex;flex-direction:column;gap:24px;max-width:880px;margin:0 auto;}
+.timeline-item{display:grid;grid-template-columns:90px 1fr;gap:24px;align-items:flex-start;padding:22px 0;border-bottom:1px solid var(--line);}
+.timeline-item:last-child{border-bottom:0;}
+.timeline-year{font-family:'Playfair Display',serif;font-size:32px;font-weight:900;color:var(--gold);letter-spacing:-.03em;line-height:1;}
+.timeline-event b{display:block;color:var(--paper);font-size:17px;font-weight:700;margin-bottom:6px;}
+.timeline-event p{color:var(--mut);font-size:14px;line-height:1.55;}
+.visual-triptych{display:grid;grid-template-columns:1.1fr .9fr 1fr;gap:16px;margin:0 0 70px;}
+.visual-triptych .image-frame{min-height:260px;}
+.visual-triptych .image-frame:nth-child(2){min-height:320px;}
+@media(max-width:900px){.visual-triptych{grid-template-columns:1fr;}.visual-triptych .image-frame,.visual-triptych .image-frame:nth-child(2){min-height:240px;}}
+.pain-head{text-align:center;margin:85px auto 26px;max-width:780px;}
+.pain-head h3{font-family:'Playfair Display',serif;font-size:clamp(30px,4vw,54px);font-weight:900;letter-spacing:-.04em;line-height:1.05;margin-bottom:14px;}
+.pain-head h3 span{color:var(--gold);}
+.pain-head p{font-family:'Playfair Display',serif;font-style:italic;font-size:18px;color:#e8c6a6;}
+.pain-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:28px;}
+.pain-grid .image-frame{min-height:230px;border-radius:14px;}
+@media(max-width:1120px){.pain-grid{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:680px){.pain-grid{grid-template-columns:1fr;}.pain-grid .image-frame{min-height:260px;}}
+
+/* ===== SEÇÃO: MOVIMENTO NAS LOJAS ===== */
+.store-motion{min-height:150vh;padding:80px 32px 140px;background:radial-gradient(circle at 50% 24%,rgba(255,106,0,.13),transparent 42%),linear-gradient(180deg,#070301,#050302 58%,#090401);align-items:flex-start;}
+.store-scroll{width:100%;max-width:1180px;margin:0 auto;position:sticky;top:72px;perspective:1000px;z-index:2;}
+.store-title{text-align:center;max-width:900px;margin:0 auto 42px;transform:translateY(var(--store-title-y,0));opacity:var(--store-title-opacity,1);transition:opacity .12s linear;}
+.store-kicker{display:inline-block;margin-bottom:16px;padding:7px 16px;border:1px solid rgba(255,122,26,.34);border-radius:999px;background:rgba(255,106,0,.08);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:#ffad61;}
+.store-title h2{font-family:'Playfair Display',serif;font-size:clamp(38px,6vw,82px);font-weight:900;letter-spacing:-.045em;line-height:1.02;margin-bottom:20px;}
+.store-title h2 span{background:linear-gradient(120deg,#ffe6c6,#ff7a1a,#702200);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.store-title p{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(18px,2vw,24px);line-height:1.45;color:#e8c6a6;max-width:780px;margin:0 auto;}
+.store-device{max-width:1050px;height:clamp(360px,54vw,620px);margin:0 auto;border:4px solid #3a1b0b;border-radius:30px;padding:10px;background:linear-gradient(180deg,#251006,#090401);box-shadow:0 0 rgba(0,0,0,.3),0 9px 20px rgba(0,0,0,.29),0 37px 37px rgba(0,0,0,.26),0 84px 50px rgba(0,0,0,.15),0 149px 60px rgba(0,0,0,.04);transform:rotateX(var(--store-rotate,20deg)) scale(var(--store-scale,1.05));transform-origin:center top;transition:transform .08s linear;}
+.store-screen{position:relative;width:100%;height:100%;overflow:hidden;border-radius:22px;background:#090401;}
+.store-screen img{width:100%;height:100%;object-fit:cover;filter:saturate(1.08) contrast(1.04);}
+.store-screen::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,3,2,.76),rgba(5,3,2,.18) 48%,rgba(5,3,2,.55)),radial-gradient(circle at 72% 28%,rgba(255,106,0,.18),transparent 38%);z-index:1;pointer-events:none;}
+.store-screen::after{content:"";position:absolute;inset:18px;border:1px solid rgba(255,122,26,.22);border-radius:16px;z-index:2;pointer-events:none;}
+.store-overlay{position:absolute;inset:auto 28px 28px 28px;z-index:3;display:grid;grid-template-columns:1.2fr repeat(3,1fr);gap:14px;align-items:end;}
+.store-overlay-main{align-self:stretch;padding:22px;border:1px solid rgba(255,122,26,.24);border-radius:14px;background:rgba(5,3,2,.62);backdrop-filter:blur(10px);}
+.store-overlay-main b{display:block;font-family:'Playfair Display',serif;font-size:clamp(24px,3vw,42px);letter-spacing:-.04em;line-height:1.05;color:#fff4e4;margin-bottom:10px;}
+.store-overlay-main span{display:block;color:#d8bea3;font-size:14px;line-height:1.55;}
+.store-region{padding:16px;border:1px solid rgba(255,122,26,.2);border-radius:14px;background:rgba(5,3,2,.58);backdrop-filter:blur(10px);}
+.store-region strong{display:block;font-family:'Playfair Display',serif;font-size:30px;line-height:1;color:#ff7a1a;margin-bottom:7px;}
+.store-region span{display:block;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#ffd6a5;}
+@media(max-width:780px){
+  .store-motion{min-height:128vh;padding:70px 20px 110px;}
+  .store-scroll{top:54px;}
+  .store-device{height:420px;border-width:3px;border-radius:24px;padding:8px;}
+  .store-overlay{grid-template-columns:1fr;inset:auto 16px 16px 16px;}
+  .store-region{display:none;}
+}
+
+/* ===== SEÇÕES DE PROJETO ===== */
+.proj{background:linear-gradient(180deg,#050302,#070301);}
+.proj:nth-child(odd){background:linear-gradient(180deg,#090401,#050302);}
+.proj-head{display:flex;align-items:flex-start;gap:30px;margin-bottom:50px;}
+@media(max-width:780px){.proj-head{flex-direction:column;gap:18px;}}
+.proj-num{font-family:'Playfair Display',serif;font-size:120px;line-height:.85;font-weight:900;letter-spacing:-.05em;background:linear-gradient(120deg,#ffe6c6,#ff7a1a,#702200);-webkit-background-clip:text;background-clip:text;color:transparent;flex-shrink:0;min-width:140px;}
+.proj-info{flex:1;padding-top:18px;}
+.proj-tag{display:inline-block;padding:5px 12px;background:rgba(255,106,0,.09);border:1px solid rgba(255,122,26,.34);border-radius:6px;color:#ffad61;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;margin-bottom:16px;}
+.proj-info h3{font-family:'Playfair Display',serif;font-size:clamp(32px,4.5vw,58px);font-weight:900;letter-spacing:-.04em;line-height:1.05;margin-bottom:18px;}
+.proj-info h3 .accent{color:var(--gold);}
+.proj-info .pitch{font-family:'Playfair Display',serif;font-style:italic;font-size:20px;color:#e8c6a6;line-height:1.5;}
+.project-visual{height:430px;margin:-16px 0 34px;}
+.project-visual.tall{height:520px;}
+@media(max-width:780px){.project-visual,.project-visual.tall{height:320px;margin:0 0 24px;}}
+
+.proj-body{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:30px;}
+@media(max-width:780px){.proj-body{grid-template-columns:1fr;}}
+.proj-card{padding:30px 28px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,rgba(255,122,26,.045),rgba(255,255,255,.006));box-shadow:inset 0 1px 0 rgba(255,176,92,.05);}
+.proj-card h4{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:.18em;text-transform:uppercase;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:10px;}
+.proj-card h4::before{content:"";width:18px;height:2px;background:var(--gold);}
+.proj-card ul{list-style:none;}
+.proj-card li{padding:10px 0 10px 26px;position:relative;font-size:14.5px;color:#ddc3aa;line-height:1.6;border-bottom:1px solid rgba(255,122,26,.07);}
+.proj-card li:last-child{border-bottom:0;}
+.proj-card li::before{content:"→";position:absolute;left:0;color:var(--gold);font-weight:900;}
+.proj-card.high{background:linear-gradient(180deg,rgba(255,106,0,.09),rgba(255,106,0,.018));border-color:rgba(255,122,26,.36);box-shadow:inset 0 1px 0 rgba(255,176,92,.08),0 22px 70px rgba(0,0,0,.22);}
+.proj-card.high p{font-family:'Playfair Display',serif;font-style:italic;font-size:17px;color:#edd1b4;line-height:1.55;}
+
+/* ===== BRAINSTORM ===== */
+.brain{background:linear-gradient(180deg,#050302,#0b0502);}
+.brain-head{text-align:center;margin-bottom:60px;}
+.brain-head h2{font-family:'Playfair Display',serif;font-size:clamp(36px,5vw,64px);font-weight:900;letter-spacing:-.04em;line-height:1.05;margin-bottom:18px;}
+.brain-head h2 span{color:var(--gold);}
+.brain-head p{font-family:'Playfair Display',serif;font-style:italic;font-size:18px;color:#e8c6a6;max-width:680px;margin:0 auto;}
+.brain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:1100px;margin:0 auto;}
+@media(max-width:900px){.brain-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:560px){.brain-grid{grid-template-columns:1fr;}}
+.brain-card{padding:30px 24px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(180deg,rgba(255,122,26,.045),rgba(255,255,255,.006));transition:.3s;cursor:default;}
+.brain-card:hover{border-color:var(--gold);transform:translateY(-4px);}
+.brain-card .ic{font-size:28px;margin-bottom:14px;}
+.brain-card h4{font-family:'Playfair Display',serif;font-size:18px;font-weight:800;color:var(--paper);margin-bottom:8px;letter-spacing:-.02em;}
+.brain-card p{font-size:13px;color:#d8bea3;line-height:1.5;}
+
+/* ===== FECHAMENTO ===== */
+.fechar{background:radial-gradient(ellipse at center,rgba(255,106,0,.16),transparent 68%),linear-gradient(180deg,#070301,#050302);min-height:90vh;}
+.fechar-content{text-align:center;max-width:820px;margin:0 auto;}
+.fechar h2{font-family:'Playfair Display',serif;font-size:clamp(40px,6vw,84px);font-weight:900;letter-spacing:-.04em;line-height:1;margin-bottom:30px;}
+.fechar h2 span{background:linear-gradient(120deg,#ffe6c6,#ff7a1a,#702200);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.fechar p{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(18px,2vw,24px);color:#e8c6a6;line-height:1.5;margin-bottom:24px;}
+.fechar .signature{margin:50px 0 40px;}
+.fechar .signature b{display:block;font-family:'Playfair Display',serif;font-size:28px;color:var(--gold);font-weight:900;margin-bottom:6px;}
+.fechar .signature span{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mut);letter-spacing:.16em;text-transform:uppercase;}
+.fechar-cta{display:inline-flex;align-items:center;gap:14px;padding:22px 42px;background:linear-gradient(135deg,#ffb05c,#ff6a00,#b63a00);color:#160600;font-weight:900;border-radius:99px;text-decoration:none;font-size:18px;letter-spacing:.02em;transition:.3s;box-shadow:0 20px 60px rgba(255,106,0,.36);}
+.fechar-cta:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 30px 70px rgba(255,106,0,.56);}
+.fechar-cta svg{width:24px;height:24px;}
+.fechar .alt-cta{display:block;margin-top:20px;font-size:14px;color:var(--mut);}
+.fechar .alt-cta a{color:var(--gold);text-decoration:none;font-weight:600;}
+
+/* REVEAL ANIMATION */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 1s cubic-bezier(.16,1,.3,1),transform 1s cubic-bezier(.16,1,.3,1);}
+.reveal.show{opacity:1;transform:translateY(0);}
+.reveal-left{opacity:0;transform:translateX(-40px);transition:opacity 1s cubic-bezier(.16,1,.3,1),transform 1s cubic-bezier(.16,1,.3,1);}
+.reveal-left.show{opacity:1;transform:translateX(0);}
+.reveal-scale{opacity:0;transform:scale(.94);transition:opacity 1s cubic-bezier(.16,1,.3,1),transform 1s cubic-bezier(.16,1,.3,1);}
+.reveal-scale.show{opacity:1;transform:scale(1);}
+
+footer{padding:30px;text-align:center;color:var(--dim);font-size:11px;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;border-top:1px solid var(--line);}
+
+/* ===== LOGIN GATE ANTES DA LP ===== */
+body.auth-locked{overflow:hidden;}
+.login-gate{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 50% 15%,rgba(255,106,0,.18),transparent 34%),linear-gradient(180deg,#080301,#020100);transition:opacity .55s ease,visibility .55s ease;}
+.login-gate.hide{opacity:0;visibility:hidden;pointer-events:none;}
+.login-gate::before{content:"";position:absolute;inset:0;background-size:62px 62px;background-image:linear-gradient(to right,rgba(255,122,26,.055) 1px,transparent 1px),linear-gradient(to bottom,rgba(255,122,26,.055) 1px,transparent 1px);mask-image:radial-gradient(ellipse at center,black 0%,transparent 72%);-webkit-mask-image:radial-gradient(ellipse at center,black 0%,transparent 72%);}
+.login-gate-card{position:relative;width:min(440px,100%);border:1px solid rgba(255,122,26,.22);background:linear-gradient(145deg,rgba(28,11,3,.96),rgba(5,3,2,.98));box-shadow:0 45px 120px rgba(0,0,0,.78),inset 0 1px 1px rgba(255,255,255,.12),inset 0 -2px 4px rgba(0,0,0,.75);padding:34px 30px;border-radius:6px;}
+.login-gate-mark{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:#ffad61;margin-bottom:22px;}
+.login-gate-card h2{font-family:'Playfair Display',serif;font-size:clamp(38px,8vw,58px);line-height:.96;letter-spacing:-.05em;margin-bottom:12px;}
+.login-gate-card h2 span{color:var(--gold);}
+.login-gate-card p{font-family:'Playfair Display',serif;font-style:italic;color:#e8c6a6;font-size:18px;line-height:1.45;margin-bottom:26px;}
+.login-gate-form{display:grid;gap:12px;}
+.login-gate-form label{display:grid;gap:7px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:#d8bea3;}
+.login-gate-form input{height:50px;width:100%;padding:0 14px;background:#0b0b0d;border:1px solid rgba(255,255,255,.1);color:#fff4e4;font:800 15px Archivo,system-ui,sans-serif;letter-spacing:.08em;border-radius:4px;outline:none;box-shadow:inset 0 2px 8px rgba(0,0,0,.55);}
+.login-gate-form input:focus{border-color:rgba(255,122,26,.55);box-shadow:0 0 0 3px rgba(255,106,0,.12),inset 0 2px 8px rgba(0,0,0,.55);}
+.login-gate-btn{height:54px;margin-top:8px;border:0;border-radius:4px;background:linear-gradient(180deg,#fff,#d9d9d9);color:#0b0b0d;font:900 13px Archivo,system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;box-shadow:0 0 0 1px rgba(0,0,0,.08),0 18px 32px -14px rgba(0,0,0,.65),inset 0 1px 1px rgba(255,255,255,1),inset 0 -3px 6px rgba(0,0,0,.08);}
+.login-gate-error{min-height:18px;margin-top:12px;color:#ff8a66;font-size:12px;font-weight:800;letter-spacing:.06em;}
+.login-gate-card.shake{animation:gateShake .42s cubic-bezier(.36,.07,.19,.97) both;}
+@keyframes gateShake{10%,90%{transform:translateX(-1px)}20%,80%{transform:translateX(2px)}30%,50%,70%{transform:translateX(-4px)}40%,60%{transform:translateX(4px)}}
+@media(max-width:520px){.login-gate{padding:16px}.login-gate-card{padding:28px 20px}.login-gate-form input,.login-gate-btn{height:50px}.login-gate-card p{font-size:16px}}
+
+/* ===== HARDWARE / MENOS "CARD DE IA" ===== */
+.image-frame,.metric,.proj-card,.brain-card,.terminal,.store-overlay-main,.store-region{border-radius:5px;}
+.dados-tag,.proj-tag,.store-kicker,.nav-float{border-radius:4px;}
+.cta-go,.fechar-cta{border-radius:8px;}
+.metric,.proj-card,.brain-card,.store-overlay-main,.store-region{
+  background:linear-gradient(145deg,rgba(28,11,3,.92),rgba(5,3,2,.94));
+  border-color:rgba(255,122,26,.18);
+  box-shadow:0 28px 80px -32px rgba(0,0,0,.95),inset 0 1px 1px rgba(255,255,255,.11),inset 0 -2px 4px rgba(0,0,0,.75);
+}
+.cta-go,.fechar-cta{
+  box-shadow:0 0 0 1px rgba(255,255,255,.08),0 2px 4px rgba(0,0,0,.55),0 14px 30px -8px rgba(255,106,0,.55),inset 0 1px 1px rgba(255,255,255,.22),inset 0 -3px 6px rgba(80,20,0,.55);
+}
+.cta-go:active,.fechar-cta:active{transform:translateY(1px);box-shadow:0 0 0 1px rgba(255,255,255,.05),inset 0 3px 8px rgba(0,0,0,.75);}
+
+/* ===== SEÇÃO CELULAR / LOGIN ===== */
+.mobile-system{background:linear-gradient(180deg,#070301,#020100);overflow:hidden;}
+.mobile-system::before{content:"";position:absolute;inset:0;background-size:60px 60px;background-image:linear-gradient(to right,rgba(255,122,26,.045) 1px,transparent 1px),linear-gradient(to bottom,rgba(255,122,26,.045) 1px,transparent 1px);mask-image:radial-gradient(ellipse at center,black 0%,transparent 72%);-webkit-mask-image:radial-gradient(ellipse at center,black 0%,transparent 72%);}
+.mobile-system::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 72% 38%,rgba(255,106,0,.13),transparent 34%),linear-gradient(180deg,rgba(3,2,1,.1),rgba(3,2,1,.86));pointer-events:none;}
+.mobile-layout{position:relative;z-index:2;display:grid;grid-template-columns:.9fr 1.1fr;gap:42px;align-items:center;}
+.mobile-copy .proj-tag{margin-bottom:22px;}
+.mobile-copy h3{font-family:'Playfair Display',serif;font-size:clamp(38px,5vw,72px);font-weight:900;letter-spacing:-.045em;line-height:1.02;margin-bottom:22px;}
+.mobile-copy h3 span{color:var(--gold);}
+.mobile-copy .pitch{font-family:'Playfair Display',serif;font-size:clamp(18px,2vw,24px);font-style:italic;color:#e8c6a6;line-height:1.45;}
+.hardware-stage{position:relative;min-height:690px;display:grid;grid-template-columns:1fr 330px;gap:26px;align-items:center;justify-items:center;perspective:1500px;padding:42px 0 42px 28px;}
+.premium-depth-panel{position:absolute;inset:34px 0;border:1px solid rgba(255,255,255,.05);background:linear-gradient(145deg,#162c6d 0%,#0a101d 100%);box-shadow:0 40px 100px -20px rgba(0,0,0,.9),0 20px 40px -20px rgba(0,0,0,.8),inset 0 1px 2px rgba(255,255,255,.2),inset 0 -2px 4px rgba(0,0,0,.8);}
+.card-sheen{position:absolute;inset:0;pointer-events:none;background:radial-gradient(800px circle at 62% 30%,rgba(255,255,255,.08) 0%,transparent 42%);mix-blend-mode:screen;}
+.iphone-bezel{position:relative;width:280px;height:580px;border-radius:48px;background:#111;box-shadow:inset 0 0 0 2px #52525b,inset 0 0 0 7px #000,0 40px 80px -15px rgba(0,0,0,.9),0 15px 25px -5px rgba(0,0,0,.7);transform:rotateY(-12deg) rotateX(6deg);transform-style:preserve-3d;z-index:4;grid-column:1;}
+.hardware-btn{position:absolute;width:3px;background:linear-gradient(90deg,#404040 0%,#171717 100%);box-shadow:-2px 0 5px rgba(0,0,0,.8),inset -1px 0 1px rgba(255,255,255,.15),inset 1px 0 2px rgba(0,0,0,.8);}
+.hardware-btn.left{left:-3px;border-radius:4px 0 0 4px;}
+.hardware-btn.right{right:-3px;border-radius:0 4px 4px 0;transform:scaleX(-1);}
+.phone-screen{position:absolute;inset:7px;background:#050914;border-radius:40px;overflow:hidden;color:white;box-shadow:inset 0 0 15px rgba(0,0,0,1);}
+.phone-screen::before{content:"";position:absolute;inset:0;background:linear-gradient(110deg,rgba(255,255,255,.08) 0%,rgba(255,255,255,0) 45%);z-index:5;pointer-events:none;}
+.dynamic-island{position:absolute;top:5px;left:50%;transform:translateX(-50%);width:100px;height:28px;background:#000;border-radius:999px;z-index:6;box-shadow:inset 0 -1px 2px rgba(255,255,255,.1);}
+.phone-app{height:100%;padding:48px 18px 22px;display:flex;flex-direction:column;gap:14px;background:radial-gradient(circle at 50% 0,rgba(255,106,0,.16),transparent 42%),#050914;}
+.phone-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.phone-top span{font-family:'JetBrains Mono',monospace;font-size:9px;color:#9ca3af;letter-spacing:.18em;text-transform:uppercase;}
+.phone-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#ffb05c,#ff6a00);color:#150600;display:flex;align-items:center;justify-content:center;font-weight:900;}
+.widget-depth{background:linear-gradient(180deg,rgba(255,255,255,.045) 0%,rgba(255,255,255,.012) 100%);box-shadow:0 10px 20px rgba(0,0,0,.3),inset 0 1px 1px rgba(255,255,255,.05),inset 0 -1px 1px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.04);border-radius:16px;padding:14px;}
+.login-panel{position:relative;grid-column:2;align-self:end;width:100%;max-width:330px;z-index:5;padding:22px;background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.015));backdrop-filter:blur(24px);box-shadow:0 0 0 1px rgba(255,255,255,.1),0 25px 50px -12px rgba(0,0,0,.8),inset 0 1px 1px rgba(255,255,255,.18),inset 0 -1px 1px rgba(0,0,0,.5);}
+.login-panel h4{font-family:'Playfair Display',serif;font-size:28px;letter-spacing:-.03em;margin-bottom:6px;}
+.login-panel p{font-size:13px;color:#d8bea3;margin-bottom:18px;}
+.login-field{display:block;width:100%;height:44px;margin:10px 0;padding:0 12px;background:#0b0b0d;border:1px solid rgba(255,255,255,.08);color:#fff;font:600 13px Archivo,system-ui,sans-serif;border-radius:4px;}
+.login-button{display:flex;align-items:center;justify-content:center;width:100%;height:46px;margin-top:12px;text-decoration:none;background:linear-gradient(180deg,#fff,#d8d8d8);color:#0b0b0d;font-weight:900;border-radius:4px;box-shadow:0 0 0 1px rgba(0,0,0,.08),0 12px 24px -8px rgba(0,0,0,.5),inset 0 1px 1px rgba(255,255,255,1),inset 0 -3px 6px rgba(0,0,0,.08);}
+.floating-badge{position:absolute;left:0;top:92px;z-index:5;display:flex;gap:12px;align-items:center;padding:15px 18px;background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.015));backdrop-filter:blur(24px);box-shadow:0 0 0 1px rgba(255,255,255,.1),0 25px 50px -12px rgba(0,0,0,.8),inset 0 1px 1px rgba(255,255,255,.18),inset 0 -1px 1px rgba(0,0,0,.5);}
+.floating-badge b{display:block;font-size:13px}.floating-badge span{font-size:11px;color:#d8bea3}
+@media(max-width:900px){.mobile-layout{grid-template-columns:1fr}.hardware-stage{min-height:auto;grid-template-columns:1fr;padding:76px 0 24px;gap:18px}.login-panel{grid-column:1;align-self:center;width:min(360px,92vw)}.floating-badge{left:50%;transform:translateX(-50%);top:18px}.iphone-bezel{grid-column:1;transform:none}}
+
+@media(max-width:600px){
+  section{padding:80px 20px;}
+  .proj-num{font-size:80px;min-width:auto;}
+  .proj-head{margin-bottom:30px;}
+  .terminal{padding:24px 18px;}
+  .terminal-body{font-size:14px;}
+  .metric .v{font-size:42px;}
+}
+
+/* ===== APP-GRADE RESPONSIVO · 100% CELULAR ===== */
+html,body{width:100%;max-width:100%;overflow-x:hidden;}
+section,.container,.proj-info,.mobile-copy,.terminal,.proj-card,.brain-card,.metric{min-width:0;}
+a,button,.cta-go,.fechar-cta,.login-button{touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
+
+@media(max-width:820px){
+  section{min-height:auto;padding:92px 22px;}
+  .container{max-width:100%;}
+  .nav-float{top:10px;width:calc(100vw - 24px);justify-content:center;padding:10px 12px;font-size:10px;letter-spacing:.12em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .cover{min-height:100svh;padding:0 18px;}
+  .cover-content{padding:0;max-width:100%;}
+  .cover h1{line-height:1;}
+  .frase-1{font-size:clamp(38px,13vw,64px);margin-bottom:20px;}
+  .frase-2{font-size:clamp(21px,7vw,32px);margin-bottom:18px;}
+  .frase-3{font-size:clamp(15px,4.3vw,19px);max-width:92vw;margin-bottom:28px;}
+  .scroll-hint{bottom:18px;font-size:9px;letter-spacing:.18em;}
+  .terminal{width:100%;max-width:100%;padding:26px 18px;}
+  .terminal-head{gap:10px;flex-wrap:wrap;}
+  .terminal-head .label{width:100%;font-size:9px;margin-top:8px;}
+  .terminal-body{font-size:15px;line-height:1.75;word-break:normal;overflow-wrap:anywhere;}
+  .cta-go{width:100%;justify-content:center;min-height:48px;text-align:center;padding:14px 18px;}
+  .dados-head{margin-bottom:44px;}
+  .dados h2{font-size:clamp(34px,10.5vw,56px);line-height:1.02;}
+  .dados .lead{font-size:clamp(17px,5vw,21px);line-height:1.45;}
+  .metrics-grid{gap:12px;margin:34px 0 54px;}
+  .metric{padding:28px 18px;}
+  .timeline-item{grid-template-columns:1fr;gap:10px;padding:20px 0;}
+  .timeline-year{font-size:30px;}
+  .pain-head{margin:58px auto 22px;}
+  .pain-grid{gap:14px;}
+  .pain-grid .image-frame{min-height:250px;}
+  .proj-head{gap:12px;margin-bottom:32px;}
+  .proj-num{font-size:clamp(58px,19vw,92px);line-height:.9;}
+  .proj-info{padding-top:0;}
+  .proj-info h3{font-size:clamp(31px,9.6vw,48px);}
+  .proj-info .pitch{font-size:clamp(17px,5vw,21px);line-height:1.48;}
+  .proj-tag,.dados-tag,.store-kicker{max-width:100%;white-space:normal;line-height:1.35;letter-spacing:.16em;}
+  .project-visual,.project-visual.tall{height:clamp(260px,74vw,360px);margin:0 0 24px;}
+  .proj-body{gap:16px;margin-top:18px;}
+  .proj-card{padding:24px 18px;}
+  .proj-card li{font-size:14px;padding-left:22px;}
+  .brain-head{margin-bottom:34px;}
+  .brain-card{padding:24px 18px;}
+  .fechar{min-height:auto;}
+  .fechar-content{max-width:100%;}
+  .fechar .signature{margin:34px 0 30px;}
+  .fechar-cta{width:100%;max-width:360px;justify-content:center;min-height:56px;padding:18px 22px;font-size:16px;}
+}
+
+@media(max-width:780px){
+  .store-motion{min-height:auto;padding:76px 18px 90px;}
+  .store-scroll{position:relative;top:auto;perspective:none;}
+  .store-title{margin-bottom:26px;transform:none!important;opacity:1!important;}
+  .store-title h2{font-size:clamp(34px,10vw,54px);}
+  .store-title p{font-size:clamp(17px,5vw,21px);}
+  .store-device{width:100%;height:clamp(360px,108vw,500px);border-radius:16px;border-width:2px;padding:6px;transform:none!important;}
+  .store-screen{border-radius:12px;}
+  .store-screen::after{inset:10px;border-radius:10px;}
+  .store-overlay{inset:auto 10px 10px 10px;gap:10px;}
+  .store-overlay-main{padding:16px 14px;border-radius:5px;}
+  .store-overlay-main b{font-size:clamp(24px,8vw,34px);}
+  .store-overlay-main span{font-size:13px;}
+}
+
+@media(max-width:520px){
+  section{padding:78px 16px;}
+  .nav-float span{max-width:calc(100vw - 70px);overflow:hidden;text-overflow:ellipsis;}
+  .cover .hero-photo{background-position:center top;}
+  .image-caption{left:12px;right:12px;bottom:12px;font-size:9px;letter-spacing:.12em;}
+  .image-frame{border-radius:4px;}
+  .mobile-layout{gap:24px;}
+  .mobile-copy h3{font-size:clamp(34px,11vw,48px);}
+  .mobile-copy .pitch{font-size:clamp(17px,5.2vw,21px);}
+  .hardware-stage{min-height:auto;display:grid;grid-template-columns:1fr;gap:18px;padding:68px 0 22px;perspective:none;justify-items:center;}
+  .premium-depth-panel{inset:50px 0 108px;border-radius:6px;}
+  .floating-badge{top:10px;left:50%;width:min(340px,92vw);transform:translateX(-50%);padding:13px 14px;border-radius:5px;}
+  .iphone-bezel{width:min(260px,78vw);height:auto;aspect-ratio:280/580;border-radius:42px;transform:none;}
+  .phone-screen{inset:7px;border-radius:35px;}
+  .dynamic-island{width:88px;height:24px;}
+  .phone-app{padding:42px 15px 18px;gap:11px;}
+  .phone-top h4{font-size:18px;}
+  .widget-depth{padding:12px;border-radius:12px;}
+  .widget-depth p{font-size:12px!important;line-height:1.45;}
+  .login-panel{position:relative;right:auto;bottom:auto;transform:none;width:min(340px,92vw);padding:18px;margin-top:4px;border-radius:5px;grid-column:1;}
+  .login-panel h4{font-size:25px;}
+  .login-field,.login-button{height:48px;font-size:14px;}
+  .hardware-btn{display:none;}
+  .store-device{height:clamp(390px,118vw,520px);}
+  .store-screen img{object-position:center;}
+  .metrics-grid{grid-template-columns:1fr;}
+  .metric .v{font-size:clamp(36px,12vw,48px);}
+  .visual-triptych{gap:12px;margin-bottom:46px;}
+  .visual-triptych .image-frame,.visual-triptych .image-frame:nth-child(2){min-height:220px;}
+  .project-visual,.project-visual.tall{height:clamp(240px,72vw,320px);}
+  .brain-grid{gap:12px;}
+  footer{padding:24px 16px;font-size:9px;line-height:1.5;}
+}
+
+@media(max-width:380px){
+  section{padding-left:14px;padding-right:14px;}
+  .frase-1{font-size:36px;}
+  .frase-2{font-size:21px;}
+  .terminal-body{font-size:14px;}
+  .proj-card{padding:22px 15px;}
+  .store-device{height:455px;}
+  .iphone-bezel{width:244px;}
+  .floating-badge,.login-panel{width:94vw;}
+}
+
+@media(max-height:620px) and (orientation:landscape){
+  .cover{min-height:120vh;}
+  .nav-float{display:none;}
+  section{padding-top:62px;padding-bottom:62px;}
+  .hardware-stage{min-height:520px;}
+}
+</style>
+</head>
+<body class="auth-locked">
+
+<div class="login-gate" id="loginGate" aria-modal="true" role="dialog" aria-labelledby="loginTitle">
+  <div class="login-gate-card" id="loginGateCard">
+    <div class="login-gate-mark">ACESSO PRIVADO · NETÃO</div>
+    <h2 id="loginTitle">Salve salve,<br><span>entra aqui.</span></h2>
+    <p>Essa apresentação é privada. Coloca o nome e a senha para abrir a LP.</p>
+    <form class="login-gate-form" id="loginGateForm">
+      <label>Nome
+        <input id="loginName" autocomplete="username" value="NETAO" inputmode="text">
+      </label>
+      <label>Senha
+        <input id="loginPass" autocomplete="current-password" type="password" value="SALVESALVE">
+      </label>
+      <button class="login-gate-btn" type="submit">ABRIR LP</button>
+      <div class="login-gate-error" id="loginGateError" aria-live="polite"></div>
+    </form>
+  </div>
+</div>
+
+<div class="progress" id="progress"></div>
+
+<div class="nav-float">
+  <span class="dot"></span>
+  <span>NETÃO × <b>BRUNO KVETIK</b></span>
+</div>
+
+<!-- ===== COVER: IMAGEM + FRASES SEQUENCIAIS ===== -->
+<section class="cover" id="cover">
+  <div class="image-bg">
+    <div class="hero-photo"></div>
+  </div>
+  <div class="cover-content">
+    <h1>
+      <span class="frase frase-1" id="f1">Salve salve, Netão.</span>
+      <span class="frase frase-2" id="f2">Olha o que eu pensei pra você.</span>
+    </h1>
+    <p class="frase frase-3" id="f3">Se fizer sentido, podemos bater um papo — contigo ou com alguém do seu time.</p>
+    <div class="frase frase-4" id="f4">— BRUNO KVETIK</div>
+  </div>
+  <div class="scroll-hint">↓ ROLE PARA COMEÇAR</div>
+</section>
+
+<!-- ===== SEÇÃO 1: IA ESCREVENDO ===== -->
+<section class="ia-write" id="s1">
+  <div class="container">
+    <div class="terminal reveal-scale">
+      <div class="terminal-head">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <span class="ia-icon">⚡ IA · BOLTLOCK</span>
+        <span class="label">CARTA ABERTA · NETÃO</span>
+      </div>
+      <div class="terminal-body" id="ia-text">
+        <p id="t1"></p>
+        <p id="t2"></p>
+        <p id="t3"></p>
+        <a class="cta-go" id="cta-go" href="#s2">Vamos pra apresentação ↓</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SEÇÃO 2: DADOS DO NETÃO ===== -->
+<section class="dados" id="s2">
+  <div class="container">
+    <div class="dados-head reveal">
+      <span class="dados-tag">DE ONDE EU PARTI</span>
+      <h2>Esses foram os <span class="gold-text">números públicos</span><br>que encontrei. Foi daqui que comecei.</h2>
+      <p class="lead">Se algum tiver desatualizado, me corrige depois — usei eles como ponto de partida pra cada um dos projetos que vêm a seguir.</p>
+    </div>
+
+    <div class="metrics-grid reveal">
+      <div class="metric"><div class="v">R$ 300M</div><div class="l">Faturamento 2023+</div><div class="d">Auto-financiado · zero investidor externo</div></div>
+      <div class="metric"><div class="v">51</div><div class="l">Açougues</div><div class="d">Em 12 estados · 80 vendidas pra 2023</div></div>
+      <div class="metric"><div class="v">27</div><div class="l">Bom Beef Burgers</div><div class="d">R$ 500k/mês por unidade · margem 20-25%</div></div>
+      <div class="metric"><div class="v">3.2M</div><div class="l">Audiência total</div><div class="d">1.7M IG · 1.33M YT · 200k TikTok</div></div>
+    </div>
+
+    <div class="visual-triptych reveal">
+      <figure class="image-frame"><img src="assets/img/web/16-fachada-bom-beef-burgers-wide.jpg" alt="Fachada Bom Beef Burgers"><figcaption class="image-caption">Marca viva na rua</figcaption></figure>
+      <figure class="image-frame"><img src="assets/img/web/06-logo-bom-beef-burgers.jpg" alt="Logo Bom Beef Burgers"><figcaption class="image-caption">Comunidade reconhece o selo</figcaption></figure>
+      <figure class="image-frame"><img src="assets/img/web/17-mapa-bom-beef-brasil-wide.jpg" alt="Mapa de expansão Bom Beef"><figcaption class="image-caption">51 pontos pedindo sistema</figcaption></figure>
+    </div>
+
+    <div class="timeline reveal">
+      <div class="timeline-item">
+        <div class="timeline-year">2004</div>
+        <div class="timeline-event"><b>18 anos · Primeira hamburgueria em Santos</b><p>Fechou em 45 dias antes do alvará. "Não chegamos nem a ter alvará, quebrou antes." — A escola começou aí.</p></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2013</div>
+        <div class="timeline-event"><b>Comprou o açougue (Bom Beef nasce)</b><p>1º mês: R$ 17k → R$ 118k de faturamento. 7× em 30 dias. A virada do jogo.</p></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2014</div>
+        <div class="timeline-event"><b>Canal YouTube · construiu autoridade antes de vender</b><p>10 anos de conteúdo até virar 1.33M de inscritos. Estratégia de longo prazo que poucos têm coragem.</p></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2021</div>
+        <div class="timeline-event"><b>Primeira Bom Beef Burgers</b><p>O canal abriu o caminho. O conteúdo virou demanda. Demanda virou loja.</p></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2022-2025</div>
+        <div class="timeline-event"><b>Expansão acelerada · Parrilla Bom Beef · franchising</b><p>3 verticais que se complementam (açougue → hamburgueria → parrilla). R$ 300M no horizonte.</p></div>
+      </div>
+    </div>
+
+    <div class="pain-head reveal">
+      <h3>A escala fica linda por fora.<br><span>Mas pesa no balcão.</span></h3>
+      <p>É aqui que automação deixa de ser “tecnologia” e vira alívio operacional real.</p>
+    </div>
+    <div class="pain-grid reveal">
+      <figure class="image-frame"><img src="assets/img/web/01-dor-produto-vencido.jpg" alt="Produto vencido no balcão"><figcaption class="image-caption">Produto parado</figcaption></figure>
+      <figure class="image-frame"><img src="assets/img/web/02-dor-caos-estoque.jpg" alt="Caos de estoque no açougue"><figcaption class="image-caption">Estoque sem comando</figcaption></figure>
+      <figure class="image-frame"><img src="assets/img/web/03-dor-baixa-procura.jpg" alt="Baixa procura e excesso de mercadoria"><figcaption class="image-caption">Baixa procura</figcaption></figure>
+      <figure class="image-frame"><img src="assets/img/web/04-dor-margem-preco.jpg" alt="Margem e preço pressionados"><figcaption class="image-caption">Margem pressionada</figcaption></figure>
+      <figure class="image-frame"><img src="assets/img/web/05-dor-relatorios-perda.jpg" alt="Relatórios de perda operacional"><figcaption class="image-caption">Perda invisível</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MOVIMENTO NAS LOJAS ===== -->
+<section class="store-motion" id="movimento">
+  <div class="store-scroll" data-store-scroll>
+    <div class="store-title">
+      <span class="store-kicker">MOVIMENTO EM TODAS AS REGIÕES</span>
+      <h2>Uma rede viva precisa <span>parecer viva</span>.</h2>
+      <p>Quando uma loja acende, a marca inteira sente. A IA pode transformar cada região em um ponto de movimento: campanha local, conteúdo local, oferta local e dados voltando para o centro.</p>
+    </div>
+    <div class="store-device">
+      <div class="store-screen">
+        <img src="assets/img/web/16-fachada-bom-beef-burgers-wide.jpg" alt="Loja Bom Beef Burgers com movimento">
+        <div class="store-overlay">
+          <div class="store-overlay-main">
+            <b>Movimento coordenado, loja por loja.</b>
+            <span>O cliente vê a loja cheia. O franqueado recebe campanha pronta. O Netão enxerga onde a marca está acelerando em tempo real.</span>
+          </div>
+          <div class="store-region"><strong>SE</strong><span>Demanda premium</span></div>
+          <div class="store-region"><strong>NE</strong><span>Campanha local</span></div>
+          <div class="store-region"><strong>SUL</strong><span>Evento regional</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROJETO 1: EXPANSÃO DE FRANQUIAS ===== -->
+<section class="proj" id="p1">
+  <div class="container">
+    <div class="proj-head reveal-left">
+      <div class="proj-num">01</div>
+      <div class="proj-info">
+        <span class="proj-tag">PROJETO 1 · EXPANSÃO</span>
+        <h3>Expansão de franquias <span class="accent">end-to-end</span>.</h3>
+        <p class="pitch">"Você só aprova o franqueado final. A gente faz todo o resto — captação, qualificação, entrevista, validação financeira, ranking."</p>
+      </div>
+    </div>
+    <figure class="project-visual image-frame reveal"><img src="assets/img/web/25-mapa-expansao-bom-beef-novo.jpg" alt="Mapa de expansão de franquias Bom Beef"><figcaption class="image-caption">Expansão deixa de ser número e vira mapa de decisão</figcaption></figure>
+    <div class="proj-body">
+      <div class="proj-card high reveal">
+        <h4>O QUE ENTREGAMOS</h4>
+        <p>Um time digital completo de seleção de franqueado que separa o curioso do operador real. Você recebe só o top 5% qualificado, com dossiê, score financeiro e perfil cultural.</p>
+      </div>
+      <div class="proj-card reveal">
+        <h4>O FLUXO</h4>
+        <ul>
+          <li>Captação ativa (LinkedIn + IG + Google Ads)</li>
+          <li>IA qualifica capital, cidade, perfil operacional</li>
+          <li>Entrevista pré-gravada com roteiro inteligente</li>
+          <li>Validação de score / antecedentes</li>
+          <li>Dossiê pronto entregue no seu WhatsApp</li>
+          <li>Você bate o martelo — só a decisão final</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROJETO 2: AUTOMAÇÃO DE VENDAS ===== -->
+<section class="proj mobile-system" id="p2">
+  <div class="container">
+    <div class="proj-head reveal-left">
+      <div class="proj-num">02</div>
+      <div class="proj-info">
+        <span class="proj-tag">PROJETO 2 · RECORRÊNCIA</span>
+        <h3>Automação de vendas e <span class="accent">recorrência</span>.</h3>
+        <p class="pitch">"O cliente nunca mais é esquecido. Ele compra dry-aged uma vez, IA cuida dele pela vida toda — aniversário, churrasco do fim de semana, lançamento de corte novo."</p>
+      </div>
+    </div>
+    <div class="mobile-layout reveal">
+      <div class="mobile-copy">
+        <span class="proj-tag">CELULAR · WHATSAPP · LOGIN</span>
+        <h3>Uma cabine de comando <span>no bolso</span>.</h3>
+        <p class="pitch">A automação não aparece como “robô falando”. Ela aparece como fluxo: lead entra, cliente responde, venda aquece, recorrência dispara e o time enxerga tudo numa tela simples.</p>
+        <div class="proj-body" style="grid-template-columns:1fr;margin-top:28px">
+          <div class="proj-card high">
+            <h4>O QUE MUDA</h4>
+            <p>O cliente vê atendimento rápido. O franqueado vê próximos passos. O Netão vê a operação sem depender de print, planilha ou áudio perdido no WhatsApp.</p>
+          </div>
+        </div>
+      </div>
+      <div class="hardware-stage">
+        <div class="premium-depth-panel"><div class="card-sheen"></div></div>
+        <div class="floating-badge">
+          <div class="phone-avatar">BB</div>
+          <div><b>Recorrência ativa</b><span>cliente reativado há 4 min</span></div>
+        </div>
+        <div class="iphone-bezel">
+          <div class="hardware-btn left" style="top:120px;height:25px"></div>
+          <div class="hardware-btn left" style="top:160px;height:45px"></div>
+          <div class="hardware-btn left" style="top:220px;height:45px"></div>
+          <div class="hardware-btn right" style="top:170px;height:70px"></div>
+          <div class="phone-screen">
+            <div class="dynamic-island"></div>
+            <div class="phone-app">
+              <div class="phone-top">
+                <div><span>Bom Beef OS</span><h4>Vendas hoje</h4></div>
+                <div class="phone-avatar">N</div>
+              </div>
+              <div class="widget-depth">
+                <small class="mono" style="color:#ffb05c;letter-spacing:.14em">WHATSAPP</small>
+                <p style="margin-top:8px;font-size:13px;color:#e8c6a6">Lead de franquia em Campinas respondeu. Capital validado. Próximo passo: entrevista.</p>
+              </div>
+              <div class="widget-depth">
+                <small class="mono" style="color:#46d9ff;letter-spacing:.14em">RECORRÊNCIA</small>
+                <p style="margin-top:8px;font-size:13px;color:#e8c6a6">Cliente comprou dry-aged há 31 dias. Mensagem de recompra pronta para envio.</p>
+              </div>
+              <div class="widget-depth">
+                <small class="mono" style="color:#48ff9b;letter-spacing:.14em">LOJA</small>
+                <p style="margin-top:8px;font-size:13px;color:#e8c6a6">Unidade Moema com baixa procura hoje. Campanha local sugerida.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="login-panel">
+          <h4>Login Bom Beef</h4>
+          <p>Portal rápido para franqueado, time comercial e central.</p>
+          <input class="login-field" value="NETAO" aria-label="nome">
+          <input class="login-field" value="SALVESALVE" aria-label="senha">
+          <a class="login-button" href="#fim">ENTRAR NO PAINEL</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROJETO 3: IA MULTIPLICA CONTEÚDO ===== -->
+<section class="proj" id="p3">
+  <div class="container">
+    <div class="proj-head reveal-left">
+      <div class="proj-num">03</div>
+      <div class="proj-info">
+        <span class="proj-tag">PROJETO 3 · CONTEÚDO</span>
+        <h3>IA <span class="accent">multiplica</span> o conteúdo que você já tem.</h3>
+        <p class="pitch">"De 1 vídeo seu no YouTube saem 30 cortes, 12 posts Insta, 8 TikToks, 4 carrosséis, 1 newsletter. Você ganha tempo livre — pra criar o que realmente importa."</p>
+      </div>
+    </div>
+    <figure class="project-visual image-frame reveal"><img src="assets/img/web/19-conteudo-ia-celulares-wide.jpg" alt="Multiplicador de conteúdo com IA"><figcaption class="image-caption">1 marca, conteúdo infinito, agenda preservada</figcaption></figure>
+    <div class="proj-body">
+      <div class="proj-card high reveal">
+        <h4>O QUE ENTREGAMOS</h4>
+        <p>Pipeline IA que pega 1 vídeo longo do canal, transcreve, identifica os 5 melhores momentos, gera cortes verticais, escreve copies próprios, agenda em todas as redes. Tudo na sua voz.</p>
+      </div>
+      <div class="proj-card reveal">
+        <h4>O QUE LIBERA</h4>
+        <ul>
+          <li>10× mais conteúdo com o mesmo esforço</li>
+          <li>Reels diários (sem você gravar reels)</li>
+          <li>Você foca em produzir o conteúdo NOVO mais esperado</li>
+          <li>SEO blog automático (busca por "como fazer X")</li>
+          <li>Tradução automática (preparação pro mercado externo)</li>
+          <li>Calendário inteligente que aprende com performance</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROJETO 4: CONTEÚDOS DOS TIMES/FRANQUEADOS ===== -->
+<section class="proj" id="p4">
+  <div class="container">
+    <div class="proj-head reveal-left">
+      <div class="proj-num">04</div>
+      <div class="proj-info">
+        <span class="proj-tag">PROJETO 4 · CONTEÚDO DESCENTRALIZADO</span>
+        <h3>Os franqueados <span class="accent">criando conteúdo</span> com você.</h3>
+        <p class="pitch">"Cada açougueiro tem uma história. Cada franqueado tem um diferencial. IA captura, edita, publica. Você multiplica a marca sem multiplicar sua agenda."</p>
+      </div>
+    </div>
+    <figure class="project-visual image-frame reveal"><img src="assets/img/web/20-netao-gravando-conteudo.jpg" alt="Franqueado gravando conteúdo no balcão"><figcaption class="image-caption">Cada loja vira mídia local</figcaption></figure>
+    <div class="proj-body">
+      <div class="proj-card high reveal">
+        <h4>O QUE ENTREGAMOS</h4>
+        <p>Plataforma onde franqueado/açougueiro grava no celular e a IA edita, legenda, publica. Cada loja vira micro-canal alimentando o ecossistema Bom Beef.</p>
+      </div>
+      <div class="proj-card reveal">
+        <h4>RESULTADOS ESPERADOS</h4>
+        <ul>
+          <li>51 unidades = 51 micro-criadores de conteúdo</li>
+          <li>Diferencial regional comunicado direto</li>
+          <li>SEO local explode (cada loja vira página viva)</li>
+          <li>Cultura Bom Beef reforçada via vídeo</li>
+          <li>Custo de marketing por unidade cai 40-60%</li>
+          <li>Franqueado se sente parte do show — engaja mais</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROJETO 5: SISTEMA PRÓPRIO PONTA A PONTA ===== -->
+<section class="proj" id="p5">
+  <div class="container">
+    <div class="proj-head reveal-left">
+      <div class="proj-num">05</div>
+      <div class="proj-info">
+        <span class="proj-tag">PROJETO 5 · TECNOLOGIA PROPRIETÁRIA</span>
+        <h3>Sistema próprio: <span class="accent">do pasto à mesa</span>.</h3>
+        <p class="pitch">"Quando idealizei, pensei do pasto até a mesa no mesmo sistema. Tudo código próprio, protegido, seguro — sem ficar refém de SaaS terceiros."</p>
+      </div>
+    </div>
+    <figure class="project-visual image-frame reveal"><img src="assets/img/web/23-dry-aged-camara-wide.jpg" alt="Câmara de maturação dry-aged"><figcaption class="image-caption">Do pasto à mesa, dado e operação no mesmo trilho</figcaption></figure>
+    <div class="proj-body">
+      <div class="proj-card high reveal">
+        <h4>O QUE ENTREGAMOS</h4>
+        <p>Plataforma proprietária Bom Beef: rastreabilidade do gado, gestão de frigoríficos, distribuição, açougue, franquia, e-commerce, hamburgueria, parrilla, cliente final. Tudo num só sistema, código BOLTLOCK, dado seu.</p>
+      </div>
+      <div class="proj-card reveal">
+        <h4>BENEFÍCIOS</h4>
+        <ul>
+          <li>Sem mensalidade SaaS (corte de R$ 50-200k/ano)</li>
+          <li>Dado proprietário (vale ouro pra valuation)</li>
+          <li>Customização total — adapta ao Bom Beef</li>
+          <li>Integração nativa com IAs (BOLTLOCK)</li>
+          <li>Backup + segurança nível enterprise</li>
+          <li>Vira ativo da empresa (pode até vender pra concorrente)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROJETO 6: MÓDULO FRANQUEADOS ===== -->
+<section class="proj" id="p6">
+  <div class="container">
+    <div class="proj-head reveal-left">
+      <div class="proj-num">06</div>
+      <div class="proj-info">
+        <span class="proj-tag">PROJETO 6 · COMPANHEIRO DO FRANQUEADO</span>
+        <h3>O franqueado <span class="accent">nunca mais sozinho</span> — nem às 3 da manhã.</h3>
+        <p class="pitch">"Caixa do dia, estoque, pedidos, manutenção, zeladoria, inovação. IA companheira em cada processo. Quando ele bate dúvida 3h da manhã — tem alguém pronto."</p>
+      </div>
+    </div>
+    <figure class="project-visual image-frame reveal"><img src="assets/img/web/21-dashboard-franqueado-wide.jpg" alt="Dashboard do franqueado Bom Beef"><figcaption class="image-caption">O franqueado enxerga caixa, estoque e pedido no mesmo painel</figcaption></figure>
+    <div class="proj-body">
+      <div class="proj-card high reveal">
+        <h4>O QUE ENTREGAMOS</h4>
+        <p>Módulo "Cabine de Comando" pra cada franqueado: 1 painel, todas as IAs, suporte 24/7. Reduz dor de cabeça, aumenta retenção de franqueado, melhora qualidade da rede.</p>
+      </div>
+      <div class="proj-card reveal">
+        <h4>O QUE TEM DENTRO</h4>
+        <ul>
+          <li>Financeiro: caixa diário + DRE + alertas</li>
+          <li>Estoque: previsão de compra automática</li>
+          <li>Pedidos: integração com sistema central</li>
+          <li>Manutenção: ticket + agenda + fornecedor</li>
+          <li>Zeladoria: checklist diário com foto</li>
+          <li>IA suporte 24/7 (zero abandono noturno)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROJETO 7: PLATAFORMA MENTORIA / CLUBE NETÃO ===== -->
+<section class="proj" id="p7">
+  <div class="container">
+    <div class="proj-head reveal-left">
+      <div class="proj-num">07</div>
+      <div class="proj-info">
+        <span class="proj-tag">PROJETO 7 · CLUBE NETÃO</span>
+        <h3>Sua plataforma de <span class="accent">mentoria, cursos e mastermind</span>.</h3>
+        <p class="pitch">"Clube Netão: cursos, evoluções, consultorias. Plataforma 100% sua. Franqueados viram afiliados — vendem teus cursos. Fonte poderosa de novos franqueados qualificados."</p>
+      </div>
+    </div>
+    <figure class="project-visual image-frame reveal"><img src="assets/img/web/22-clube-netao-mastermind-wide.jpg" alt="Clube Netão mastermind"><figcaption class="image-caption">Audiência vira comunidade, comunidade vira ativo</figcaption></figure>
+    <div class="proj-body">
+      <div class="proj-card high reveal">
+        <h4>POR QUE É IMPORTANTE</h4>
+        <p>Hoje quem quer aprender carne com o Netão consome de graça. Plataforma própria converte audiência fiel em receita recorrente + funil natural de pré-franqueados (eles compram curso → testam afinidade → viram operador).</p>
+      </div>
+      <div class="proj-card reveal">
+        <h4>ESTRUTURA</h4>
+        <ul>
+          <li>Cursos gravados (carne, faca, churrasco, gestão)</li>
+          <li>Mentoria mensal ao vivo com Netão</li>
+          <li>Mastermind premium (R$ 5-10k/ano)</li>
+          <li>Clube Netão (assinatura mensal de conteúdo + carne)</li>
+          <li>Franqueados como afiliados (comissão)</li>
+          <li>Onboarding de novos franqueados via curso</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROJETO 8: DIA FRACO ===== -->
+<section class="proj" id="p8">
+  <div class="container">
+    <div class="proj-head reveal-left">
+      <div class="proj-num">08</div>
+      <div class="proj-info">
+        <span class="proj-tag">PROJETO 8 · INTELIGÊNCIA DE OPERAÇÃO</span>
+        <h3>Saber o <span class="accent">pior dia</span> de cada franqueado — e vencê-lo.</h3>
+        <p class="pitch">"Carne nova chega no dia mais fraco da semana. Cliente recebe antecipação. Dia fraco vira dia esperado — sem mudar preço. Eventos exclusivos só nesses dias."</p>
+      </div>
+    </div>
+    <figure class="project-visual image-frame reveal"><img src="assets/img/web/03-dor-baixa-procura.jpg" alt="Dia fraco no balcão do açougue"><figcaption class="image-caption">O dia fraco aparece antes de virar prejuízo</figcaption></figure>
+    <div class="proj-body">
+      <div class="proj-card high reveal">
+        <h4>O INSIGHT</h4>
+        <p>Cada loja tem 1 dia que ninguém compra. Em vez de aceitar — atacar. Carne nova + comunicado antecipado + evento exclusivo = transforma terça-feira morta em terça-feira lotada. Sem desconto.</p>
+      </div>
+      <div class="proj-card reveal">
+        <h4>EXECUÇÃO</h4>
+        <ul>
+          <li>BI identifica pior dia por loja automaticamente</li>
+          <li>Calendário de "carne nova" otimizado nesse dia</li>
+          <li>Comunicação 48h antes (cliente espera)</li>
+          <li>Evento "Quartas do Dry-Aged" / "Terça do Cordeiro"</li>
+          <li>Cliente vira embaixador (compra + posta)</li>
+          <li>Ticket médio sobe 30-40% no dia antes morto</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROJETO 9: DEPARTAMENTO COMERCIAL ===== -->
+<section class="proj" id="p9">
+  <div class="container">
+    <div class="proj-head reveal-left">
+      <div class="proj-num">09</div>
+      <div class="proj-info">
+        <span class="proj-tag">PROJETO 9 · COMERCIAL</span>
+        <h3>Comercial — minha <span class="accent">maior experiência</span>.</h3>
+        <p class="pitch">"9 anos como Diretor Comercial. Acabei de sair do Grupo Cyrela. Tenho várias ideias — mas quero entender primeiro o que você já tem, pra turbinarmos juntos."</p>
+      </div>
+    </div>
+    <figure class="project-visual image-frame reveal"><img src="assets/img/web/04-dor-margem-preco.jpg" alt="Painel de margem e preço"><figcaption class="image-caption">Comercial bom começa com margem clara</figcaption></figure>
+    <div class="proj-body">
+      <div class="proj-card high reveal">
+        <h4>MEU BACKGROUND</h4>
+        <p>9 anos liderando comercial no Grupo Cyrela (uma das maiores incorporadoras do Brasil). Construí time, processo, funil, treinamento, comissionamento, KPIs, gestão de meta. Levo isso pra Bom Beef.</p>
+      </div>
+      <div class="proj-card reveal">
+        <h4>POSSÍVEIS FRENTES</h4>
+        <ul>
+          <li>Estruturação de time comercial de franquia</li>
+          <li>Processo de prospecção B2B (corporativo, restaurantes)</li>
+          <li>Vendas consultivas pra Parrilla / dry-aged</li>
+          <li>Treinamento e ramp-up de vendedores</li>
+          <li>Comissionamento + ranking + cultura comercial</li>
+          <li>Mas primeiro: entender o que já tá rodando</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROJETO 10: PARCERIA ZÉ DELIVERY ===== -->
+<section class="proj" id="p10">
+  <div class="container">
+    <div class="proj-head reveal-left">
+      <div class="proj-num">10</div>
+      <div class="proj-info">
+        <span class="proj-tag">PROJETO 10 · IDEIA AVULSA · PARCERIA ESTRATÉGICA</span>
+        <h3>"Netão e Zé pelo seu <span class="accent">churrasco</span>."</h3>
+        <p class="pitch">"Cliente compra dry-aged no Bom Beef. Recebe entrega + opção de pedir cerveja Zé Delivery sem custo de entrega. Você ainda pode negociar pra vender bebida própria. Zero custo logístico, parceria fortalecida."</p>
+      </div>
+    </div>
+    <figure class="project-visual image-frame reveal"><img src="assets/img/web/24-bom-beef-ze-delivery-wide.jpg" alt="Bom Beef e Zé Delivery"><figcaption class="image-caption">A parceria precisa aparecer no momento churrasco, não só no checkout</figcaption></figure>
+    <div class="proj-body">
+      <div class="proj-card high reveal">
+        <h4>POR QUE FUNCIONA</h4>
+        <p>Ninguém compra dry-aged sem cerveja. Ninguém compra cerveja sem motivo. Aliança Netão × Zé Delivery = cliente fica feliz, vocês dois vendem mais, e o cliente associa Bom Beef ao momento "churrasco" completo.</p>
+      </div>
+      <div class="proj-card reveal">
+        <h4>EXECUÇÃO POSSÍVEL</h4>
+        <ul>
+          <li>Pop-up no checkout: "Adicionar cerveja sem custo de entrega"</li>
+          <li>Negociação com AB InBev (dono Zé) — co-marketing</li>
+          <li>Bundle "Kit Churrasco Netão" (carne + cerveja + faca)</li>
+          <li>Posicionamento: "Comprou no Bom Beef, Zé entrega junto"</li>
+          <li>Opção: bebida própria Bom Beef no Zé Delivery</li>
+          <li>Conteúdo gerado: "harmonização cerveja × carne" no canal</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== BRAINSTORM ===== -->
+<section class="brain" id="brain">
+  <div class="container">
+    <div class="brain-head reveal">
+      <h2>Mais 6 <span>ideias soltas</span>.</h2>
+      <p>Pode ser que sirvam, pode ser que não. Preferi trazer todas e a gente filtrar juntos depois.</p>
+    </div>
+    <div class="brain-grid">
+      <div class="brain-card reveal">
+        <div class="ic">📝</div>
+        <h4>Blog de receitas SEO</h4>
+        <p>Cada corte tem 10 receitas. Google traz tráfego orgânico de "como fazer X". Funil natural pro e-commerce.</p>
+      </div>
+      <div class="brain-card reveal">
+        <div class="ic">🎯</div>
+        <h4>Busca ativa de franqueado</h4>
+        <p>IA varre LinkedIn por perfil ideal (capital + perfil operador + região alvo). Você só fala com o top 10.</p>
+      </div>
+      <div class="brain-card reveal">
+        <div class="ic">🤖</div>
+        <h4>IA do franqueado</h4>
+        <p>Cada franqueado tem sua IA personalizada (conhece a loja, histórico, fornecedor, prazo, KPI). Substitui consultoria mensal.</p>
+      </div>
+      <div class="brain-card reveal">
+        <div class="ic">📊</div>
+        <h4>BI + Dashboard executivo</h4>
+        <p>Painel único: 51 açougues + 27 burgers + canal. KPIs em tempo real no seu celular. Decisão em 30s.</p>
+      </div>
+      <div class="brain-card reveal">
+        <div class="ic">🌎</div>
+        <h4>Internacionalização (Miami / Lisboa)</h4>
+        <p>O Alfredo mencionou. Marca BR premium tem espaço gigante fora. Estudo de viabilidade + 1ª loja bandeira.</p>
+      </div>
+      <div class="brain-card reveal">
+        <div class="ic">🥩</div>
+        <h4>Clube dry-aged assinatura</h4>
+        <p>R$ 297-497/mês: carne premium em casa todo mês + curso + comunidade. Receita recorrente + lock-in cliente premium.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FECHAMENTO ===== -->
+<section class="fechar" id="fim">
+  <div class="container">
+    <div class="fechar-content reveal-scale">
+      <h2>Um prazer poder criar algo<br>pra uma pessoa e empresa<br><span>tão legais</span>.</h2>
+      <p>Se quiser bater um papo — comigo ou alguém do seu time —<br>tô aqui, fácil de achar.</p>
+
+      <div class="signature">
+        <b>Bruno Kvetik</b>
+        <span>BOLTLOCK HOLDING · CEO</span>
+      </div>
+
+      <a href="https://wa.me/5511977661008?text=Salve%20Bruno%2C%20bora%20bater%20um%20papo%3F" class="fechar-cta" target="_blank">
+        <svg viewBox="0 0 32 32" fill="currentColor"><path d="M16 .4C7.4.4.4 7.4.4 16c0 2.9.8 5.6 2.2 8L.4 31.6l7.8-2c2.3 1.3 5 2 7.8 2 8.6 0 15.6-7 15.6-15.6S24.6.4 16 .4zm0 28.5c-2.6 0-5-.7-7.1-2l-.5-.3-5.2 1.3 1.4-5-.3-.5C3 20.4 2.4 18.3 2.4 16 2.4 8.5 8.5 2.4 16 2.4S29.6 8.5 29.6 16 23.5 28.9 16 28.9zm7.6-9.7c-.4-.2-2.5-1.2-2.9-1.4-.4-.1-.7-.2-1 .2s-1.1 1.4-1.4 1.7c-.2.2-.5.3-.9.1-.4-.2-1.7-.6-3.2-2-1.2-1-2-2.3-2.2-2.7-.2-.4 0-.6.2-.8.2-.2.4-.5.6-.7.2-.2.3-.4.4-.7.1-.3.1-.5 0-.7s-1-2.3-1.3-3.1c-.3-.8-.7-.7-1-.7h-.8c-.3 0-.7.1-1.1.5s-1.5 1.4-1.5 3.5 1.5 4.1 1.7 4.3c.2.3 3 4.6 7.3 6.4 1 .4 1.8.7 2.4.9 1 .3 1.9.3 2.6.2.8-.1 2.5-1 2.8-2 .3-1 .3-1.8.2-2-.1-.2-.4-.3-.8-.5z"/></svg>
+        BATER UM PAPO NO WHATS — 11 97766-1008
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  BOLTLOCK × NETÃO BOM BEEF · BRUNO KVETIK · 2026 · v3.2 · CELULAR + LOGIN
+</footer>
+
+<script>
+// LOGIN GATE: primeiro login, depois LP.
+const LOGIN_USER = 'NETAO';
+const LOGIN_PASS = 'SALVESALVE';
+const loginGate = document.getElementById('loginGate');
+const loginGateCard = document.getElementById('loginGateCard');
+const loginGateForm = document.getElementById('loginGateForm');
+const loginGateError = document.getElementById('loginGateError');
+const loginName = document.getElementById('loginName');
+const loginPass = document.getElementById('loginPass');
+
+function unlockPresentation(){
+  document.body.classList.remove('auth-locked');
+  if(loginGate) loginGate.classList.add('hide');
+  sessionStorage.setItem('netao-auth-ok','1');
+}
+
+if(sessionStorage.getItem('netao-auth-ok') === '1'){
+  unlockPresentation();
+}else{
+  setTimeout(() => loginName && loginName.focus(), 350);
+}
+
+loginGateForm?.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const user = (loginName.value || '').trim().toUpperCase();
+  const pass = (loginPass.value || '').trim().toUpperCase();
+  if(user === LOGIN_USER && pass === LOGIN_PASS){
+    loginGateError.textContent = '';
+    unlockPresentation();
+    setTimeout(() => window.scrollTo({top:0, behavior:'instant'}), 50);
+    return;
+  }
+  loginGateError.textContent = 'Nome ou senha incorretos.';
+  loginGateCard.classList.remove('shake');
+  void loginGateCard.offsetWidth;
+  loginGateCard.classList.add('shake');
+  loginPass.select();
+});
+
+// PROGRESS
+const progress = document.getElementById('progress');
+window.addEventListener('scroll', () => {
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  progress.style.width = (window.scrollY / h * 100) + '%';
+}, { passive: true });
+
+// COVER: frases sequenciais
+const frases = [
+  { el: 'f1', delay: 300 },
+  { el: 'f2', delay: 1500 },
+  { el: 'f3', delay: 2900 },
+  { el: 'f4', delay: 4200 }
+];
+frases.forEach(f => setTimeout(() => document.getElementById(f.el).classList.add('show'), f.delay));
+
+// IA TYPEWRITER (Seção 1)
+const iaScript = [
+  { id: 't1', text: 'Vi um vídeo do <span class="gold">Alfredo Soares</span> falando sobre o seu negócio — e percebi que boa parte das coisas que ele te recomendou é exatamente o que a minha empresa faz.', delay: 30 },
+  { id: 't2', text: 'Meu irmão te conhece, então pedi pra ele te apresentar. Quem sabe a gente une as ideias do Alfredo com o Bom Beef.', delay: 30 },
+  { id: 't3', text: 'Dei uma olhada nos <span class="gold">números públicos</span> antes de pensar qualquer coisa — foi a partir daí que tudo o que vem agora foi escrito. Leva o que servir, descarta o resto.', delay: 30 }
+];
+
+function typewrite(el, text, delay, callback) {
+  let i = 0;
+  let html = '';
+  let parsedText = text;
+  const target = document.getElementById(el);
+  target.classList.add('typewriter');
+
+  function step() {
+    if (i >= parsedText.length) {
+      target.classList.remove('typewriter');
+      if (callback) callback();
+      return;
+    }
+    // Handle HTML tags atomically
+    if (parsedText[i] === '<') {
+      const closeTag = parsedText.indexOf('>', i);
+      html += parsedText.substring(i, closeTag + 1);
+      i = closeTag + 1;
+    } else {
+      html += parsedText[i];
+      i++;
+    }
+    target.innerHTML = html;
+    setTimeout(step, delay);
+  }
+  step();
+}
+
+// Start typewriter when Section 1 enters viewport
+let typingStarted = false;
+const s1 = document.getElementById('s1');
+const obsIa = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting && !typingStarted) {
+      typingStarted = true;
+      e.target.querySelector('.terminal').classList.add('show');
+      // Start typewriter sequence
+      typewrite(iaScript[0].id, iaScript[0].text, iaScript[0].delay, () => {
+        setTimeout(() => {
+          typewrite(iaScript[1].id, iaScript[1].text, iaScript[1].delay, () => {
+            setTimeout(() => {
+              typewrite(iaScript[2].id, iaScript[2].text, iaScript[2].delay, () => {
+                setTimeout(() => document.getElementById('cta-go').classList.add('show'), 400);
+              });
+            }, 500);
+          });
+        }, 500);
+      });
+    }
+  });
+}, { threshold: 0.3 });
+obsIa.observe(s1);
+
+// STORE MOTION: efeito tipo ContainerScroll, sem React/Framer.
+const storeSection = document.getElementById('movimento');
+const storeScroll = document.querySelector('[data-store-scroll]');
+function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+function updateStoreMotion() {
+  if (!storeSection || !storeScroll) return;
+  const rect = storeSection.getBoundingClientRect();
+  const total = Math.max(1, rect.height - window.innerHeight);
+  const progress = clamp(-rect.top / total, 0, 1);
+  const isMobile = window.innerWidth <= 768;
+  const startScale = isMobile ? 0.78 : 1.05;
+  const endScale = isMobile ? 0.92 : 1;
+  const rotate = 20 * (1 - progress);
+  const scale = startScale + (endScale - startScale) * progress;
+  const titleY = -100 * progress;
+  const titleOpacity = 1 - progress * 0.28;
+  storeScroll.style.setProperty('--store-rotate', rotate.toFixed(2) + 'deg');
+  storeScroll.style.setProperty('--store-scale', scale.toFixed(3));
+  storeScroll.style.setProperty('--store-title-y', titleY.toFixed(1) + 'px');
+  storeScroll.style.setProperty('--store-title-opacity', titleOpacity.toFixed(2));
+}
+window.addEventListener('scroll', updateStoreMotion, { passive: true });
+window.addEventListener('resize', updateStoreMotion);
+updateStoreMotion();
+
+// REVEAL on scroll
+const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-scale');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('show'); });
+}, { threshold: 0.15 });
+reveals.forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
