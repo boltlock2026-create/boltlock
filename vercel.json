@@ -28,6 +28,18 @@
       "dest": "/frontend/netao/$1"
     },
     {
+      "src": "/boltlock",
+      "dest": "/frontend/boltlock/index.html"
+    },
+    {
+      "src": "/boltlock/",
+      "dest": "/frontend/boltlock/index.html"
+    },
+    {
+      "src": "/boltlock/(.*)",
+      "dest": "/frontend/boltlock/$1"
+    },
+    {
       "src": "/creditscore",
       "dest": "/frontend/index.html"
     },
