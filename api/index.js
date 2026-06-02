@@ -52,6 +52,137 @@ try {
 app.use(cors());
 app.use(express.json());
 
+const presentationContext = `
+Você é uma IA de apoio da apresentação de Bruno Kvetik.
+Responda sempre em português do Brasil, com tom amigável, direto e executivo.
+Se a pessoa disser apenas "oi", cumprimente, pergunte sobre o contexto dela e ofereça caminhos de conversa.
+Não invente que uma reunião já aconteceu. Não prometa integração pronta se não houver contexto.
+
+Contexto da apresentação:
+- Bruno Kvetik apresenta soluções aplicadas com IA, dados, marketing, automação, ferramentas digitais, sites, LPs, CRM, SaaS e área dev.
+- A proposta é entender o negócio, achar gargalos e criar solução prática para empresas.
+- Frentes gerais: IA aplicada, dados/telemetria/BI, marketing/ads/conteúdo/vídeos, ferramentas digitais, sites/LP/CRM/SaaS, informação como vantagem, dados que viram dinheiro, inovação aplicada e empresas humanas com IA.
+- Se o assunto for imobiliário, fale da Aceleradora Imobiliária: RH, contratação ativa, IA para contratar, IA para manter, gestão de RH, pessoas, treinamentos, cursos, plano de desenvolvimento de 6 meses a 1 ano, mentorias, gamificação acoplada a dados/CRM/WhatsApp, IA com imobiliárias e corretores, produtos no WhatsApp do corretor, IA respondendo leads ou atuando como copiloto, recepção IA em plantões e manutenção/evolução da operação.
+- Para um Head de Marketing de incorporadora, priorize: qualidade do lead, mídia, CRM, conversão, velocidade de atendimento, corretor, plantão, dados, ROI e integração marketing-comercial.
+`;
+
+function getAgentInstruction(agent = 'Estratégia') {
+  const instructions = {
+    'Estratégia': 'Pense como consultor estratégico. Ajude a priorizar oportunidade, dor, impacto e primeiro passo.',
+    'Operação': 'Pense em processo, rotina, gargalo, CRM, atendimento, time e execução diária.',
+    'Marketing': 'Pense em aquisição, criativos, conteúdo, mídia paga, funil, conversão e posicionamento.',
+    'Dados': 'Pense em BI, telemetria, indicadores, leitura de funil, margem, alertas e decisão.',
+    'Produto': 'Pense em ferramenta digital, jornada, interface, portal, SaaS e adoção pelo time.',
+    'Dev': 'Pense em arquitetura, integrações, segurança, deploy, automação e viabilidade técnica.',
+    'Vendas': 'Pense em lead, follow-up, proposta, CRM, cadência, objeção e fechamento.'
+  };
+  return instructions[agent] || instructions.Estratégia;
+}
+
+function localPresentationReply(message = '', agent = 'Estratégia') {
+  const text = message.trim().toLowerCase();
+  if (!text || /^(oi|olá|ola|bom dia|boa tarde|boa noite|e ai|e aí)$/.test(text)) {
+    return `Oi! Sou a IA ${agent} da apresentação do Bruno. Posso te ajudar a transformar essa conversa em algo bem prático: IA aplicada, dados/BI, marketing, automação, ferramentas digitais ou uma ideia específica para o mercado imobiliário. Qual dessas frentes você quer explorar primeiro?`;
+  }
+  if (text.includes('imobili') || text.includes('corretor') || text.includes('plantão') || text.includes('plantao') || text.includes('tecnisa')) {
+    return `Boa. Para o mercado imobiliário, eu olharia primeiro para a ligação entre mídia, CRM, corretor e plantão. A Aceleradora Imobiliária pode atuar em RH, treinamento, gamificação conectada a dados, WhatsApp do corretor, IA copiloto para leads e recepção IA documentando tudo no CRM. Se você me disser a dor principal, eu desenho um primeiro fluxo.`;
+  }
+  return `Entendi. Pensando como IA ${agent}, eu começaria mapeando objetivo, gargalo, dados disponíveis e canal principal. A partir disso, o Bruno pode transformar a ideia em uma solução prática: IA para atendimento, BI para decisão, automação operacional, marketing com dados ou ferramenta digital sob medida.`;
+}
+
+async function callGroq(messages) {
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) return null;
+  const response = await axios.post(
+    'https://api.groq.com/openai/v1/chat/completions',
+    {
+      model: process.env.GROQ_MODEL || 'llama-3.1-8b-instant',
+      messages,
+      temperature: 0.55,
+      max_tokens: 520
+    },
+    { headers: { Authorization: `Bearer ${apiKey}` }, timeout: 18000 }
+  );
+  return response.data?.choices?.[0]?.message?.content?.trim() || null;
+}
+
+async function callXai(messages) {
+  const apiKey = process.env.XAI_API_KEY || process.env.GROK_API_KEY;
+  if (!apiKey) return null;
+  const response = await axios.post(
+    'https://api.x.ai/v1/chat/completions',
+    {
+      model: process.env.XAI_MODEL || process.env.GROK_MODEL || 'grok-3-mini',
+      messages,
+      temperature: 0.55,
+      max_tokens: 520
+    },
+    { headers: { Authorization: `Bearer ${apiKey}` }, timeout: 18000 }
+  );
+  return response.data?.choices?.[0]?.message?.content?.trim() || null;
+}
+
+async function callGemini(messages) {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) return null;
+  const prompt = messages.map((m) => `${m.role.toUpperCase()}: ${m.content}`).join('\n\n');
+  const model = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
+  const response = await axios.post(
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+    {
+      contents: [{ role: 'user', parts: [{ text: prompt }] }],
+      generationConfig: { temperature: 0.55, maxOutputTokens: 520 }
+    },
+    { timeout: 18000 }
+  );
+  return response.data?.candidates?.[0]?.content?.parts?.map((part) => part.text).join('').trim() || null;
+}
+
+app.post('/api/presentation-chat', async (req, res) => {
+  try {
+    const { message = '', agent = 'Estratégia', history = [] } = req.body || {};
+    const cleanHistory = Array.isArray(history)
+      ? history.slice(-6).map((item) => ({
+        role: item.role === 'assistant' ? 'assistant' : 'user',
+        content: String(item.content || '').slice(0, 800)
+      }))
+      : [];
+
+    const messages = [
+      { role: 'system', content: presentationContext },
+      { role: 'system', content: getAgentInstruction(agent) },
+      ...cleanHistory,
+      { role: 'user', content: String(message || '').slice(0, 1200) }
+    ];
+
+    let provider = 'local';
+    let answer = null;
+    const providers = [
+      ['groq', callGroq],
+      ['xai', callXai],
+      ['gemini', callGemini]
+    ];
+
+    for (const [name, fn] of providers) {
+      try {
+        answer = await fn(messages);
+        if (answer) {
+          provider = name;
+          break;
+        }
+      } catch (error) {
+        console.warn(`[presentation-chat] ${name} indisponível:`, error.response?.status || error.message);
+      }
+    }
+
+    if (!answer) answer = localPresentationReply(message, agent);
+    res.json({ answer, provider });
+  } catch (error) {
+    console.error('[presentation-chat]', error.message);
+    res.json({ answer: localPresentationReply(req.body?.message, req.body?.agent), provider: 'local' });
+  }
+});
+
 // ═══════════════════════════════════════════════════════════════
 // 1. DADOS DE USUÁRIOS (Mock - em produção seria banco de dados)
 // ═══════════════════════════════════════════════════════════════
