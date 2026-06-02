@@ -48,6 +48,14 @@
       "dest": "/frontend/boltlock/index.html"
     },
     {
+      "src": "/apresenta%C3%A7%C3%A3o",
+      "dest": "/frontend/boltlock/index.html"
+    },
+    {
+      "src": "/apresenta%C3%A7%C3%A3o/",
+      "dest": "/frontend/boltlock/index.html"
+    },
+    {
       "src": "/apresentacao",
       "dest": "/frontend/boltlock/index.html"
     },
