@@ -40,6 +40,22 @@
       "dest": "/frontend/boltlock/$1"
     },
     {
+      "src": "/apresentação",
+      "dest": "/frontend/boltlock/index.html"
+    },
+    {
+      "src": "/apresentação/",
+      "dest": "/frontend/boltlock/index.html"
+    },
+    {
+      "src": "/apresentacao",
+      "dest": "/frontend/boltlock/index.html"
+    },
+    {
+      "src": "/apresentacao/",
+      "dest": "/frontend/boltlock/index.html"
+    },
+    {
       "src": "/creditscore",
       "dest": "/frontend/index.html"
     },
