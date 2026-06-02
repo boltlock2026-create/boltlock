@@ -10,26 +10,27 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@600;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#050302;--deep:#090401;--paper:#fff2df;--mut:#bfa990;--dim:#7f5a3c;--gold:#ff6a00;--gold2:#ffb05c;--line:rgba(255,122,26,.18);--green:#38e28a;--blue:#58c7ff;}
+:root{--ink:#050302;--deep:#090401;--paper:#f7ecd6;--mut:#c6ab7c;--dim:#8a6a3e;--gold:#d6a33c;--gold2:#f2cf7a;--line:rgba(214,163,60,.22);--green:#38e28a;--blue:#58c7ff;}
 *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{font-family:Archivo,system-ui,sans-serif;background:var(--ink);color:var(--paper);overflow-x:hidden;-webkit-font-smoothing:antialiased}img{max-width:100%;display:block}.mono{font-family:'JetBrains Mono',monospace}.serif{font-family:'Playfair Display',serif}
 body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 18% 8%,rgba(255,106,0,.11),transparent 36%),radial-gradient(circle at 82% 72%,rgba(88,199,255,.055),transparent 34%),linear-gradient(90deg,rgba(255,122,26,.03),transparent 22%,rgba(255,122,26,.02));}
 .progress{position:fixed;left:0;top:0;height:2px;width:0;background:linear-gradient(90deg,var(--gold2),var(--gold),#c93400);z-index:80;box-shadow:0 0 20px rgba(255,106,0,.65)}
 .nav{position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:70;display:flex;align-items:center;gap:10px;padding:9px 14px;background:rgba(5,3,2,.78);backdrop-filter:blur(18px);border:1px solid var(--line);font:700 10px 'JetBrains Mono',monospace;letter-spacing:.18em;text-transform:uppercase;color:#e8c6a6}.nav-mark{width:24px;height:24px;display:grid;place-items:center;background:linear-gradient(180deg,var(--gold2),var(--gold));color:#070301;font:900 10px Archivo,sans-serif;letter-spacing:-.02em}.nav b{color:#fff}
 section{position:relative;z-index:1;min-height:100vh;padding:104px 32px;display:flex;align-items:center;justify-content:center}.container{width:min(1240px,100%);margin:0 auto}.tag{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid rgba(255,122,26,.32);background:rgba(255,106,0,.08);font:700 9px 'JetBrains Mono',monospace;letter-spacing:.18em;text-transform:uppercase;color:#ffbc7c;margin-bottom:22px;max-width:100%;white-space:normal}.tag::before{content:"";width:6px;height:6px;background:var(--gold);box-shadow:0 0 14px var(--gold);flex:0 0 6px}
 h1,h2,h3{font-family:'Playfair Display',serif;letter-spacing:-.035em;line-height:1.05;overflow-wrap:anywhere}h1{font-size:clamp(46px,7.6vw,104px);max-width:980px}h2{font-size:clamp(36px,5.2vw,68px)}h3{font-size:clamp(30px,4vw,52px)}.accent{color:var(--gold)}.lead{font-family:'Playfair Display',serif;font-size:clamp(17px,1.65vw,23px);font-style:italic;color:#e8c6a6;line-height:1.62;max-width:820px}.copy{color:var(--mut);font-size:15px;line-height:1.85;max-width:760px}
-.hero{align-items:flex-end;justify-content:flex-start;min-height:100svh;padding-bottom:8vh;background:linear-gradient(180deg,rgba(5,3,2,.22),rgba(5,3,2,.92)),radial-gradient(circle at 70% 38%,rgba(255,106,0,.18),transparent 34%)}.hero-signature{display:inline-grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;margin-bottom:28px}.hero-signature strong{width:64px;height:64px;display:grid;place-items:center;background:linear-gradient(180deg,var(--gold2),var(--gold));color:#070301;font:900 22px Archivo,sans-serif}.hero-signature span{font:800 11px 'JetBrains Mono',monospace;letter-spacing:.2em;text-transform:uppercase;color:#ffbc7c}.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) .58fr;gap:40px;align-items:end}.hero-panel{border:1px solid var(--line);padding:24px;background:linear-gradient(180deg,rgba(255,122,26,.055),rgba(255,255,255,.01));box-shadow:0 28px 80px rgba(0,0,0,.38)}.hero-panel b{display:block;font-family:'Playfair Display',serif;font-size:28px;line-height:1;color:#fff;margin-bottom:12px}.hero-panel p{color:var(--mut);line-height:1.58;font-size:15px}
+.hero{align-items:flex-end;justify-content:flex-start;min-height:100svh;padding-bottom:8vh;background:linear-gradient(180deg,rgba(5,3,2,.22),rgba(5,3,2,.92)),radial-gradient(circle at 70% 38%,rgba(214,163,60,.18),transparent 34%)}.hero-signature{display:inline-grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;margin-bottom:28px}.hero-signature strong{width:64px;height:64px;display:grid;place-items:center;background:linear-gradient(180deg,var(--gold2),var(--gold));color:#070301;font:900 22px Archivo,sans-serif}.hero-signature span{font:800 11px 'JetBrains Mono',monospace;letter-spacing:.2em;text-transform:uppercase;color:#f2cf7a}.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) .74fr;gap:28px 40px;align-items:end}.hero-panel{grid-column:1;border:1px solid var(--line);padding:24px;background:linear-gradient(180deg,rgba(214,163,60,.07),rgba(255,255,255,.01));box-shadow:0 28px 80px rgba(0,0,0,.38);max-width:520px}.hero-panel b{display:block;font-family:'Playfair Display',serif;font-size:28px;line-height:1;color:#fff;margin-bottom:12px}.hero-panel p{color:var(--mut);line-height:1.58;font-size:15px}.hero-media{grid-column:2;grid-row:1 / span 2;position:relative;min-height:500px;border:1px solid rgba(214,163,60,.24);overflow:hidden;box-shadow:0 45px 120px rgba(0,0,0,.56)}.hero-media img,.module-visual img,.intro-visual img{width:100%;height:100%;object-fit:cover;filter:saturate(1.06) contrast(1.05)}.hero-media::after,.module-visual::after,.panel-card::after,.accel-card::after,.intro-visual::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(0,0,0,.1),transparent 36%,rgba(242,207,122,.16));pointer-events:none}.hero-media img,.module-visual img,.intro-visual img{animation:mediaDrift 18000ms cubic-bezier(.2,.7,.2,1) 6 alternate both}
 .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:38px}.kpi div{border:1px solid rgba(255,122,26,.14);padding:18px;background:rgba(255,106,0,.035)}.kpi b{display:block;font-family:'Playfair Display',serif;font-size:34px;color:#fff}.kpi span{font:700 9px 'JetBrains Mono',monospace;letter-spacing:.18em;text-transform:uppercase;color:#ffbc7c}
-.horizontal{min-height:auto;padding:94px 32px;background:radial-gradient(circle at 50% 28%,rgba(255,106,0,.13),transparent 36%),linear-gradient(180deg,#080301,#050302)}.h-pin{width:min(1240px,100%);height:auto;overflow:visible}.h-title{position:relative;width:min(900px,100%);text-align:left;margin:0 0 32px;pointer-events:auto}.h-title p{margin:14px 0 0}.h-track{height:auto;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;transform:none!important}.panel{width:auto;height:auto;display:block;padding:0}.panel-card{position:relative;width:100%;height:310px;border:1px solid rgba(255,122,26,.2);background:linear-gradient(145deg,rgba(255,122,26,.09),rgba(255,255,255,.015));box-shadow:0 34px 90px rgba(0,0,0,.42);overflow:hidden}.panel-card::before{content:"";position:absolute;inset:0;background:linear-gradient(145deg,rgba(255,106,0,.18),transparent 42%,rgba(88,199,255,.07));}.panel-content{position:absolute;inset:auto 16px 18px 16px;z-index:2}.panel-content b{display:block;font-family:'Playfair Display',serif;font-size:clamp(25px,2.35vw,36px);letter-spacing:-.04em;line-height:1.02;overflow-wrap:anywhere}.panel-content span{display:block;margin-top:12px;color:#e8c6a6;font-size:13.5px;line-height:1.48}
-.intro{background:linear-gradient(180deg,#050302,#090401)}.intro-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:44px;align-items:start}.intro-list{display:grid;gap:14px}.intro-item{border:1px solid var(--line);padding:22px;background:rgba(255,106,0,.035)}.intro-item b{display:block;font-family:'Playfair Display',serif;font-size:28px;color:#fff;margin-bottom:6px}.intro-item p{color:var(--mut);line-height:1.58}
-.module{background:linear-gradient(180deg,#070301,#050302)}.module:nth-of-type(even){background:linear-gradient(180deg,#050302,#090401)}.module-head{display:grid;grid-template-columns:96px minmax(0,1fr);gap:28px;margin-bottom:36px}.num{font-family:'Playfair Display',serif;font-size:82px;line-height:.82;font-weight:900;color:var(--gold);letter-spacing:-.04em}.subgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.sub{border:1px solid rgba(255,122,26,.18);background:linear-gradient(180deg,rgba(255,106,0,.055),rgba(255,255,255,.008));padding:22px;min-height:230px}.sub h4{font:800 10px 'JetBrains Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:#ffbc7c;margin-bottom:16px;overflow-wrap:anywhere}.sub ul{list-style:none;display:grid;gap:11px}.sub li{position:relative;padding-left:20px;color:#dac1a7;line-height:1.48;font-size:13.5px}.sub li::before{content:"→";position:absolute;left:0;color:var(--gold);font-weight:900}
-.accelerator{background:radial-gradient(circle at 20% 16%,rgba(255,106,0,.16),transparent 35%),linear-gradient(180deg,#050302,#0b0502)}.accel-head{margin-bottom:38px}.accel-copy{display:grid;grid-template-columns:.68fr 1fr;gap:34px;align-items:end}.accel-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.accel-card{border:1px solid rgba(255,122,26,.2);background:linear-gradient(180deg,rgba(255,106,0,.065),rgba(255,255,255,.01));padding:22px;min-height:270px}.accel-card b{display:block;font-family:'Playfair Display',serif;font-size:28px;letter-spacing:-.035em;color:#fff;margin-bottom:15px}.accel-card ul{list-style:none;display:grid;gap:10px}.accel-card li{position:relative;padding-left:18px;color:#dac1a7;line-height:1.46;font-size:13.5px}.accel-card li strong{color:#fff;font-weight:900}.accel-card li::before{content:"";position:absolute;left:0;top:.62em;width:7px;height:7px;background:var(--gold);box-shadow:0 0 12px rgba(255,106,0,.62)}.accel-card.feature{grid-column:span 2;background:linear-gradient(135deg,rgba(255,106,0,.13),rgba(88,199,255,.045));min-height:250px}
+.horizontal{min-height:auto;padding:94px 32px;background:radial-gradient(circle at 50% 28%,rgba(214,163,60,.15),transparent 36%),linear-gradient(180deg,#080301,#050302)}.h-pin{width:min(1240px,100%);height:auto;overflow:visible}.h-title{position:relative;width:min(900px,100%);text-align:left;margin:0 0 32px;pointer-events:auto}.h-title p{margin:14px 0 0}.h-track{height:auto;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;transform:none!important}.panel{width:auto;height:auto;display:block;padding:0}.panel-card{position:relative;width:100%;height:310px;border:1px solid rgba(214,163,60,.24);background-size:cover;background-position:center;box-shadow:0 34px 90px rgba(0,0,0,.42);overflow:hidden;animation:cardLift 900ms cubic-bezier(.16,1,.3,1) both;animation-delay:calc(var(--i,0) * 90ms)}.panel-card::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.68)),linear-gradient(145deg,rgba(214,163,60,.18),transparent 44%,rgba(88,199,255,.08));}.panel-content{position:absolute;inset:auto 16px 18px 16px;z-index:2}.panel-content b{display:block;font-family:'Playfair Display',serif;font-size:clamp(25px,2.35vw,36px);letter-spacing:-.04em;line-height:1.02;overflow-wrap:anywhere}.panel-content span{display:block;margin-top:12px;color:#f2dfbd;font-size:13.5px;line-height:1.48}
+.intro{background:linear-gradient(180deg,#050302,#090401)}.intro-grid{display:grid;grid-template-columns:.78fr 1.22fr;gap:44px;align-items:start}.intro-visual{position:relative;height:300px;margin-top:28px;border:1px solid rgba(214,163,60,.22);overflow:hidden;box-shadow:0 30px 90px rgba(0,0,0,.42)}.intro-list{display:grid;gap:14px}.intro-item{border:1px solid var(--line);padding:22px;background:rgba(214,163,60,.045)}.intro-item b{display:block;font-family:'Playfair Display',serif;font-size:28px;color:#fff;margin-bottom:6px}.intro-item p{color:var(--mut);line-height:1.58}
+.module{background:linear-gradient(180deg,#070301,#050302)}.module:nth-of-type(even){background:linear-gradient(180deg,#050302,#090401)}.module-head{display:grid;grid-template-columns:96px minmax(0,1fr);gap:28px;margin-bottom:24px}.num{font-family:'Playfair Display',serif;font-size:82px;line-height:.82;font-weight:900;color:var(--gold);letter-spacing:-.04em}.module-visual{position:relative;height:240px;border:1px solid rgba(214,163,60,.22);overflow:hidden;margin:0 0 22px;box-shadow:0 30px 90px rgba(0,0,0,.42)}.subgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.sub{border:1px solid rgba(214,163,60,.2);background:linear-gradient(180deg,rgba(214,163,60,.06),rgba(255,255,255,.008));padding:22px;min-height:230px}.sub h4{font:800 10px 'JetBrains Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:#f2cf7a;margin-bottom:16px;overflow-wrap:anywhere}.sub ul{list-style:none;display:grid;gap:11px}.sub li{position:relative;padding-left:20px;color:#dac1a7;line-height:1.48;font-size:13.5px}.sub li::before{content:"→";position:absolute;left:0;color:var(--gold);font-weight:900}
+.accelerator{background:radial-gradient(circle at 20% 16%,rgba(214,163,60,.18),transparent 35%),linear-gradient(180deg,#050302,#0b0502)}.accel-head{margin-bottom:38px}.accel-copy{display:grid;grid-template-columns:.68fr 1fr;gap:34px;align-items:end}.accel-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.accel-card{position:relative;border:1px solid rgba(214,163,60,.24);background-size:cover;background-position:center;isolation:isolate;padding:22px;min-height:270px;overflow:hidden}.accel-card::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.22),rgba(0,0,0,.82)),linear-gradient(135deg,rgba(214,163,60,.15),rgba(88,199,255,.04));z-index:-1}.accel-card b{display:block;font-family:'Playfair Display',serif;font-size:28px;letter-spacing:-.035em;color:#fff;margin-bottom:15px}.accel-card ul{list-style:none;display:grid;gap:10px}.accel-card li{position:relative;padding-left:18px;color:#e2cba3;line-height:1.46;font-size:13.5px}.accel-card li strong{color:#fff;font-weight:900}.accel-card li::before{content:"";position:absolute;left:0;top:.62em;width:7px;height:7px;background:var(--gold);box-shadow:0 0 12px rgba(214,163,60,.62)}.accel-card.feature{grid-column:span 2;min-height:250px}
 .chat-section{background:radial-gradient(circle at 72% 42%,rgba(88,199,255,.08),transparent 34%),linear-gradient(180deg,#050302,#080301)}.chat-wrap{display:grid;grid-template-columns:.88fr 1.12fr;gap:34px;align-items:stretch}.agents{display:grid;grid-template-columns:1fr 1fr;gap:10px}.agent{border:1px solid rgba(255,122,26,.18);background:rgba(255,106,0,.045);padding:13px;text-align:left;color:#fff;cursor:pointer;font:800 10.5px Archivo,sans-serif;letter-spacing:.08em;text-transform:uppercase}.agent.active{background:linear-gradient(180deg,#ff8a1f,#d94e00);color:#160701}.chatbox{border:1px solid rgba(255,122,26,.22);background:linear-gradient(180deg,rgba(11,5,2,.84),rgba(0,0,0,.62));min-height:580px;display:flex;flex-direction:column;box-shadow:0 38px 110px rgba(0,0,0,.5)}.chat-top{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;border-bottom:1px solid var(--line);font:700 9.5px 'JetBrains Mono',monospace;letter-spacing:.15em;text-transform:uppercase;color:#ffbc7c}.messages{flex:1;padding:20px;display:flex;flex-direction:column;gap:12px;overflow:auto}.msg{max-width:86%;padding:12px 14px;border-radius:4px;line-height:1.5;font-size:13.5px}.msg.bot{align-self:flex-start;background:#16202b;color:#e8eef5}.msg.user{align-self:flex-end;background:#1f633d;color:#effff4}.msg strong{display:block;margin-bottom:5px;color:#ffbc7c;font-size:10.5px;text-transform:uppercase;letter-spacing:.08em}.chat-input{display:flex;gap:10px;padding:15px;border-top:1px solid var(--line)}.chat-input input{flex:1;background:#0b0b0d;border:1px solid rgba(255,255,255,.1);height:46px;color:#fff;padding:0 14px;font:600 13.5px Archivo,sans-serif;outline:none}.chat-input button{height:46px;border:0;padding:0 20px;background:#fff;color:#090401;font-weight:900;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
 footer{padding:34px;text-align:center;border-top:1px solid var(--line);font:700 10px 'JetBrains Mono',monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
 .reveal{opacity:0;transform:translateY(34px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1)}.reveal.show{opacity:1;transform:translateY(0)}
+@keyframes mediaDrift{from{transform:scale(1.02) translate3d(-1.5%,0,0)}to{transform:scale(1.08) translate3d(1.5%,-1%,0)}}@keyframes cardLift{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
 @media(min-width:861px){html{scroll-snap-type:y proximity;scroll-padding-top:0}section{scroll-snap-align:start;scroll-snap-stop:normal}.chat-section,.accelerator{scroll-snap-align:start}}
-@media(max-width:1366px) and (min-width:861px){section{padding:88px 28px}.container{width:min(1100px,100%)}h1{font-size:clamp(44px,6.8vw,86px)}h2{font-size:clamp(34px,4.6vw,58px)}h3{font-size:clamp(28px,3.5vw,44px)}.lead{font-size:clamp(16px,1.45vw,21px)}.module-head{grid-template-columns:78px minmax(0,1fr);gap:24px;margin-bottom:30px}.num{font-size:68px}.sub{padding:20px;min-height:220px}.sub li,.accel-card li{font-size:13px}.sub h4{font-size:9.5px}.horizontal{padding:82px 28px}.h-pin{width:min(1100px,100%)}.panel-card{height:280px}.panel-content b{font-size:clamp(23px,2vw,31px)}.accel-card{padding:20px;min-height:250px}.accel-card b{font-size:25px}.chatbox{min-height:540px}}
+@media(max-width:1366px) and (min-width:861px){section{padding:88px 28px}.container{width:min(1100px,100%)}h1{font-size:clamp(44px,6.8vw,86px)}h2{font-size:clamp(34px,4.6vw,58px)}h3{font-size:clamp(28px,3.5vw,44px)}.lead{font-size:clamp(16px,1.45vw,21px)}.hero-media{min-height:390px}.module-head{grid-template-columns:78px minmax(0,1fr);gap:24px;margin-bottom:24px}.num{font-size:68px}.module-visual{height:210px}.sub{padding:20px;min-height:220px}.sub li,.accel-card li{font-size:13px}.sub h4{font-size:9.5px}.horizontal{padding:82px 28px}.h-pin{width:min(1100px,100%)}.panel-card{height:280px}.panel-content b{font-size:clamp(23px,2vw,31px)}.accel-card{padding:20px;min-height:250px}.accel-card b{font-size:25px}.chatbox{min-height:540px}}
 @media(max-width:1100px){.h-track{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:860px){section{min-height:auto;padding:86px 18px}.nav{width:calc(100vw - 24px);justify-content:center;overflow:hidden}.hero-grid,.intro-grid,.module-head,.chat-wrap,.accel-head,.accel-copy{grid-template-columns:1fr}.hero{min-height:100svh}.kpi{grid-template-columns:1fr 1fr}.num{font-size:76px}.subgrid,.accel-grid{grid-template-columns:1fr}.accel-card.feature{grid-column:auto}.horizontal{padding:86px 18px}.h-track{grid-template-columns:1fr}.panel-card{height:auto;min-height:300px}.panel-content{position:relative;inset:auto;padding:156px 18px 22px}.agents{grid-template-columns:1fr}.chatbox{min-height:560px}.chat-input{display:grid}.chat-input button{width:100%}}
+@media(max-width:860px){section{min-height:auto;padding:86px 18px}.nav{width:calc(100vw - 24px);justify-content:center;overflow:hidden}.hero-grid,.intro-grid,.module-head,.chat-wrap,.accel-head,.accel-copy{grid-template-columns:1fr}.hero{min-height:100svh}.hero-media{grid-column:auto;grid-row:auto;min-height:320px}.kpi{grid-template-columns:1fr 1fr}.num{font-size:76px}.module-visual,.intro-visual{height:260px}.subgrid,.accel-grid{grid-template-columns:1fr}.accel-card.feature{grid-column:auto}.horizontal{padding:86px 18px}.h-track{grid-template-columns:1fr}.panel-card{height:auto;min-height:300px}.panel-content{position:relative;inset:auto;padding:156px 18px 22px}.agents{grid-template-columns:1fr}.chatbox{min-height:560px}.chat-input{display:grid}.chat-input button{width:100%}}
 </style>
 </head>
 <body>
@@ -49,6 +50,7 @@ footer{padding:34px;text-align:center;border-top:1px solid var(--line);font:700 
         <b>Não é ferramenta solta.</b>
         <p>É uma arquitetura de crescimento. Eu desenho o fluxo, conecto os dados, automatizo o que trava e entrego interface para o time operar.</p>
       </div>
+      <figure class="hero-media reveal"><img src="assets/img/presentation/p27-ecossistema-bruno.webp" alt="Ecossistema Bruno Kvetik com IA, dados, marketing e desenvolvimento"></figure>
     </div>
     <div class="kpi">
       <div><b>7</b><span>IAs de apoio executivo</span></div>
@@ -65,6 +67,7 @@ footer{padding:34px;text-align:center;border-top:1px solid var(--line);font:700 
       <span class="tag">MERCADO DIGITAL</span>
       <h2>O mercado mudou de velocidade.</h2>
       <p class="lead" style="margin-top:20px">Quem trata IA como aplicativo perde. Quem trata IA como infraestrutura ganha margem, tempo e inteligência operacional.</p>
+      <figure class="intro-visual reveal"><img src="assets/img/presentation/p18-antes-depois-operacao.webp" alt="Antes e depois de uma operação empresarial com IA e dados"></figure>
     </div>
     <div class="intro-list">
       <div class="intro-item reveal"><b>IA aplicada em empresas</b><p>Automação de atendimento, análise, suporte, CRM, operação e decisão com contexto real do negócio.</p></div>
@@ -82,11 +85,11 @@ footer{padding:34px;text-align:center;border-top:1px solid var(--line);font:700 
       <p class="lead">Uma visão por etapa: mercado, IA, dados, marketing, produto e desenvolvimento.</p>
     </div>
     <div class="h-track" data-h-track>
-      <div class="panel"><div class="panel-card"><div class="panel-content"><b>Mercado digital</b><span>A disputa sai do “quem posta mais” e vai para quem aprende, mede e ajusta mais rápido.</span></div></div></div>
-      <div class="panel"><div class="panel-card"><div class="panel-content"><b>IA aplicada</b><span>Assistentes deixam de responder perguntas e passam a executar processos inteiros.</span></div></div></div>
-      <div class="panel"><div class="panel-card"><div class="panel-content"><b>Dados e telemetria</b><span>Toda interação vira sinal: venda, atendimento, campanha, loja, produto, equipe e margem.</span></div></div></div>
-      <div class="panel"><div class="panel-card"><div class="panel-content"><b>Marketing industrializado</b><span>Conteúdo e ads viram linha de produção inteligente, sem perder estratégia nem voz de marca.</span></div></div></div>
-      <div class="panel"><div class="panel-card"><div class="panel-content"><b>Dev como vantagem</b><span>Sites, LPs, CRM, SaaS e automações deixam de ser custo e viram capacidade interna de criação.</span></div></div></div>
+      <div class="panel"><div class="panel-card" style="--i:0;background-image:url('assets/img/presentation/p33-radar-mercado.webp')"><div class="panel-content"><b>Mercado digital</b><span>A disputa sai do “quem posta mais” e vai para quem aprende, mede e ajusta mais rápido.</span></div></div></div>
+      <div class="panel"><div class="panel-card" style="--i:1;background-image:url('assets/img/presentation/p23-gestor-ia.webp')"><div class="panel-content"><b>IA aplicada</b><span>Assistentes deixam de responder perguntas e passam a executar processos inteiros.</span></div></div></div>
+      <div class="panel"><div class="panel-card" style="--i:2;background-image:url('assets/img/presentation/p22-bi-executivo.webp')"><div class="panel-content"><b>Dados e telemetria</b><span>Toda interação vira sinal: venda, atendimento, campanha, loja, produto, equipe e margem.</span></div></div></div>
+      <div class="panel"><div class="panel-card" style="--i:3;background-image:url('assets/img/presentation/p30-central-conteudo.webp')"><div class="panel-content"><b>Marketing industrializado</b><span>Conteúdo e ads viram linha de produção inteligente, sem perder estratégia nem voz de marca.</span></div></div></div>
+      <div class="panel"><div class="panel-card" style="--i:4;background-image:url('assets/img/presentation/p32-produto-digital.webp')"><div class="panel-content"><b>Dev como vantagem</b><span>Sites, LPs, CRM, SaaS e automações deixam de ser custo e viram capacidade interna de criação.</span></div></div></div>
     </div>
   </div>
 </section>
@@ -105,7 +108,7 @@ footer{padding:34px;text-align:center;border-top:1px solid var(--line);font:700 
       </div>
     </div>
     <div class="accel-grid">
-      <div class="accel-card feature reveal">
+      <div class="accel-card feature reveal" style="background-image:url('assets/img/presentation/p28-whatsapp-escala.webp')">
         <b>1. Time</b>
         <ul>
           <li><strong>IA com imobiliárias e corretores:</strong> todos informados sobre produtos, regras, campanha e oportunidade.</li>
@@ -114,7 +117,7 @@ footer{padding:34px;text-align:center;border-top:1px solid var(--line);font:700 
           <li><strong>Copiloto do corretor:</strong> quando precisa de humano, a IA apoia com contexto, resposta e próximo passo.</li>
         </ul>
       </div>
-      <div class="accel-card reveal">
+      <div class="accel-card reveal" style="background-image:url('assets/img/presentation/p10-rh-comercial.webp')">
         <b>2. RH</b>
         <ul>
           <li><strong>Contratação ativa:</strong> busca, abordagem, triagem e cadência para formar banco de corretores e SDRs.</li>
@@ -123,7 +126,7 @@ footer{padding:34px;text-align:center;border-top:1px solid var(--line);font:700 
           <li><strong>Gestão de RH:</strong> presença, performance, evolução, aderência ao processo e potencial de crescimento.</li>
         </ul>
       </div>
-      <div class="accel-card reveal">
+      <div class="accel-card reveal" style="background-image:url('assets/img/presentation/p11-plano-desenvolvimento.webp')">
         <b>3. Pessoas</b>
         <ul>
           <li><strong>Treinamentos:</strong> produto, objeção, abordagem, follow-up, CRM, WhatsApp e jornada do cliente.</li>
@@ -132,7 +135,7 @@ footer{padding:34px;text-align:center;border-top:1px solid var(--line);font:700 
           <li><strong>Mentorias:</strong> líderes e corretores-chave acompanhados nos gargalos que impactam conversão.</li>
         </ul>
       </div>
-      <div class="accel-card reveal">
+      <div class="accel-card reveal" style="background-image:url('assets/img/presentation/p09-gamificacao-comercial.webp')">
         <b>4. Gamificação</b>
         <ul>
           <li><strong>Problema real:</strong> o maior problema das gamificações é que o time não engaja.</li>
@@ -141,7 +144,7 @@ footer{padding:34px;text-align:center;border-top:1px solid var(--line);font:700 
           <li><strong>Resultado:</strong> ranking vivo com meta, reconhecimento, cobrança, campanha e evolução comercial.</li>
         </ul>
       </div>
-      <div class="accel-card reveal">
+      <div class="accel-card reveal" style="background-image:url('assets/img/presentation/p24-recepcao-ia.webp')">
         <b>5. Recepção IA</b>
         <ul>
           <li><strong>Problema:</strong> muitos plantões não têm recepção estruturada e o marketing perde leitura da ponta.</li>
@@ -150,7 +153,7 @@ footer{padding:34px;text-align:center;border-top:1px solid var(--line);font:700 
           <li><strong>Controle:</strong> o gestor enxerga o atendimento desde o primeiro contato e mede qualidade da demanda.</li>
         </ul>
       </div>
-      <div class="accel-card reveal">
+      <div class="accel-card reveal" style="background-image:url('assets/img/presentation/p12-manutencao-operacao.webp')">
         <b>6. Manter</b>
         <ul>
           <li><strong>Manutenção da operação:</strong> rotina para não deixar a aceleradora morrer depois da implantação.</li>
@@ -169,6 +172,7 @@ footer{padding:34px;text-align:center;border-top:1px solid var(--line);font:700 
       <span class="tag">CHAT COM 7 IAS DE APOIO</span>
       <h2>Quer saber o que mais poderíamos criar?</h2>
       <p class="lead" style="margin:22px 0 28px">Uma interface para conversar com IAs especialistas por nível executivo: estratégia, operação, marketing, dados, produto, dev e vendas.</p>
+      <figure class="intro-visual reveal"><img src="assets/img/presentation/p13-chat-sete-ias.webp" alt="Interface de chat com sete IAs especialistas"></figure>
       <div class="agents" id="agents"></div>
     </div>
     <div class="chatbox">
@@ -197,11 +201,24 @@ const modules = [
   ['14','INOVAÇÃO APLICADA NA OPERAÇÃO','Como eu levo inovação para dentro','Eu pego o problema real da empresa e desenho uma solução que o time consegue usar: simples na tela, forte por trás e conectada com a rotina.','O que eu construo','Fluxos automatizados, áreas logadas, chatbots, assistentes internos, dashboards, páginas, CRM, ferramentas de vendas e sistemas sob medida.','O que posso criar para você','Uma esteira de inovação contínua: todo mês uma melhoria concreta, uma automação nova ou uma ferramenta que tira peso do time.'],
   ['15','EMPRESAS HUMANAS VALENDO MILHÕES','Como eu vejo o futuro','As empresas mais valiosas não serão as que trocam pessoas por tecnologia. Serão as que colocam humanos bons operando com IA, dados e sistemas melhores.','O que eu observo no mercado','Times pequenos criando produtos globais, empresas com operação enxuta, fundadores com copilotos de IA e negócios que escalam porque cada pessoa produz muito mais.','O que posso criar para você','Uma operação onde cada pessoa vale mais: vendedor com IA, gestor com BI, marketing com automação, atendimento com contexto e diretoria com visão em tempo real.']
 ];
+const moduleImages = [
+  'assets/img/presentation/p23-gestor-ia.webp',
+  'assets/img/presentation/p22-bi-executivo.webp',
+  'assets/img/presentation/p30-central-conteudo.webp',
+  'assets/img/presentation/p19-crm-vivo.webp',
+  'assets/img/presentation/p32-produto-digital.webp',
+  'assets/img/presentation/p33-radar-mercado.webp',
+  'assets/img/presentation/p20-lead-funil.webp',
+  'assets/img/presentation/p14-war-room-marketing.webp',
+  'assets/img/presentation/p16-mapa-operacao.webp',
+  'assets/img/presentation/p29-empresas-humanas-ia.webp'
+];
 const modulesEl = document.getElementById('modules');
-modulesEl.innerHTML = modules.map(m => `
+modulesEl.innerHTML = modules.map((m,i) => `
 <section class="module">
   <div class="container">
     <div class="module-head reveal"><div class="num">${m[0]}</div><div><span class="tag">${m[1]}</span><h3>${m[1]} <span class="accent">na prática</span>.</h3><p class="lead" style="margin-top:16px">Cada frente tem o que já existe, o que está evoluindo e o que pode ser criado sob medida para empresas.</p></div></div>
+    <figure class="module-visual reveal"><img src="${moduleImages[i]}" alt="${m[1]} aplicado em interface visual premium"></figure>
     <div class="subgrid">
       <div class="sub reveal"><h4>${m[2]}</h4><ul><li>${m[3]}</li><li>Implementação rápida com interface clara para o time usar.</li><li>Conecta marketing, operação e tomada de decisão.</li></ul></div>
       <div class="sub reveal"><h4>${m[4]}</h4><ul><li>${m[5]}</li><li>Mais automação, mais contexto e menos tarefa manual.</li><li>Camadas prontas para escalar por cliente ou unidade.</li></ul></div>
