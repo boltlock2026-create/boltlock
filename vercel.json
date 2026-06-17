@@ -28,6 +28,18 @@
       "dest": "/frontend/netao/$1"
     },
     {
+      "src": "/escolas",
+      "dest": "/frontend/escolas/index.html"
+    },
+    {
+      "src": "/escolas/",
+      "dest": "/frontend/escolas/index.html"
+    },
+    {
+      "src": "/escolas/(.*)",
+      "dest": "/frontend/escolas/$1"
+    },
+    {
       "src": "/boltlock",
       "dest": "/frontend/boltlock/index.html"
     },

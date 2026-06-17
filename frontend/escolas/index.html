@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOLTLOCK para Escolas · Funcionário de IA que atende, matricula e cobra no WhatsApp</title>
+<meta name="description" content="Uma IA que atende os pais na hora, capta e fecha matrículas, lembra a mensalidade e nunca dorme. Veja tudo que a inteligência artificial pode fazer pela sua escola — e o ganho real.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&family=Space+Grotesk:wght@500;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#050505; --ink2:#0a0a0a; --paper:#f7f2e8;
+  --accent:#f5c518; --accent2:#ffe28a; --accent-deep:#8b5f12;
+  --cyan:#4ec8ff; --wa:#25d366; --mut:#a5a5a5; --dim:#6b6b6b;
+  --line:rgba(255,255,255,.10);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:Inter,system-ui,-apple-system,sans-serif;
+  background:var(--ink); color:var(--paper);
+  background-image:radial-gradient(circle at 20% 8%, rgba(245,197,24,.07), transparent 45%),radial-gradient(circle at 85% 95%, rgba(78,200,255,.05), transparent 45%);
+  -webkit-font-smoothing:antialiased; line-height:1.55; overflow-x:hidden;
+}
+.serif{font-family:'Playfair Display',serif}
+.grotesk{font-family:'Space Grotesk',sans-serif}
+.mono{font-family:'JetBrains Mono',monospace}
+.wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+.accent{background:linear-gradient(110deg,var(--accent2),var(--accent),var(--accent-deep));-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:50;background:rgba(5,5,5,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:62px}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:19px;letter-spacing:-.02em}
+.logo b{color:var(--accent)}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:'Space Grotesk',sans-serif;font-weight:700;border-radius:12px;padding:13px 22px;text-decoration:none;cursor:pointer;border:0;font-size:15px;transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn-primary{background:linear-gradient(135deg,var(--accent2),var(--accent-deep));color:#0a0a0a;box-shadow:0 10px 34px rgba(245,197,24,.30)}
+.btn-wa{background:var(--wa);color:#04210f;box-shadow:0 10px 34px rgba(37,211,102,.30)}
+.btn-ghost{background:transparent;color:var(--paper);border:1px solid var(--line)}
+.nav-cta{padding:9px 18px;font-size:14px}
+
+/* HERO */
+.hero{padding:78px 0 60px;text-align:center}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:7px 16px;margin-bottom:26px;background:rgba(245,197,24,.05)}
+.eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent);animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.hero h1{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(38px,6.4vw,76px);line-height:1.02;letter-spacing:-.035em;margin-bottom:22px}
+.hero p.sub{font-size:clamp(17px,2.2vw,21px);color:var(--mut);max-width:720px;margin:0 auto 34px}
+.hero .cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.hero .micro{margin-top:18px;font-size:13px;color:var(--dim)}
+
+/* STATS strip */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:64px}
+.stat{padding:26px 18px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.025);text-align:center}
+.stat .v{font-family:'Playfair Display',serif;font-size:clamp(30px,4vw,44px);font-weight:900;color:var(--accent);letter-spacing:-.03em;line-height:1}
+.stat .l{font-size:13px;color:var(--mut);margin-top:8px}
+
+/* SECTION */
+section{padding:74px 0;border-top:1px solid var(--line)}
+.sec-head{max-width:760px;margin:0 auto 44px;text-align:center}
+.sec-head .tag{display:inline-block;padding:5px 14px;background:rgba(255,255,255,.04);border:1px solid var(--accent);color:var(--accent);border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;margin-bottom:18px}
+.sec-head h2{font-family:'Playfair Display',serif;font-size:clamp(30px,4.6vw,52px);letter-spacing:-.035em;line-height:1.06;font-weight:900;margin-bottom:14px}
+.sec-head p{color:var(--mut);font-size:17px}
+
+/* GRID cards */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{padding:26px 22px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.005));transition:border-color .2s,transform .2s}
+.card:hover{border-color:rgba(245,197,24,.45);transform:translateY(-3px)}
+.card .ico{font-size:30px;margin-bottom:14px;display:block}
+.card h3{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;margin-bottom:8px;letter-spacing:-.02em}
+.card p{font-size:14px;color:var(--mut)}
+
+/* DELIVER list */
+.deliver{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;max-width:900px;margin:0 auto}
+.drow{display:flex;gap:14px;padding:18px 20px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.02)}
+.drow .chk{flex-shrink:0;width:30px;height:30px;border-radius:8px;background:rgba(245,197,24,.14);border:1px solid var(--accent);display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:900}
+.drow h4{font-family:'Space Grotesk',sans-serif;font-size:15.5px;font-weight:700;margin-bottom:3px}
+.drow p{font-size:13.5px;color:var(--mut)}
+
+/* GAIN */
+.gain{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:960px;margin:0 auto}
+.gcard{padding:28px 24px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(180deg,rgba(245,197,24,.06),rgba(255,255,255,.005))}
+.gcard .big{font-family:'Playfair Display',serif;font-size:clamp(32px,4.5vw,46px);font-weight:900;color:var(--accent);line-height:1;letter-spacing:-.03em}
+.gcard h4{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:800;margin:12px 0 6px}
+.gcard p{font-size:14px;color:var(--mut)}
+
+/* STEPS */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:960px;margin:0 auto}
+.step{padding:26px 22px;border:1px solid var(--line);border-radius:20px;background:rgba(255,255,255,.02);position:relative}
+.step .n{font-family:'JetBrains Mono',monospace;font-size:13px;color:#0a0a0a;background:var(--accent);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;margin-bottom:14px}
+.step h3{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;margin-bottom:7px}
+.step p{font-size:14px;color:var(--mut)}
+
+/* CTA final */
+.final{text-align:center;background:radial-gradient(circle at 50% 0%,rgba(245,197,24,.12),transparent 62%)}
+.final h2{font-family:'Playfair Display',serif;font-size:clamp(32px,5vw,58px);font-weight:900;letter-spacing:-.035em;line-height:1.05;margin-bottom:18px}
+.final p{color:var(--mut);font-size:18px;max-width:620px;margin:0 auto 32px}
+
+footer{border-top:1px solid var(--line);padding:34px 0;text-align:center;color:var(--dim);font-size:13px}
+footer b{color:var(--accent)}
+
+@media(max-width:860px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .grid{grid-template-columns:1fr}
+  .deliver,.gain,.steps{grid-template-columns:1fr}
+  .nav-cta-hide{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="logo">BOLT<b>LOCK</b> · Escolas</div>
+    <a href="#contato" class="btn btn-wa nav-cta">Falar agora</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow"><span class="dot"></span> Inteligência Artificial para Escolas</span>
+    <h1>Sua escola <span class="accent">respondendo na hora</span>,<br>matriculando sem fila e <span class="accent">sem nunca dormir</span>.</h1>
+    <p class="sub">Um Funcionário de IA que atende os pais no WhatsApp em segundos, capta e fecha matrículas, lembra a mensalidade e tira a secretaria do operacional repetitivo. 24 horas, 7 dias, no número e no tom da sua escola.</p>
+    <div class="cta-row">
+      <a href="#contato" class="btn btn-wa">💬 Quero ver na minha escola</a>
+      <a href="#oque" class="btn btn-ghost">Ver o que a IA faz ↓</a>
+    </div>
+    <div class="micro">Sem trocar de número · Sem app novo para os pais · Funciona no WhatsApp que você já usa</div>
+
+    <div class="stats">
+      <div class="stat"><div class="v">&lt;1 min</div><div class="l">para responder cada pai</div></div>
+      <div class="stat"><div class="v">24/7</div><div class="l">inclui fim de semana e feriado</div></div>
+      <div class="stat"><div class="v">100%</div><div class="l">dos contatos atendidos</div></div>
+      <div class="stat"><div class="v">0</div><div class="l">lead de matrícula perdido por demora</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- O QUE A IA FAZ -->
+<section id="oque">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="tag">O que a IA faz</span>
+      <h2>Tudo que uma <span class="accent">inteligência artificial</span> pode fazer pela sua escola</h2>
+      <p>Do primeiro "oi, tem vaga?" até a rematrícula do ano seguinte — sem deixar nenhum pai no vácuo.</p>
+    </div>
+    <div class="grid">
+      <div class="card"><span class="ico">🎓</span><h3>Captação e matrícula</h3><p>Responde o interessado na hora, explica valores e diferenciais, agenda a visita e conduz o pai até fechar a matrícula.</p></div>
+      <div class="card"><span class="ico">💬</span><h3>Atendimento aos pais 24/7</h3><p>Horários, uniforme, material, calendário, cardápio, documentos. Tira dúvida na hora, a qualquer hora, sem sobrecarregar a secretaria.</p></div>
+      <div class="card"><span class="ico">🧾</span><h3>Secretaria automática</h3><p>2ª via de boleto, declarações, comprovantes e formulários — entregues automaticamente, sem fila e sem ligação.</p></div>
+      <div class="card"><span class="ico">💰</span><h3>Cobrança da mensalidade</h3><p>Lembretes educados e no tom certo antes e depois do vencimento. Reduz a inadimplência sem desgastar a relação.</p></div>
+      <div class="card"><span class="ico">📢</span><h3>Comunicados em massa</h3><p>Reunião, recesso, evento, suspensão de aula — avisa todos os responsáveis de uma vez, sem grupo bagunçado e sem bloquear o número.</p></div>
+      <div class="card"><span class="ico">🔁</span><h3>Rematrícula e reativação</h3><p>Puxa de volta o aluno que não renovou e reativa ex-alunos e interessados antigos que ficaram pelo caminho.</p></div>
+      <div class="card"><span class="ico">🧭</span><h3>Triagem inteligente</h3><p>Identifica se é financeiro, pedagógico ou coordenação e encaminha pra pessoa certa — só o que realmente precisa de humano chega no humano.</p></div>
+      <div class="card"><span class="ico">⭐</span><h3>Pesquisa e satisfação</h3><p>Mede a satisfação dos pais (NPS), coleta feedback e sinaliza famílias insatisfeitas antes de virarem evasão.</p></div>
+      <div class="card"><span class="ico">📊</span><h3>Tudo num painel só</h3><p>Cada conversa, lead e responsável organizados num painel — a direção enxerga a operação inteira em tempo real.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- O QUE A BOLTLOCK ENTREGA -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="tag">O que nós entregamos</span>
+      <h2>O que a <span class="accent">BOLTLOCK</span> faz pela sua escola</h2>
+      <p>Não é um chatbot genérico. É um funcionário de IA treinado com as informações da sua escola, no seu número e com a sua voz.</p>
+    </div>
+    <div class="deliver">
+      <div class="drow"><div class="chk">✓</div><div><h4>Funcionário de IA no WhatsApp</h4><p>Atende, qualifica, agenda e cobra — conversando como gente, no WhatsApp que os pais já usam.</p></div></div>
+      <div class="drow"><div class="chk">✓</div><div><h4>Disparo inteligente com anti-ban</h4><p>Comunicados para todos os responsáveis com proteção do número — sem cair em bloqueio do WhatsApp.</p></div></div>
+      <div class="drow"><div class="chk">✓</div><div><h4>Treinado com a SUA escola</h4><p>Valores, regras, calendário, documentos e tom de voz. Ele responde como a sua secretaria responderia — só que na hora.</p></div></div>
+      <div class="drow"><div class="chk">✓</div><div><h4>Painel de gestão</h4><p>Conversas, leads de matrícula e responsáveis num lugar só. A direção acompanha tudo sem depender de print.</p></div></div>
+      <div class="drow"><div class="chk">✓</div><div><h4>Funil de matrícula (CRM)</h4><p>Do interessado ao matriculado, etapa por etapa — nenhum pai esquecido no meio do caminho.</p></div></div>
+      <div class="drow"><div class="chk">✓</div><div><h4>Implantação acompanhada</h4><p>A gente conecta, treina a IA e ajusta junto com a sua equipe. Você não fica sozinho.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- GANHO REAL -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="tag">O ganho real</span>
+      <h2>O que a sua escola <span class="accent">ganha de verdade</span></h2>
+      <p>Mais matrículas, menos inadimplência e uma secretaria livre pra cuidar do que importa.</p>
+    </div>
+    <div class="gain">
+      <div class="gcard"><div class="big">+ Matrículas</div><h4>Lead que responde na hora, fecha mais</h4><p>O pai decide pela escola que respondeu primeiro. Respondendo em segundos (e não em horas), você para de perder matrícula pra demora.</p></div>
+      <div class="gcard"><div class="big">− Inadimplência</div><h4>Mensalidade lembrada sozinha</h4><p>Lembretes automáticos e educados antes do vencimento reduzem o atraso sem a secretaria precisar cobrar pessoa por pessoa.</p></div>
+      <div class="gcard"><div class="big">− Horas</div><h4>Secretaria fora do operacional</h4><p>As perguntas repetitivas (horário, boleto, documento) a IA resolve. A equipe sobra pra atender bem quem realmente precisa.</p></div>
+      <div class="gcard"><div class="big">24/7</div><h4>A escola nunca fica offline</h4><p>Pai manda mensagem 22h, domingo, feriado — e é atendido na hora. Nada espera o expediente abrir.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="tag">Como começa</span>
+      <h2>Pronto pra atender em <span class="accent">3 passos</span></h2>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><h3>Conecta o WhatsApp</h3><p>Ligamos a IA ao número da escola — sem trocar de chip e sem os pais precisarem instalar nada.</p></div>
+      <div class="step"><div class="n">2</div><h3>Treina com a escola</h3><p>Alimentamos a IA com valores, regras, calendário e o tom de voz da sua secretaria.</p></div>
+      <div class="step"><div class="n">3</div><h3>Começa a atender</h3><p>A partir daí ela responde, capta, agenda e cobra sozinha — e você acompanha tudo pelo painel.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section id="contato" class="final">
+  <div class="wrap">
+    <h2>Vamos colocar uma <span class="accent">IA pra trabalhar</span><br>na sua escola?</h2>
+    <p>Em uma conversa rápida a gente mostra, com o caso da sua escola, quanto você deixa de matricular e de receber por falta de atendimento na hora.</p>
+    <div class="cta-row" style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+      <a href="https://wa.me/5511973472297?text=Quero%20ver%20a%20IA%20da%20BOLTLOCK%20na%20minha%20escola" class="btn btn-wa">💬 Falar com a BOLTLOCK no WhatsApp</a>
+    </div>
+    <div class="micro" style="margin-top:18px;color:var(--dim);font-size:13px">Resposta rápida · Demonstração com o caso real da sua escola</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <b>BOLTLOCK Holding</b> · Funcionários de IA para escolas · Atendimento, matrícula, cobrança e gestão no WhatsApp<br>
+    © 2026 BOLTLOCK · boltlock.com.br
+  </div>
+</footer>
+
+</body>
+</html>
