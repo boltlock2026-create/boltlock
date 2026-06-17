@@ -28,6 +28,18 @@
       "dest": "/frontend/netao/$1"
     },
     {
+      "src": "/historiadaia",
+      "dest": "/frontend/historiadaia/index.html"
+    },
+    {
+      "src": "/historiadaia/",
+      "dest": "/frontend/historiadaia/index.html"
+    },
+    {
+      "src": "/historiadaia/(.*)",
+      "dest": "/frontend/historiadaia/$1"
+    },
+    {
       "src": "/escolas",
       "dest": "/frontend/escolas/index.html"
     },
