@@ -88,6 +88,26 @@
       "dest": "/frontend/boltlock/index.html"
     },
     {
+      "src": "/produtos",
+      "dest": "/frontend/produtos/index.html"
+    },
+    {
+      "src": "/produtos/",
+      "dest": "/frontend/produtos/index.html"
+    },
+    {
+      "src": "/produtos/assets/(.*)",
+      "dest": "/frontend/produtos/assets/$1"
+    },
+    {
+      "src": "/produtos/logos/(.*)",
+      "dest": "/frontend/produtos/logos/$1"
+    },
+    {
+      "src": "/produtos/([^/]+)/?",
+      "dest": "/frontend/produtos/$1/index.html"
+    },
+    {
       "src": "/creditscore",
       "dest": "/frontend/index.html"
     },
