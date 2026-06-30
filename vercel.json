@@ -40,6 +40,30 @@
       "dest": "/frontend/historiadaia/$1"
     },
     {
+      "src": "/colegiovilareal",
+      "dest": "/frontend/colegiovilareal/index.html"
+    },
+    {
+      "src": "/colegiovilareal/",
+      "dest": "/frontend/colegiovilareal/index.html"
+    },
+    {
+      "src": "/colegiovilareal/(.*)",
+      "dest": "/frontend/colegiovilareal/$1"
+    },
+    {
+      "src": "/ospequeninos",
+      "dest": "/frontend/ospequeninos/index.html"
+    },
+    {
+      "src": "/ospequeninos/",
+      "dest": "/frontend/ospequeninos/index.html"
+    },
+    {
+      "src": "/ospequeninos/(.*)",
+      "dest": "/frontend/ospequeninos/$1"
+    },
+    {
       "src": "/escolas",
       "dest": "/frontend/escolas/index.html"
     },
