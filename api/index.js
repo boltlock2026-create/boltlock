@@ -942,12 +942,146 @@ app.post('/api/portal/login', async (req, res) => {
   } catch (e) { res.status(500).json({ erro: e.message }); }
 });
 
+// ═══════════════════════════════════════════════════════════════
+// DISPAROS — WhatsApp (Evolution via proxy VPS) + SMS (TextBee)
+// ═══════════════════════════════════════════════════════════════
+
+const EVO_PROXY_URL = process.env.EVO_PROXY_URL || '';      // ex: https://enviaai.boltlock.com.br/evoproxy
+const EVO_PROXY_SECRET = process.env.EVO_PROXY_SECRET || '';
+const EVOLUTION_API_KEY = process.env.EVOLUTION_API_KEY || '';
+const TEXTBEE_API_KEY = process.env.TEXTBEE_API_KEY || '';
+const TEXTBEE_DEVICE_ID = process.env.TEXTBEE_DEVICE_ID || '';
+const TEXTBEE_URL = process.env.TEXTBEE_URL || 'https://api.textbee.dev';
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+function normalizarNumero(n) {
+  let d = String(n || '').replace(/\D/g, '');
+  if (d.length === 10 || d.length === 11) d = '55' + d;
+  return d;
+}
+function toE164(n) {
+  let d = String(n || '').replace(/\D/g, '');
+  if (d.startsWith('55') && d.length >= 12) return '+' + d;
+  if (d.length === 10 || d.length === 11) return '+55' + d;
+  return '+' + d;
+}
+async function evoCall(method, path, body) {
+  if (!EVO_PROXY_URL) return { ok: false, status: 0, data: { erro: 'EVO_PROXY_URL não configurada' } };
+  const res = await fetch(EVO_PROXY_URL + path, {
+    method,
+    headers: { 'x-crm-secret': EVO_PROXY_SECRET, 'apikey': EVOLUTION_API_KEY, 'Content-Type': 'application/json' },
+    body: body ? JSON.stringify(body) : undefined
+  });
+  const data = await res.json().catch(() => ({}));
+  return { ok: res.ok, status: res.status, data };
+}
+const evoConfigurado = (req, res, next) => {
+  if (!EVO_PROXY_URL || !EVOLUTION_API_KEY) return res.status(503).json({ erro: 'WhatsApp não configurado. Defina EVO_PROXY_URL, EVO_PROXY_SECRET e EVOLUTION_API_KEY na Vercel.' });
+  next();
+};
+
+// ── INSTÂNCIAS ──
+app.get('/api/crm/wa/instances', validarToken, evoConfigurado, async (req, res) => {
+  try {
+    const r = await evoCall('GET', '/instance/fetchInstances');
+    const lista = Array.isArray(r.data) ? r.data.map(i => ({ name: i.name, status: i.connectionStatus, numero: i.ownerJid ? i.ownerJid.split('@')[0] : '', perfil: i.profileName || '' })) : [];
+    res.json({ instances: lista });
+  } catch (e) { res.status(500).json({ erro: e.message }); }
+});
+app.post('/api/crm/wa/instances', validarToken, evoConfigurado, async (req, res) => {
+  try {
+    const nome = (req.body.name || '').trim();
+    if (!nome) return res.status(400).json({ erro: 'Informe o nome da instância' });
+    const r = await evoCall('POST', '/instance/create', { instanceName: nome, integration: 'WHATSAPP-BAILEYS', qrcode: true });
+    const qr = r.data?.qrcode?.base64 || r.data?.qrcode || null;
+    res.json({ ok: r.ok, qr, pairingCode: r.data?.qrcode?.pairingCode || null, raw: r.data?.instance ? undefined : r.data });
+  } catch (e) { res.status(500).json({ erro: e.message }); }
+});
+app.get('/api/crm/wa/connect/:name', validarToken, evoConfigurado, async (req, res) => {
+  try {
+    const r = await evoCall('GET', '/instance/connect/' + encodeURIComponent(req.params.name));
+    res.json({ ok: r.ok, qr: r.data?.base64 || r.data?.qrcode?.base64 || null, pairingCode: r.data?.pairingCode || null, code: r.data?.code || null });
+  } catch (e) { res.status(500).json({ erro: e.message }); }
+});
+app.get('/api/crm/wa/state/:name', validarToken, evoConfigurado, async (req, res) => {
+  try {
+    const r = await evoCall('GET', '/instance/connectionState/' + encodeURIComponent(req.params.name));
+    res.json({ state: r.data?.instance?.state || r.data?.state || 'unknown' });
+  } catch (e) { res.status(500).json({ erro: e.message }); }
+});
+app.delete('/api/crm/wa/instances/:name', validarToken, evoConfigurado, async (req, res) => {
+  try {
+    const n = encodeURIComponent(req.params.name);
+    await evoCall('DELETE', '/instance/logout/' + n);
+    const r = await evoCall('DELETE', '/instance/delete/' + n);
+    res.json({ ok: r.ok });
+  } catch (e) { res.status(500).json({ erro: e.message }); }
+});
+
+// ── DISPARO WHATSAPP (texto / imagem / vídeo / documento / áudio) ──
+app.post('/api/crm/wa/send', validarToken, evoConfigurado, async (req, res) => {
+  try {
+    const { instance, numbers, type = 'text', text = '', media = '', fileName, caption, delay = 2 } = req.body || {};
+    if (!instance) return res.status(400).json({ erro: 'Selecione a instância' });
+    if (!Array.isArray(numbers) || !numbers.length) return res.status(400).json({ erro: 'Informe os números' });
+    const inst = encodeURIComponent(instance);
+    const midia = String(media || '').startsWith('data:') ? String(media).split(',')[1] : media;
+    let enviados = 0, falhas = 0; const results = [];
+    for (const raw of numbers) {
+      const number = normalizarNumero(raw);
+      if (!number) { falhas++; continue; }
+      let r;
+      try {
+        if (type === 'audio') {
+          r = await evoCall('POST', '/message/sendWhatsAppAudio/' + inst, { number, audio: midia });
+        } else if (type === 'image' || type === 'video' || type === 'document') {
+          const body = { number, mediatype: type, media: midia, fileName: fileName || (type + '_boltlock') };
+          if (caption || text) body.caption = caption || text;
+          r = await evoCall('POST', '/message/sendMedia/' + inst, body);
+        } else {
+          r = await evoCall('POST', '/message/sendText/' + inst, { number, text });
+        }
+      } catch (e) { r = { ok: false }; }
+      if (r.ok) enviados++; else falhas++;
+      results.push({ number, ok: !!r.ok });
+      if (delay > 0) await sleep(delay * 1000);
+    }
+    res.json({ ok: true, enviados, falhas, total: numbers.length, results });
+  } catch (e) { res.status(500).json({ erro: e.message }); }
+});
+
+// ── DISPARO SMS (TextBee) ──
+app.post('/api/crm/sms/send', validarToken, async (req, res) => {
+  try {
+    if (!TEXTBEE_API_KEY || !TEXTBEE_DEVICE_ID) return res.status(503).json({ erro: 'SMS não configurado. Defina TEXTBEE_API_KEY e TEXTBEE_DEVICE_ID na Vercel.' });
+    const { numbers, message, delay = 2 } = req.body || {};
+    if (!Array.isArray(numbers) || !numbers.length) return res.status(400).json({ erro: 'Informe os números' });
+    if (!message) return res.status(400).json({ erro: 'Informe a mensagem' });
+    let enviados = 0, falhas = 0; const results = [];
+    for (const raw of numbers) {
+      try {
+        const r = await fetch(`${TEXTBEE_URL}/api/v1/gateway/devices/${TEXTBEE_DEVICE_ID}/send-sms`, {
+          method: 'POST',
+          headers: { 'x-api-key': TEXTBEE_API_KEY, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ recipients: [toE164(raw)], message })
+        });
+        if (r.ok) { enviados++; results.push({ number: toE164(raw), ok: true }); }
+        else { falhas++; results.push({ number: toE164(raw), ok: false, status: r.status }); }
+      } catch (e) { falhas++; results.push({ number: toE164(raw), ok: false }); }
+      if (delay > 0) await sleep(delay * 1000);
+    }
+    res.json({ ok: true, enviados, falhas, total: numbers.length, results });
+  } catch (e) { res.status(500).json({ erro: e.message }); }
+});
+
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'OK',
     timestamp: new Date().toISOString(),
     versao: '1.0.0',
     crm: firebaseInitialized ? 'persistente (firebase)' : 'memoria (configure FIREBASE_SERVICE_ACCOUNT p/ persistir)',
+    whatsapp: (EVO_PROXY_URL && EVOLUTION_API_KEY) ? 'configurado' : 'falta env (EVO_PROXY_URL/EVOLUTION_API_KEY)',
+    sms: (TEXTBEE_API_KEY && TEXTBEE_DEVICE_ID) ? 'configurado' : 'falta env (TEXTBEE_*)',
     apis: {
       'CPF-Light (Serpro)': 'Gratuita (com credenciais)',
       'DICT (Bacen)': 'Gratuita',
