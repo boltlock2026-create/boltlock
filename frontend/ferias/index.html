@@ -193,6 +193,8 @@ function enviar(e){
     "🏫 Escola: "+escola+"\n"+
     "📱 WhatsApp: "+fone;
   var num = escola.indexOf("Vila Real")===0 ? "5511953054065" : "5511947718778";
+  var esc = escola.indexOf("Vila Real")===0 ? "vilareal" : "pequeninos";
+  try{ fetch("/api/crm/intake",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({nome:nome,fone:fone,escola:esc,crianca:crianca,origem:"LP Ferias"})}); }catch(_){}
   window.open("https://wa.me/"+num+"?text="+encodeURIComponent(msg),"_blank");
   return false;
 }

@@ -64,6 +64,30 @@
       "dest": "/frontend/ospequeninos/$1"
     },
     {
+      "src": "/crm",
+      "dest": "/frontend/crm/index.html"
+    },
+    {
+      "src": "/crm/",
+      "dest": "/frontend/crm/index.html"
+    },
+    {
+      "src": "/crm/(.*)",
+      "dest": "/frontend/crm/$1"
+    },
+    {
+      "src": "/portal",
+      "dest": "/frontend/portal/index.html"
+    },
+    {
+      "src": "/portal/",
+      "dest": "/frontend/portal/index.html"
+    },
+    {
+      "src": "/portal/(.*)",
+      "dest": "/frontend/portal/$1"
+    },
+    {
       "src": "/ferias",
       "dest": "/frontend/ferias/index.html"
     },

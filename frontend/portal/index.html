@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Espaço dos Pais · Os Pequeninos & Vila Real</title>
+<link rel="icon" href="/ospequeninos/img/logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--orange:#f7901e;--orange-deep:#e2630f;--green:#46b14e;--green-deep:#2f8a39;--ink:#2b2014;--paper:#fff8ee;--mut:#6f6150;--line:#f1e3cd;--red:#e0431c}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',system-ui,sans-serif;background:var(--paper);color:var(--ink)}
+.wrap{max-width:680px;margin:0 auto;padding:24px 18px}
+.top{display:flex;align-items:center;gap:10px;padding:16px 18px;background:#fff;border-bottom:2px solid var(--line)}
+.top img{width:36px;height:36px;border-radius:50%;background:#fff;object-fit:contain;border:1px solid var(--line)}
+.top b{font-size:16px}
+.top .out{margin-left:auto;color:var(--red);font-weight:700;background:none;border:none;cursor:pointer}
+
+#login{min-height:80vh;display:flex;align-items:center;justify-content:center}
+.lcard{background:#fff;border:2px solid var(--line);border-radius:22px;padding:34px;max-width:380px;width:100%;text-align:center}
+.lcard h1{font-size:24px;margin-bottom:6px}
+.lcard p{color:var(--mut);margin-bottom:22px}
+.lcard input{width:100%;padding:14px;border:2px solid var(--line);border-radius:14px;font-size:20px;text-align:center;letter-spacing:3px;font-weight:800;text-transform:uppercase}
+.lcard input:focus{outline:none;border-color:var(--orange)}
+.lcard button{width:100%;margin-top:16px;padding:14px;background:var(--green);color:#fff;border:none;border-radius:14px;font-weight:800;font-size:16px;cursor:pointer}
+.err{color:var(--red);font-weight:700;margin-top:12px;min-height:18px}
+
+.card{background:#fff;border:2px solid var(--line);border-radius:20px;padding:22px;margin-bottom:16px}
+.card h3{font-size:14px;text-transform:uppercase;letter-spacing:.5px;color:var(--orange-deep);margin-bottom:14px}
+.hero{background:linear-gradient(135deg,var(--green),var(--green-deep));color:#fff;border-radius:20px;padding:24px;margin-bottom:16px}
+.hero h2{font-size:24px}.hero p{opacity:.92;margin-top:4px;font-weight:600}
+.item{border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}
+.item b{font-size:15px}.item .meta{color:var(--mut);font-size:13px;margin-top:4px}
+.pill{font-size:12px;padding:3px 10px;border-radius:20px;font-weight:800;float:right}
+.pago{background:#e3f7e6;color:var(--green-deep)}.pendente{background:#fff0d6;color:var(--orange-deep)}.vencido{background:#fde2da;color:var(--red)}
+.empty{color:var(--mut);text-align:center;padding:24px;font-weight:600}
+.tot{display:flex;gap:12px;flex-wrap:wrap}
+.tot div{flex:1;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center;min-width:120px}
+.tot .v{font-size:22px;font-weight:800}.tot .l{color:var(--mut);font-size:12px}
+</style>
+</head>
+<body>
+
+<div id="login">
+  <div class="lcard">
+    <h1>Espaço dos Pais</h1>
+    <p>Digite o código de acesso que a escola te enviou</p>
+    <input id="cod" maxlength="8" placeholder="CÓDIGO" onkeydown="if(event.key==='Enter')entrar()">
+    <button onclick="entrar()">Entrar</button>
+    <div class="err" id="err"></div>
+  </div>
+</div>
+
+<div id="app" style="display:none">
+  <div class="top"><img src="/ospequeninos/img/logo.jpg"><b>Espaço dos Pais</b><button class="out" onclick="sair()">Sair</button></div>
+  <div class="wrap" id="content"></div>
+</div>
+
+<script>
+const hoje=new Date().toISOString().slice(0,10);
+const fmt=v=>'R$ '+(Number(v)||0).toLocaleString('pt-BR',{minimumFractionDigits:2});
+const esc=s=>(s||'').replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
+const dia=s=>s?new Date(s).toLocaleDateString('pt-BR'):'—';
+
+async function entrar(){
+  const codigo=document.getElementById('cod').value.trim();
+  const err=document.getElementById('err'); err.textContent='';
+  if(!codigo){err.textContent='Digite o código';return;}
+  try{
+    const r=await fetch('/api/portal/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({codigo})});
+    const d=await r.json();
+    if(!r.ok)throw new Error(d.erro||'Código inválido');
+    localStorage.setItem('portal_cod',codigo);
+    render(d.aluno);
+  }catch(e){err.textContent=e.message;}
+}
+function sair(){localStorage.removeItem('portal_cod');location.reload();}
+
+function render(a){
+  document.getElementById('login').style.display='none';
+  document.getElementById('app').style.display='block';
+  const escola=a.escola==='vilareal'?'Colégio Vila Real':'Os Pequeninos';
+  const pend=(a.pagamentos||[]).filter(p=>p.status!=='pago').reduce((s,p)=>s+(p.valor||0),0);
+  const pago=(a.pagamentos||[]).filter(p=>p.status==='pago').reduce((s,p)=>s+(p.valor||0),0);
+  document.getElementById('content').innerHTML=`
+    <div class="hero"><h2>${esc(a.nome)}</h2><p>${escola} · ${esc(a.turma||a.serie||'')} · ${esc(a.status||'')}</p></div>
+
+    <div class="card"><h3>🔔 Avisos da escola</h3>
+      ${(a.notificacoes||[]).map(n=>`<div class="item"><b>${esc(n.titulo)}</b><div class="meta">${esc(n.msg)}</div><div class="meta">${dia(n.em)}</div></div>`).join('')||'<div class="empty">Nenhum aviso novo</div>'}
+    </div>
+
+    <div class="card"><h3>💰 Pagamentos</h3>
+      <div class="tot"><div><div class="v" style="color:var(--green-deep)">${fmt(pago)}</div><div class="l">Pago</div></div><div><div class="v" style="color:var(--orange-deep)">${fmt(pend)}</div><div class="l">Em aberto</div></div></div>
+      <div style="margin-top:14px">
+      ${(a.pagamentos||[]).map(p=>{const venc=p.status!=='pago'&&p.vencimento&&p.vencimento<hoje;const st=venc?'vencido':p.status;return `<div class="item"><b>${esc(p.descricao)}</b> <span class="pill ${st}">${st}</span><div class="meta">${fmt(p.valor)} · vence ${dia(p.vencimento)}</div></div>`;}).join('')||'<div class="empty">Nenhum pagamento lançado</div>'}
+      </div>
+    </div>
+
+    <div class="card"><h3>📝 Acompanhamento</h3>
+      ${(a.notas||[]).map(n=>`<div class="item">${esc(n.texto)}<div class="meta">${esc(n.tipo)} · ${dia(n.em)}</div></div>`).join('')||'<div class="empty">Sem registros ainda</div>'}
+    </div>`;
+}
+
+const saved=localStorage.getItem('portal_cod');
+if(saved){document.getElementById('cod').value=saved;entrar();}
+</script>
+</body>
+</html>
