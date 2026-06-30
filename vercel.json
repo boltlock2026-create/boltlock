@@ -40,6 +40,31 @@
       "dest": "/frontend/historiadaia/$1"
     },
     {
+      "src": "/crm(/.*)?",
+      "status": 308,
+      "headers": { "Location": "/escolas/crm" }
+    },
+    {
+      "src": "/portal(/.*)?",
+      "status": 308,
+      "headers": { "Location": "/escolas/portal" }
+    },
+    {
+      "src": "/ferias(/.*)?",
+      "status": 308,
+      "headers": { "Location": "/escolas/ferias" }
+    },
+    {
+      "src": "/colegiovilareal(/.*)?",
+      "status": 308,
+      "headers": { "Location": "/escolas/colegiovilareal" }
+    },
+    {
+      "src": "/ospequeninos(/.*)?",
+      "status": 308,
+      "headers": { "Location": "/escolas/ospequeninos" }
+    },
+    {
       "src": "/escolas/colegiovilareal",
       "dest": "/frontend/colegiovilareal/index.html"
     },
