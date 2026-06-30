@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DISCA AI - Discador automático para corretores | BOLTLOCK</title>
+  <meta name="description" content="DISCA AI é o discador automático da BOLTLOCK para corretores: distribui ligações, registra contexto e acelera o atendimento humano.">
+  <meta property="og:title" content="DISCA AI - Discador automático para corretores">
+  <meta property="og:description" content="Primeiro estágio com 10 números, 20 usuários simultâneos e capacidade planejada para 2 mil a 4 mil ligações por dia.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/produtos/logos/disca-ai.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/discaai/assets/discaai.css">
+</head>
+<body>
+  <canvas class="frame-canvas" id="frameCanvas" aria-hidden="true"></canvas>
+
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="BOLTLOCK">
+      <strong>BOLT</strong><span>LOCK</span>
+    </a>
+    <nav aria-label="Navegação principal">
+      <a href="#operacao">Operação</a>
+      <a href="#fluxo">Fluxo</a>
+      <a href="#ativacao">Ativação</a>
+    </nav>
+    <a class="header-cta" href="https://wa.me/5511977661008?text=Quero%20ativar%20o%20DISCA%20AI">Ativar agora</a>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Discador automático BOLTLOCK</p>
+        <h1>DISCA AI coloca cada corretor falando com mais oportunidades reais.</h1>
+        <p class="lead">A operação liga, organiza, distribui e registra o contexto de cada contato. O corretor entra quando existe conversa com chance de avançar.</p>
+
+        <div class="hero-actions">
+          <a class="btn primary" href="https://wa.me/5511977661008?text=Quero%20ativar%20o%20DISCA%20AI%20para%20meu%20time">Quero ativar o DISCA AI</a>
+          <a class="btn secondary" href="#operacao">Ver capacidade</a>
+        </div>
+
+        <dl class="capacity-strip" aria-label="Capacidade inicial do projeto">
+          <div>
+            <dt>10</dt>
+            <dd>números no primeiro estágio</dd>
+          </div>
+          <div>
+            <dt>20</dt>
+            <dd>usuários simultâneos</dd>
+          </div>
+          <div>
+            <dt>2 mil a 4 mil</dt>
+            <dd>ligações por dia planejadas</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="hero-visual" aria-label="Painel visual do DISCA AI">
+        <div class="visual-top">
+          <img src="/produtos/logos/disca-ai.png" alt="DISCA AI">
+          <span>Operação ativa</span>
+        </div>
+        <div class="dialer-panel">
+          <div class="call-ring" aria-hidden="true">
+            <span></span>
+            <i></i>
+          </div>
+          <div class="call-meta">
+            <p>Fila inteligente</p>
+            <strong id="liveCalls">184</strong>
+            <span>ligações processadas hoje</span>
+          </div>
+        </div>
+        <div class="signal-grid">
+          <div>
+            <span>Atendidas</span>
+            <strong id="answered">71%</strong>
+          </div>
+          <div>
+            <span>Quentes</span>
+            <strong id="hotLeads">36</strong>
+          </div>
+          <div>
+            <span>Repassadas</span>
+            <strong id="handoffs">18</strong>
+          </div>
+        </div>
+        <ol class="activity-feed" id="activityFeed" aria-label="Eventos recentes"></ol>
+      </div>
+    </section>
+
+    <section class="section band" id="operacao">
+      <div class="section-head">
+        <p class="eyebrow">Primeiro estágio</p>
+        <h2>Começamos com 10 números para validar volume, qualidade e entrega.</h2>
+        <p>Para 2 mil a 4 mil ligações por dia com 20 usuários simultâneos, a primeira estrutura fica enxuta e controlável. A expansão vem depois de medir atendimento, bloqueios, custo por conversa e taxa de repasse.</p>
+      </div>
+      <div class="metric-grid">
+        <article>
+          <span>01</span>
+          <h3>Distribuição por número</h3>
+          <p>Cada número trabalha com cadência própria para reduzir saturação e manter reputação operacional.</p>
+        </article>
+        <article>
+          <span>02</span>
+          <h3>Fila por usuário</h3>
+          <p>Os 20 usuários recebem oportunidades conforme disponibilidade, prioridade da campanha e temperatura do lead.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <h3>Contexto registrado</h3>
+          <p>Resultado da ligação, objeção, interesse e próxima ação ficam salvos para o corretor não começar do zero.</p>
+        </article>
+        <article>
+          <span>04</span>
+          <h3>Escala com controle</h3>
+          <p>Se os 10 números baterem a meta com qualidade, subimos a capacidade com mais números e novas rotas.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="fluxo">
+      <div class="section-head compact">
+        <p class="eyebrow">Como funciona</p>
+        <h2>O DISCA AI não substitui o corretor. Ele remove o peso repetitivo antes da conversa boa.</h2>
+      </div>
+      <div class="flow">
+        <div class="flow-step">
+          <span>1</span>
+          <h3>Importa a lista</h3>
+          <p>Leads entram por CSV, CRM ou integração definida no projeto.</p>
+        </div>
+        <div class="flow-step">
+          <span>2</span>
+          <h3>Disca com regra</h3>
+          <p>O sistema controla horários, tentativas, prioridades e números usados.</p>
+        </div>
+        <div class="flow-step">
+          <span>3</span>
+          <h3>Qualifica o contato</h3>
+          <p>Registra se atendeu, se tem interesse, melhor horário e objeção principal.</p>
+        </div>
+        <div class="flow-step">
+          <span>4</span>
+          <h3>Chama o humano</h3>
+          <p>Quando há oportunidade real, o corretor recebe contexto e próxima ação.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section dashboard-section">
+      <div class="dashboard-copy">
+        <p class="eyebrow">Console de operação</p>
+        <h2>Visão clara para o gestor e ritmo melhor para o time.</h2>
+        <p>O time acompanha campanha, usuários, chamadas, status e retorno. Nada fica solto em planilha perdida ou conversa sem histórico.</p>
+      </div>
+      <div class="dashboard">
+        <div class="dash-header">
+          <strong>Campanha Colombo - Lançamento</strong>
+          <span>Em execução</span>
+        </div>
+        <div class="dash-bars">
+          <div style="--w:82%"><span>Fila discada</span><i></i><b>82%</b></div>
+          <div style="--w:64%"><span>Contatos atendidos</span><i></i><b>64%</b></div>
+          <div style="--w:31%"><span>Interesse comercial</span><i></i><b>31%</b></div>
+        </div>
+        <div class="agent-list">
+          <div><span></span><strong>12 corretores livres</strong><small>recebendo repasses</small></div>
+          <div><span></span><strong>8 corretores em conversa</strong><small>aguardando próxima oportunidade</small></div>
+          <div><span></span><strong>10 números ativos</strong><small>cadência balanceada</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section band about">
+      <div>
+        <p class="eyebrow">Quem somos</p>
+        <h2>A BOLTLOCK constrói funcionários de IA para tirar operação repetitiva da mão do time comercial.</h2>
+      </div>
+      <p>Somos a empresa que transforma atendimento, prospecção, cobrança, conteúdo, agenda e análise em sistemas de IA práticos. A regra é simples: a IA segura o volume, o humano entra no momento em que a relação precisa de julgamento, confiança e fechamento.</p>
+    </section>
+
+    <section class="final-cta" id="ativacao">
+      <p class="eyebrow">Pronto para ativar</p>
+      <h2>O primeiro estágio do DISCA AI nasce com 10 números e operação pensada para escala.</h2>
+      <p>Vamos colocar o subdomínio no ar, validar o fluxo com o time e conectar a telefonia assim que as credenciais do provedor estiverem disponíveis.</p>
+      <a class="btn primary" href="https://wa.me/5511977661008?text=Quero%20ativar%20o%20DISCA%20AI%20com%2010%20n%C3%BAmeros">Ativar com 10 números</a>
+    </section>
+  </main>
+
+  <footer>
+    <strong>BOLTLOCK Holding</strong>
+    <span>DISCA AI - Discador automático para times comerciais</span>
+  </footer>
+
+  <script src="/discaai/assets/discaai.js"></script>
+</body>
+</html>

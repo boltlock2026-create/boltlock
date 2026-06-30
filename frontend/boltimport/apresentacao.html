@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOLT IMPORT - A Visão do Produto</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #F8F9FA;
+            --text-color: #212529;
+            --primary-color: #000000;
+            --accent-color: #D4AF37; /* Gold */
+            --surface-color: #FFFFFF;
+        }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2em;
+        }
+        header {
+            background-color: var(--primary-color);
+            color: var(--surface-color);
+            text-align: center;
+            padding: 4em 2em;
+            border-bottom: 5px solid var(--accent-color);
+        }
+        header h1 {
+            font-size: 3.5em;
+            margin: 0;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+        header h1 span {
+            color: var(--accent-color);
+        }
+        header p {
+            font-size: 1.3em;
+            font-weight: 300;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 1em auto 0;
+        }
+        .section {
+            background-color: var(--surface-color);
+            margin: 2em 0;
+            padding: 3em;
+            border-radius: 8px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.05);
+        }
+        h2 {
+            font-size: 2.2em;
+            color: var(--primary-color);
+            font-weight: 600;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5em;
+            margin-bottom: 1.5em;
+        }
+        h3 {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 0.8em;
+            font-size: 1.1em;
+        }
+        li::before {
+            content: '✓';
+            color: var(--accent-color);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        .code {
+            background-color: #212529;
+            color: #E0E0E0;
+            padding: 1.5em;
+            border-radius: 5px;
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre-wrap;
+            font-size: 0.9em;
+        }
+        .roadmap {
+            display: flex;
+            justify-content: space-between;
+            gap: 2em;
+            margin-top: 2em;
+        }
+        .phase {
+            background: var(--bg-color);
+            padding: 2em;
+            border-radius: 8px;
+            width: 30%;
+            border-left: 4px solid var(--accent-color);
+        }
+        .phase h3 {
+            margin-top: 0;
+            color: var(--accent-color);
+        }
+        footer {
+            text-align: center;
+            margin-top: 4em;
+            padding: 2em;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>BOLT<span> IMPORT</span></h1>
+        <p>A Visão do Produto: Uma Experiência de E-commerce Prime para o Público AAA.</p>
+    </header>
+
+    <div class="container">
+        <div class="section">
+            <h2>Visão e Conceito: A Boutique Digital</h2>
+            <p>A Bolt Import não será apenas uma loja, será um destino. Nossa visão é criar uma experiência de compra que espelha a exclusividade dos produtos que oferecemos. A estética será minimalista, sofisticada e intuitiva, com um foco absoluto na qualidade visual e na fluidez da navegação.</p>
+            <ul>
+                <li><strong>Paleta de Cores:</strong> Preto, branco e tons de cinza, com o dourado (#D4AF37) como ponto de destaque para botões e elementos importantes.</li>
+                <li><strong>Tipografia:</strong> Montserrat, uma fonte moderna e elegante que transmite confiança e sofisticação.</li>
+                <li><strong>Foco no Produto:</strong> Interfaces limpas, com imagens de alta resolução e vídeos, onde o produto é a estrela principal.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>A Jornada do Cliente: Da Descoberta ao Pagamento Instantâneo</h2>
+            <p>Mapeamos uma jornada de compra sem fricção, projetada para o cliente exigente que valoriza seu tempo.</p>
+            <h3>1. Descoberta e Detalhes</h3>
+            <p>A página de produto será imersiva, com uma galeria de imagens de alta definição, descrições detalhadas e todas as informações de forma clara e acessível.</p>
+            <h3>2. Carrinho e Checkout Simplificado</h3>
+            <p>O processo de checkout será reduzido ao essencial. Sem cadastros longos, apenas as informações necessárias para a entrega e o pagamento.</p>
+            <h3>3. Pagamento PIX: Rápido e Seguro</h3>
+            <p>O pagamento será exclusivamente via PIX. Ao finalizar o pedido, um QR Code será gerado instantaneamente na tela. O cliente escaneia, paga, e nosso sistema confirma o pagamento em segundos, atualizando o status do pedido em tempo real.</p>
+        </div>
+
+        <div class="section">
+            <h2>Arquitetura e Segurança: A Fundação Robusta</h2>
+            <p>Por trás de uma interface elegante, haverá uma arquitetura de software de nível corporativo, garantindo performance, escalabilidade e, acima de tudo, segurança.</p>
+            <ul>
+                <li><strong>Tecnologia de Ponta:</strong> A plataforma será construída com Next.js, o padrão de mercado para aplicações web modernas e de alta performance.</li>
+                <li><strong>Banco de Dados Robusto:</strong> Utilizaremos PostgreSQL, garantindo a integridade e a segurança dos dados de clientes, produtos e pedidos.</li>
+                <li><strong>APIs Seguras:</strong> Toda a comunicação entre a loja e o banco de dados será feita através de APIs seguras e autenticadas. Nenhum dado sensível é exposto.</li>
+            </ul>
+            <div class="code">
+-- Exemplo da Estrutura de Tabela 'orders'
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    customer_id INTEGER NOT NULL REFERENCES customers(id),
+    status VARCHAR(50) NOT NULL DEFAULT 'pending_payment',
+    total_amount DECIMAL(10, 2) NOT NULL,
+    pix_charge_id VARCHAR(255), -- ID seguro da cobrança PIX
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>O Coração da Operação: A Área Administrativa</h2>
+            <p>A Bolt Import contará com um painel administrativo completo, projetado para dar controle total sobre a operação e o ecossistema de parceiros.</p>
+            <ul>
+                <li><strong>Gestão Interna:</strong> Controle total sobre o catálogo de produtos, gerenciamento de estoque e acompanhamento de todos os pedidos em tempo real.</li>
+                <li><strong>Portal de Afiliados:</strong> Uma área dedicada para parceiros afiliados, com links de rastreamento, dashboards de performance e relatórios de comissão.</li>
+                <li><strong>Portal de Fornecedores:</strong> Um sistema para que fornecedores parceiros possam gerenciar seu próprio catálogo de produtos e visualizar o desempenho de suas vendas.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Roadmap de Desenvolvimento</h2>
+            <p>Nosso plano de desenvolvimento é dividido em fases claras, garantindo entregas de valor contínuas e visibilidade total do progresso.</p>
+            <div class="roadmap">
+                <div class="phase">
+                    <h3>Fase 1: Fundação</h3>
+                    <p>Definição da arquitetura, design do banco de dados e protótipos visuais. A base sólida sobre a qual tudo será construído.</p>
+                    <p><strong>Status:</strong> Em Andamento</p>
+                </div>
+                <div class="phase">
+                    <h3>Fase 2: MVP</h3>
+                    <p>Lançamento da loja com o fluxo de compra completo via PIX e a área administrativa para a equipe interna.</p>
+                    <p><strong>Status:</strong> Próxima Fase</p>
+                </div>
+                <div class="phase">
+                    <h3>Fase 3: Ecossistema</h3>
+                    <p>Desenvolvimento e lançamento dos portais de Afiliados e Fornecedores, expandindo o modelo de negócio.</p>
+                    <p><strong>Status:</strong> A Seguir</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Apresentação de Visão de Produto | BOLTLOCK © 2026</p>
+    </footer>
+</body>
+</html>
