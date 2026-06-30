@@ -127,6 +127,8 @@ tr.click:hover{background:var(--panel2);cursor:pointer}
       <button data-v="funil" onclick="go('funil')">🎯 Funil de Leads</button>
       <button data-v="alunos" onclick="go('alunos')">🎓 Alunos</button>
       <button data-v="financeiro" onclick="go('financeiro')">💰 Financeiro</button>
+      <button data-v="whats" onclick="go('whats')">🟢 Disparo de Whats</button>
+      <button data-v="sms" onclick="go('sms')">✉️ Disparo de SMS</button>
     </nav>
     <div class="who"><span id="whoName"></span><br><button onclick="sair()">Sair</button></div>
   </aside>
@@ -194,14 +196,148 @@ async function refresh(){
 function go(v){VIEW=v;document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.v===v));document.getElementById('side').classList.remove('open');render();}
 
 function render(){
-  const titles={dash:'Painel',funil:'Funil de Leads',alunos:'Alunos',financeiro:'Financeiro'};
+  const titles={dash:'Painel',funil:'Funil de Leads',alunos:'Alunos',financeiro:'Financeiro',whats:'Disparo de WhatsApp',sms:'Disparo de SMS'};
   document.getElementById('vTitle').textContent=titles[VIEW];
-  document.getElementById('addBtn').classList.toggle('hide', VIEW==='financeiro');
+  document.getElementById('addBtn').classList.toggle('hide', ['financeiro','whats','sms'].includes(VIEW));
   const v=document.getElementById('view');
   if(VIEW==='dash') v.innerHTML=viewDash();
   else if(VIEW==='funil') v.innerHTML=viewFunil();
   else if(VIEW==='alunos') v.innerHTML=viewAlunos();
   else if(VIEW==='financeiro') v.innerHTML=viewFinanceiro();
+  else if(VIEW==='whats'){ v.innerHTML=viewWhats(); carregarInstancias(); }
+  else if(VIEW==='sms') v.innerHTML=viewSms();
+}
+
+/* telefones dos leads/alunos da escola atual */
+function telefonesCRM(){
+  const ns=[];
+  LEADS.forEach(l=>{ if(l.fone) ns.push(l.fone); });
+  ALUNOS.forEach(a=>{ if(a.fone) ns.push(a.fone); });
+  return Array.from(new Set(ns));
+}
+function parseNums(txt){ return (txt||'').split(/[\n,;]+/).map(s=>s.trim()).filter(Boolean); }
+
+/* ---------- DISPARO WHATSAPP ---------- */
+let WA_INSTANCES=[];
+function viewWhats(){
+  return `<div class="stats" style="margin-bottom:18px">
+    <div class="stat"><div class="v" id="waCount">—</div><div class="l">Instâncias conectadas</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px" id="waGrid">
+    <div class="stat" style="padding:18px">
+      <h3 style="font-size:15px;margin-bottom:12px">📱 Instância (chip)</h3>
+      <label style="font-size:12px;color:var(--mut)">Instância para disparar</label>
+      <select id="waInst" style="width:100%;padding:10px;margin:6px 0 12px;background:var(--bg);border:1px solid var(--line);border-radius:9px;color:var(--ink)"></select>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn gray sm" onclick="carregarInstancias()">↻ Atualizar</button>
+        <button class="btn sm" onclick="novaInstancia()">+ Nova instância (QR)</button>
+        <button class="btn gray sm" onclick="removerInstancia()">Desconectar</button>
+      </div>
+      <div id="waQR" style="margin-top:14px;text-align:center"></div>
+    </div>
+    <div class="stat" style="padding:18px">
+      <h3 style="font-size:15px;margin-bottom:12px">🚀 Disparo</h3>
+      <label style="font-size:12px;color:var(--mut)">Tipo</label>
+      <select id="waType" onchange="waTipoMuda()" style="width:100%;padding:10px;margin:6px 0 12px;background:var(--bg);border:1px solid var(--line);border-radius:9px;color:var(--ink)">
+        <option value="text">Texto</option><option value="image">Imagem</option><option value="video">Vídeo</option><option value="audio">Áudio (voz)</option><option value="document">Documento</option>
+      </select>
+      <div id="waMediaBox" class="hide" style="margin-bottom:10px">
+        <label style="font-size:12px;color:var(--mut)">Arquivo</label>
+        <input type="file" id="waFile" style="width:100%;margin:6px 0;color:var(--ink);font-size:12px">
+        <label style="font-size:12px;color:var(--mut)">ou URL pública (recomendado p/ vídeo grande)</label>
+        <input id="waUrl" placeholder="https://..." style="width:100%;padding:9px;margin-top:5px;background:var(--bg);border:1px solid var(--line);border-radius:9px;color:var(--ink)">
+      </div>
+      <label style="font-size:12px;color:var(--mut)" id="waTxtLabel">Mensagem / legenda</label>
+      <textarea id="waText" rows="3" style="width:100%;padding:10px;margin:6px 0 12px;background:var(--bg);border:1px solid var(--line);border-radius:9px;color:var(--ink)" placeholder="Olá! Temos novidades..."></textarea>
+      <label style="font-size:12px;color:var(--mut)">Números (1 por linha) <a href="#" onclick="puxarLeadsWa();return false" style="color:var(--brand)">+ puxar do CRM</a></label>
+      <textarea id="waNums" rows="4" style="width:100%;padding:10px;margin:6px 0 12px;background:var(--bg);border:1px solid var(--line);border-radius:9px;color:var(--ink)" placeholder="11999990000"></textarea>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
+        <label style="font-size:12px;color:var(--mut)">Intervalo (s)</label><input id="waDelay" type="number" value="3" style="width:70px;padding:8px;background:var(--bg);border:1px solid var(--line);border-radius:9px;color:var(--ink)">
+      </div>
+      <button class="btn green" style="width:100%" id="waSendBtn" onclick="dispararWa()">Disparar WhatsApp</button>
+      <div id="waResult" style="margin-top:12px;font-size:13px"></div>
+    </div>
+  </div>`;
+}
+function waTipoMuda(){ const t=document.getElementById('waType').value; document.getElementById('waMediaBox').classList.toggle('hide', t==='text'); document.getElementById('waTxtLabel').textContent = t==='text'?'Mensagem':'Legenda (opcional)'; }
+async function carregarInstancias(){
+  try{
+    const d=await api('/crm/wa/instances'); WA_INSTANCES=d.instances||[];
+    const sel=document.getElementById('waInst'); if(!sel)return;
+    const conn=WA_INSTANCES.filter(i=>i.status==='open');
+    document.getElementById('waCount').textContent=conn.length;
+    sel.innerHTML=WA_INSTANCES.map(i=>`<option value="${esc(i.name)}">${esc(i.name)} ${i.status==='open'?'🟢 '+esc(i.numero||''):'⚪ '+esc(i.status||'')}</option>`).join('')||'<option value="">nenhuma instância</option>';
+  }catch(e){ const r=document.getElementById('waResult'); if(r)r.innerHTML='<span style="color:var(--red)">'+esc(e.message)+'</span>'; }
+}
+async function novaInstancia(){
+  const nome=prompt('Nome da nova instância (ex: escola-pequeninos):'); if(!nome)return;
+  const qrbox=document.getElementById('waQR'); qrbox.innerHTML='Gerando QR...';
+  try{
+    const d=await api('/crm/wa/instances','POST',{name:nome});
+    if(d.qr){ qrbox.innerHTML=`<img src="${d.qr}" style="max-width:230px;border:6px solid #fff;border-radius:10px"><div style="font-size:12px;color:var(--mut);margin-top:6px">Escaneie no WhatsApp → Aparelhos conectados</div>`; pollState(nome); }
+    else if(d.pairingCode){ qrbox.innerHTML='Código: <b>'+esc(d.pairingCode)+'</b>'; }
+    else qrbox.innerHTML='<span style="color:var(--amber)">Instância criada. Clique Atualizar.</span>';
+    setTimeout(carregarInstancias,1500);
+  }catch(e){ qrbox.innerHTML='<span style="color:var(--red)">'+esc(e.message)+'</span>'; }
+}
+async function pollState(nome){
+  for(let i=0;i<20;i++){ await new Promise(r=>setTimeout(r,3000));
+    try{ const s=await api('/crm/wa/state/'+encodeURIComponent(nome)); if(s.state==='open'){ document.getElementById('waQR').innerHTML='<span style="color:var(--green);font-weight:700">✅ Conectado!</span>'; carregarInstancias(); return; } }catch(_){}
+  }
+}
+async function removerInstancia(){ const n=document.getElementById('waInst').value; if(!n||!confirm('Desconectar e remover "'+n+'"?'))return; await api('/crm/wa/instances/'+encodeURIComponent(n),'DELETE'); carregarInstancias(); }
+function puxarLeadsWa(){ document.getElementById('waNums').value=telefonesCRM().join('\n'); }
+function fileToB64(file){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); }); }
+async function dispararWa(){
+  const btn=document.getElementById('waSendBtn'), out=document.getElementById('waResult');
+  const instance=document.getElementById('waInst').value;
+  const type=document.getElementById('waType').value;
+  const numbers=parseNums(document.getElementById('waNums').value);
+  const text=document.getElementById('waText').value;
+  const delay=Number(document.getElementById('waDelay').value)||2;
+  if(!instance){out.innerHTML='<span style="color:var(--red)">Selecione uma instância</span>';return;}
+  if(!numbers.length){out.innerHTML='<span style="color:var(--red)">Informe os números</span>';return;}
+  let media='';
+  if(type!=='text'){
+    const url=document.getElementById('waUrl').value.trim(), file=document.getElementById('waFile').files[0];
+    if(url) media=url; else if(file){ out.textContent='Carregando arquivo...'; media=await fileToB64(file); } else {out.innerHTML='<span style="color:var(--red)">Anexe arquivo ou URL</span>';return;}
+  }
+  btn.disabled=true; btn.textContent='Disparando...'; out.textContent='Enviando para '+numbers.length+' número(s)...';
+  try{
+    const d=await api('/crm/wa/send','POST',{instance,type,text,caption:text,media,numbers,delay});
+    out.innerHTML=`<b style="color:var(--green)">✅ ${d.enviados} enviados</b>${d.falhas?` · <span style="color:var(--red)">${d.falhas} falhas</span>`:''} de ${d.total}`;
+  }catch(e){ out.innerHTML='<span style="color:var(--red)">'+esc(e.message)+'</span>'; }
+  btn.disabled=false; btn.textContent='Disparar WhatsApp';
+}
+
+/* ---------- DISPARO SMS ---------- */
+function viewSms(){
+  return `<div class="stat" style="padding:20px;max-width:560px">
+    <h3 style="font-size:15px;margin-bottom:4px">✉️ Disparo de SMS (TextBee)</h3>
+    <p style="color:var(--mut);font-size:12px;margin-bottom:16px">Mensagem de texto direto no celular, sem precisar de WhatsApp.</p>
+    <label style="font-size:12px;color:var(--mut)">Mensagem (até ~160 caracteres por SMS)</label>
+    <textarea id="smsMsg" rows="3" maxlength="320" style="width:100%;padding:10px;margin:6px 0 12px;background:var(--bg);border:1px solid var(--line);border-radius:9px;color:var(--ink)" placeholder="Matrículas abertas na Os Pequeninos! Agende sua visita: ..."></textarea>
+    <label style="font-size:12px;color:var(--mut)">Números (1 por linha) <a href="#" onclick="puxarLeadsSms();return false" style="color:var(--brand)">+ puxar do CRM</a></label>
+    <textarea id="smsNums" rows="5" style="width:100%;padding:10px;margin:6px 0 12px;background:var(--bg);border:1px solid var(--line);border-radius:9px;color:var(--ink)" placeholder="11999990000"></textarea>
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px"><label style="font-size:12px;color:var(--mut)">Intervalo (s)</label><input id="smsDelay" type="number" value="2" style="width:70px;padding:8px;background:var(--bg);border:1px solid var(--line);border-radius:9px;color:var(--ink)"></div>
+    <button class="btn" style="width:100%;background:var(--purple)" id="smsBtn" onclick="dispararSms()">Disparar SMS</button>
+    <div id="smsResult" style="margin-top:12px;font-size:13px"></div>
+  </div>`;
+}
+function puxarLeadsSms(){ document.getElementById('smsNums').value=telefonesCRM().join('\n'); }
+async function dispararSms(){
+  const btn=document.getElementById('smsBtn'), out=document.getElementById('smsResult');
+  const message=document.getElementById('smsMsg').value.trim();
+  const numbers=parseNums(document.getElementById('smsNums').value);
+  const delay=Number(document.getElementById('smsDelay').value)||2;
+  if(!message){out.innerHTML='<span style="color:var(--red)">Escreva a mensagem</span>';return;}
+  if(!numbers.length){out.innerHTML='<span style="color:var(--red)">Informe os números</span>';return;}
+  btn.disabled=true; btn.textContent='Disparando...'; out.textContent='Enviando para '+numbers.length+' número(s)...';
+  try{
+    const d=await api('/crm/sms/send','POST',{message,numbers,delay});
+    out.innerHTML=`<b style="color:var(--green)">✅ ${d.enviados} enviados</b>${d.falhas?` · <span style="color:var(--red)">${d.falhas} falhas</span>`:''} de ${d.total}`;
+  }catch(e){ out.innerHTML='<span style="color:var(--red)">'+esc(e.message)+'</span>'; }
+  btn.disabled=false; btn.textContent='Disparar SMS';
 }
 
 function viewDash(){
