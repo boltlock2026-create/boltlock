@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CRM Escolas · BOLTLOCK</title>
-<link rel="icon" href="/ospequeninos/img/logo.jpg">
+<link rel="icon" href="/escolas/ospequeninos/img/logo.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -121,7 +121,7 @@ tr.click:hover{background:var(--panel2);cursor:pointer}
 <!-- APP -->
 <div id="app" class="hide">
   <aside class="side" id="side">
-    <div class="brand"><img src="/ospequeninos/img/logo.jpg" alt="">CRM Escolas</div>
+    <div class="brand"><img src="/escolas/ospequeninos/img/logo.jpg" alt="">CRM Escolas</div>
     <nav class="nav">
       <button data-v="dash" class="active" onclick="go('dash')">📊 Painel</button>
       <button data-v="funil" onclick="go('funil')">🎯 Funil de Leads</button>
@@ -333,7 +333,7 @@ function abrirAluno(id){
   const a=ALUNOS.find(x=>x.id===id);if(!a)return;
   modal(`<h3>${esc(a.nome)}</h3><div class="sub">${esc(a.responsavel||'')} · ${esc(a.fone||'')} · ${a.escola==='vilareal'?'Vila Real':'Pequeninos'} · ${esc(a.turma||a.serie||'')}</div>
     <label>Código de acesso dos pais (Portal)</label><div class="codebox">${esc(a.codigo||'—')}</div>
-    <div style="font-size:11px;color:var(--mut)">Os pais acessam em <b>/portal</b> com este código.</div>
+    <div style="font-size:11px;color:var(--mut)">Os pais acessam em <b>boltlock.com.br/escolas/portal</b> com este código.</div>
 
     <div class="section"><h4>💰 Pagamentos</h4>
       ${(a.pagamentos||[]).map(p=>{const venc=p.status!=='pago'&&p.vencimento&&p.vencimento<hoje;return `<div class="item"><b>${esc(p.descricao)}</b> — ${fmt(p.valor)} <span class="pill ${venc?'vencido':p.status}" style="float:right">${venc?'vencido':p.status}</span><div class="meta">Venc: ${dia(p.vencimento)||'—'} ${p.status!=='pago'?`· <a href="#" onclick="pagar('${id}','${p.id}');return false">dar baixa</a>`:''}</div></div>`;}).join('')||'<div class="empty" style="padding:12px">nenhum</div>'}

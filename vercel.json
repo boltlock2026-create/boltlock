@@ -40,63 +40,63 @@
       "dest": "/frontend/historiadaia/$1"
     },
     {
-      "src": "/colegiovilareal",
+      "src": "/escolas/colegiovilareal",
       "dest": "/frontend/colegiovilareal/index.html"
     },
     {
-      "src": "/colegiovilareal/",
+      "src": "/escolas/colegiovilareal/",
       "dest": "/frontend/colegiovilareal/index.html"
     },
     {
-      "src": "/colegiovilareal/(.*)",
+      "src": "/escolas/colegiovilareal/(.*)",
       "dest": "/frontend/colegiovilareal/$1"
     },
     {
-      "src": "/ospequeninos",
+      "src": "/escolas/ospequeninos",
       "dest": "/frontend/ospequeninos/index.html"
     },
     {
-      "src": "/ospequeninos/",
+      "src": "/escolas/ospequeninos/",
       "dest": "/frontend/ospequeninos/index.html"
     },
     {
-      "src": "/ospequeninos/(.*)",
+      "src": "/escolas/ospequeninos/(.*)",
       "dest": "/frontend/ospequeninos/$1"
     },
     {
-      "src": "/crm",
+      "src": "/escolas/crm",
       "dest": "/frontend/crm/index.html"
     },
     {
-      "src": "/crm/",
+      "src": "/escolas/crm/",
       "dest": "/frontend/crm/index.html"
     },
     {
-      "src": "/crm/(.*)",
+      "src": "/escolas/crm/(.*)",
       "dest": "/frontend/crm/$1"
     },
     {
-      "src": "/portal",
+      "src": "/escolas/portal",
       "dest": "/frontend/portal/index.html"
     },
     {
-      "src": "/portal/",
+      "src": "/escolas/portal/",
       "dest": "/frontend/portal/index.html"
     },
     {
-      "src": "/portal/(.*)",
+      "src": "/escolas/portal/(.*)",
       "dest": "/frontend/portal/$1"
     },
     {
-      "src": "/ferias",
+      "src": "/escolas/ferias",
       "dest": "/frontend/ferias/index.html"
     },
     {
-      "src": "/ferias/",
+      "src": "/escolas/ferias/",
       "dest": "/frontend/ferias/index.html"
     },
     {
-      "src": "/ferias/(.*)",
+      "src": "/escolas/ferias/(.*)",
       "dest": "/frontend/ferias/$1"
     },
     {

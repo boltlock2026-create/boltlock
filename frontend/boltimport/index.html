@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bolt Import - A Vanguarda da Tecnologia Global</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #1A1A1A;
+            --text-color: #F5F5F5;
+            --card-bg: #2F2F2F;
+            --accent-luxury: #B28A64;
+            --accent-action: #007BFF;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .container {
+            width: 90%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        a { color: var(--accent-action); text-decoration: none; transition: color 0.3s ease; }
+        a:hover { color: var(--text-color); }
+
+        /* Header */
+        .main-header {
+            position: fixed; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 1.5em 5%;
+            background: rgba(26, 26, 26, 0.8); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid #333;
+        }
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.8em; font-weight: 700; color: var(--text-color); cursor: pointer; }
+        .logo span { color: var(--accent-luxury); }
+        .main-nav ul { list-style: none; display: flex; gap: 2em; }
+        .main-nav a { font-weight: 600; font-size: 1em; }
+        .header-icons { display: flex; gap: 1.5em; }
+        .header-icons svg { width: 24px; height: 24px; stroke: var(--text-color); transition: stroke 0.3s ease; }
+        .header-icons a:hover svg { stroke: var(--accent-action); }
+
+        /* CTA Button */
+        .cta-button {
+            display: inline-block; background: var(--accent-action); color: #fff; padding: 0.8em 2.5em; border-radius: 50px;
+            font-weight: 600; font-size: 1.2em; transition: transform 0.3s ease, box-shadow 0.3s ease; border: none; cursor: pointer;
+        }
+        .cta-button:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0, 123, 255, 0.3); }
+
+        /* Home Page */
+        .hero { height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; background: url('https://images.unsplash.com/photo-1550009158-94ae76552485?q=80&w=2584&auto=format&fit=crop') no-repeat center center/cover; position: relative; }
+        .hero::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); }
+        .hero-content { z-index: 10; max-width: 800px; }
+        .hero h1 { font-family: 'Playfair Display', serif; font-size: 5vw; color: #fff; margin: 0 0 0.5em; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
+        .content-section { padding: 6em 0; }
+        .section-title { font-family: 'Playfair Display', serif; font-size: 3em; text-align: center; margin-bottom: 1.5em; }
+        .curator-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2em; }
+        .product-card { background: var(--card-bg); border-radius: 8px; overflow: hidden; position: relative; transition: transform 0.4s ease, box-shadow 0.4s ease; cursor: pointer; }
+        .product-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+        .product-card img { width: 100%; height: 350px; object-fit: cover; transition: transform 0.4s ease; }
+        .product-card:hover img { transform: scale(1.05); }
+        .product-info { position: absolute; bottom: 0; left: 0; width: 100%; padding: 2em; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); transform: translateY(100%); opacity: 0; transition: transform 0.4s ease, opacity 0.4s ease; }
+        .product-card:hover .product-info { transform: translateY(0); opacity: 1; }
+        .product-name { font-family: 'Playfair Display', serif; font-size: 1.5em; margin: 0; color: #fff; }
+        .product-price { font-size: 1.2em; color: var(--accent-action); font-weight: 600; }
+
+        /* Product Page */
+        .product-page-section { padding-top: 120px; }
+        .product-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 4em; align-items: center; }
+        .product-gallery img { width: 100%; border-radius: 8px; }
+        .product-details .product-title { font-family: 'Playfair Display', serif; font-size: 3em; }
+        .product-details .product-price { font-size: 2em; color: var(--accent-action); font-weight: 600; margin: 0.5em 0; }
+        .product-details .product-description { font-size: 1.1em; color: var(--text-color); margin-bottom: 2em; }
+
+        /* Checkout Page */
+        .checkout-page-section { padding-top: 120px; text-align: center; }
+        .checkout-container { max-width: 600px; margin: 0 auto; background: var(--card-bg); padding: 3em; border-radius: 8px; }
+        #qr-code-container img { max-width: 250px; margin: 1em 0; }
+        .copy-code-btn { background: #444; color: #fff; padding: 0.5em 1em; border-radius: 5px; cursor: pointer; border: none; margin-top: 1em; }
+        #confirmation-message { color: var(--accent-luxury); font-weight: 600; font-size: 1.2em; display: none; }
+        #confirmation-message.visible { display: block; }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo" onclick="navigateTo('home')">Bolt<span> Import</span></div>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="#">Lançamentos</a></li>
+                <li><a href="#">Tênis</a></li>
+            </ul>
+        </nav>
+        <div class="header-icons">
+             <a href="#" aria-label="Carrinho" onclick="navigateTo('checkout')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+            </a>
+        </div>
+    </header>
+
+    <!-- PÁGINA INICIAL -->
+    <div id="home" class="page active">
+        <main>
+            <section class="hero">
+                <div class="hero-content">
+                    <h1>A Vanguarda da Tecnologia Global</h1>
+                    <a href="#" class="cta-button">Descubra a Coleção</a>
+                </div>
+            </section>
+            <section class="content-section">
+                <div class="container">
+                    <h2 class="section-title">Seleção do Curador</h2>
+                    <div class="curator-grid">
+                        <div class="product-card" onclick="navigateTo('product', { name: 'Nike Air Force \\'Custom\\'', price: 'R$ 1.299,90', img: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?q=80&w=2487&auto=format&fit=crop' })">
+                            <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?q=80&w=2487&auto=format&fit=crop" alt="Nike Air Force">
+                            <div class="product-info">
+                                <h3 class="product-name">Nike Air Force 'Custom'</h3>
+                                <p class="product-price">R$ 1.299,90</p>
+                            </div>
+                        </div>
+                        <div class="product-card" onclick="navigateTo('product', { name: 'Dunk Low \\'Spectrum\\'', price: 'R$ 1.499,90', img: 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?q=80&w=2564&auto=format&fit=crop' })">
+                            <img src="https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?q=80&w=2564&auto=format&fit=crop" alt="Dunk Low">
+                            <div class="product-info">
+                                <h3 class="product-name">Dunk Low 'Spectrum'</h3>
+                                <p class="product-price">R$ 1.499,90</p>
+                            </div>
+                        </div>
+                         <div class="product-card" onclick="navigateTo('product', { name: 'Adidas Evo \\'Redline\\'', price: 'R$ 1.199,90', img: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=2670&auto=format&fit=crop' })">
+                            <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=2670&auto=format&fit=crop" alt="Adidas Evo">
+                            <div class="product-info">
+                                <h3 class="product-name">Adidas Evo 'Redline'</h3>
+                                <p class="product-price">R$ 1.199,90</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- PÁGINA DE PRODUTO (Simulada) -->
+    <div id="product" class="page">
+        <div class="container product-page-section">
+            <div class="product-layout">
+                <div class="product-gallery">
+                    <img id="product-img" src="" alt="Produto">
+                </div>
+                <div class="product-details">
+                    <h1 id="product-name" class="product-title"></h1>
+                    <p id="product-price" class="product-price"></p>
+                    <p class="product-description">Descubra a peça de colecionador que define o seu estilo. Cada detalhe foi pensado para oferecer uma experiência única de luxo e performance. Produto com autenticidade 100% garantida.</p>
+                    <button class="cta-button" onclick="addToCart()">Adicionar ao Carrinho</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PÁGINA DE CHECKOUT (Simulada) -->
+    <div id="checkout" class="page">
+        <div class="container checkout-page-section">
+            <div class="checkout-container">
+                <h2 class="section-title">Pagamento via PIX</h2>
+                <div id="pix-flow">
+                    <p>Para finalizar sua compra, escaneie o QR Code abaixo com o aplicativo do seu banco.</p>
+                    <div id="qr-code-container">
+                        <!-- QR Code será injetado aqui -->
+                    </div>
+                    <button class="copy-code-btn" onclick="copyPixCode()">Copiar Código PIX</button>
+                    <p>Aguardando confirmação de pagamento...</p>
+                </div>
+                <div id="confirmation-message">
+                    <h3>✓ Pagamento Aprovado!</h3>
+                    <p>Seu pedido foi confirmado e já estamos preparando tudo para o envio. Obrigado por escolher a Bolt Import!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<script>
+    const pages = document.querySelectorAll('.page');
+    let cartItem = null;
+
+    function navigateTo(pageId, data = {}) {
+        pages.forEach(page => page.classList.remove('active'));
+        const targetPage = document.getElementById(pageId);
+        if (targetPage) {
+            targetPage.classList.add('active');
+            window.scrollTo(0, 0);
+
+            if (pageId === 'product') {
+                document.getElementById('product-name').textContent = data.name;
+                document.getElementById('product-price').textContent = data.price;
+                document.getElementById('product-img').src = data.img;
+                cartItem = data;
+            }
+            if (pageId === 'checkout') {
+                simulatePixPayment();
+            }
+        }
+    }
+
+    function addToCart() {
+        // Simula adicionar ao carrinho e vai para o checkout
+        alert(`${cartItem.name} foi adicionado ao carrinho!`);
+        navigateTo('checkout');
+    }
+
+    function simulatePixPayment() {
+        const qrContainer = document.getElementById('qr-code-container');
+        const pixFlow = document.getElementById('pix-flow');
+        const confirmationMessage = document.getElementById('confirmation-message');
+
+        // Reset state
+        pixFlow.style.display = 'block';
+        confirmationMessage.classList.remove('visible');
+
+        // Simula a geração de um QR Code (usando um placeholder)
+        qrContainer.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=00020126580014br.gov.bcb.pix0136123e4567-e89b-12d3-a456-4266141740005204000053039865802BR5913NOME DO VENDEDOR6008BRASILIA62070503***6304E2C2" alt="QR Code PIX">`;
+
+        // Simula a confirmação do pagamento após 5 segundos
+        setTimeout(() => {
+            pixFlow.style.display = 'none';
+            confirmationMessage.classList.add('visible');
+        }, 5000);
+    }
+
+    function copyPixCode() {
+        const pixCode = "00020126580014br.gov.bcb.pix0136123e4567-e89b-12d3-a456-4266141740005204000053039865802BR5913NOME DO VENDEDOR6008BRASILIA62070503***6304E2C2";
+        navigator.clipboard.writeText(pixCode).then(() => {
+            alert('Código PIX copiado para a área de transferência!');
+        });
+    }
+
+</script>
+</body>
+</html>
