@@ -745,13 +745,14 @@ function escolaFiltro(req) {
 // ── INTAKE PÚBLICO (chamado pelas LPs) ──
 app.post('/api/crm/intake', async (req, res) => {
   try {
-    const { nome, fone, email, escola, crianca, origem, mensagem } = req.body || {};
+    const { nome, fone, email, escola, crianca, serie, origem, mensagem } = req.body || {};
     if (!nome || !fone) return res.status(400).json({ erro: 'Nome e telefone são obrigatórios' });
     const id = uid('lead');
     const lead = {
       nome, fone, email: email || '',
       escola: escola || 'pequeninos',
       crianca: crianca || '',
+      serie: serie || '',
       origem: origem || 'site',
       mensagem: mensagem || '',
       stage: 'novo',

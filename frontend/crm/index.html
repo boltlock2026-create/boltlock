@@ -225,7 +225,7 @@ function viewFunil(){
     return `<div class="col"><h3>${st.t}<span>${items.length}</span></h3><div class="body">
       ${items.map(l=>`<div class="lead" onclick="abrirLead('${l.id}')">
         <div class="n">${esc(l.nome)}</div>
-        <div class="c">${esc(l.crianca||'—')} · ${esc(l.fone||'')}</div>
+        <div class="c">${esc(l.crianca||'—')}${l.serie?' · '+esc(l.serie):''} · ${esc(l.fone||'')}</div>
         <span class="tag ${l.escola}">${l.escola==='vilareal'?'Vila Real':'Pequeninos'}</span>
       </div>`).join('')||'<div class="empty" style="padding:20px;font-size:12px">vazio</div>'}
     </div></div>`;
@@ -306,7 +306,7 @@ async function delLead(id){if(!confirm('Excluir este lead?'))return;await api('/
 function converter(id){
   const l=LEADS.find(x=>x.id===id);
   modal(`<h3>Matricular ${esc(l.crianca||l.nome)}</h3><div class="sub">Converter lead em aluno</div>
-    <div class="row2"><div><label>Série/Nível</label><input id="c_serie" placeholder="Maternal / 3º ano"></div>
+    <div class="row2"><div><label>Série/Nível</label><input id="c_serie" value="${esc(l.serie||'')}" placeholder="Maternal / 3º ano"></div>
     <div><label>Turma</label><input id="c_turma" placeholder="Manhã A"></div></div>
     <div class="mactions"><button class="btn green" onclick="confirmarConv('${id}')">Confirmar matrícula</button><button class="btn gray" onclick="abrirLead('${id}')">Voltar</button></div>`);
 }
