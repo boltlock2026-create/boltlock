@@ -64,6 +64,18 @@
       "dest": "/frontend/ospequeninos/$1"
     },
     {
+      "src": "/ferias",
+      "dest": "/frontend/ferias/index.html"
+    },
+    {
+      "src": "/ferias/",
+      "dest": "/frontend/ferias/index.html"
+    },
+    {
+      "src": "/ferias/(.*)",
+      "dest": "/frontend/ferias/$1"
+    },
+    {
       "src": "/escolas",
       "dest": "/frontend/escolas/index.html"
     },
