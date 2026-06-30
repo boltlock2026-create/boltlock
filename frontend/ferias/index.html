@@ -186,15 +186,19 @@ a{text-decoration:none;color:inherit}
 function enviar(e){
   e.preventDefault();
   var f=e.target;
-  var nome=f.nome.value, crianca=f.crianca.value, escola=f.escola.value, fone=f.fone.value;
-  var msg="Olá! Vi a campanha de Férias Incríveis e quero a programação completa.\n\n"+
-    "👤 Responsável: "+nome+"\n"+
-    "🧒 Criança: "+crianca+"\n"+
-    "🏫 Escola: "+escola+"\n"+
-    "📱 WhatsApp: "+fone;
+  var nome=f.nome.value.trim(), crianca=f.crianca.value.trim(), escola=f.escola.value, fone=f.fone.value.trim();
+  if(!nome||!fone){return false;}
   var num = escola.indexOf("Vila Real")===0 ? "5511953054065" : "5511947718778";
   var esc = escola.indexOf("Vila Real")===0 ? "vilareal" : "pequeninos";
-  try{ fetch("/api/crm/intake",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({nome:nome,fone:fone,escola:esc,crianca:crianca,origem:"LP Ferias"})}); }catch(_){}
+  // 1) grava no CRM (keepalive: completa mesmo abrindo o WhatsApp)
+  try{ fetch("/api/crm/intake",{method:"POST",keepalive:true,headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({nome:nome,fone:fone,escola:esc,crianca:crianca,mensagem:"Interesse: "+escola,origem:"LP Ferias"})}); }catch(_){}
+  // 2) confirmação visual
+  var btn=f.querySelector('button[type=submit]');
+  if(btn){btn.disabled=true;btn.textContent="✅ Recebido! Abrindo WhatsApp...";btn.style.background="#2f8a39";}
+  // 3) WhatsApp
+  var msg="Olá! Vi a campanha de Férias Incríveis e quero a programação completa.\n\n"+
+    "👤 Responsável: "+nome+"\n🧒 Criança: "+crianca+"\n🏫 Escola: "+escola+"\n📱 WhatsApp: "+fone;
   window.open("https://wa.me/"+num+"?text="+encodeURIComponent(msg),"_blank");
   return false;
 }

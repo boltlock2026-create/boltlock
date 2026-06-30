@@ -300,8 +300,11 @@ document.querySelectorAll('.rv').forEach((el,i)=>{el.style.transitionDelay=(i%4*
 function enviar(e){
   e.preventDefault();
   const f=e.target;
+  if(!f.nome.value.trim()||!f.fone.value.trim())return false;
+  try{ fetch('/api/crm/intake',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json'},body:JSON.stringify({nome:f.nome.value.trim(),fone:f.fone.value.trim(),escola:'vilareal',crianca:f.crianca.value.trim(),serie:f.serie.value,mensagem:f.msg.value.trim(),origem:'LP Vila Real'})}); }catch(_){}
+  const btn=f.querySelector('button[type=submit]');
+  if(btn){btn.disabled=true;btn.textContent='✅ Recebido! Abrindo WhatsApp...';}
   const t=`Olá! Quero saber mais sobre o Colégio Vila Real.%0A%0ARespons%C3%A1vel: ${encodeURIComponent(f.nome.value)}%0AWhatsApp: ${encodeURIComponent(f.fone.value)}%0ACrian%C3%A7a: ${encodeURIComponent(f.crianca.value)}%0AS%C3%A9rie: ${encodeURIComponent(f.serie.value)}%0AMensagem: ${encodeURIComponent(f.msg.value)}`;
-  try{ fetch('/api/crm/intake',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome:f.nome.value,fone:f.fone.value,escola:'vilareal',crianca:f.crianca.value,mensagem:f.msg.value,origem:'LP Vila Real'})}); }catch(_){}
   window.open('https://wa.me/5511953054065?text='+t,'_blank');
   return false;
 }
