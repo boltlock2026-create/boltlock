@@ -301,6 +301,7 @@ function enviar(e){
   e.preventDefault();
   const f=e.target;
   const t=`Olá! Quero saber mais sobre o Colégio Vila Real.%0A%0ARespons%C3%A1vel: ${encodeURIComponent(f.nome.value)}%0AWhatsApp: ${encodeURIComponent(f.fone.value)}%0ACrian%C3%A7a: ${encodeURIComponent(f.crianca.value)}%0AS%C3%A9rie: ${encodeURIComponent(f.serie.value)}%0AMensagem: ${encodeURIComponent(f.msg.value)}`;
+  try{ fetch('/api/crm/intake',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome:f.nome.value,fone:f.fone.value,escola:'vilareal',crianca:f.crianca.value,mensagem:f.msg.value,origem:'LP Vila Real'})}); }catch(_){}
   window.open('https://wa.me/5511953054065?text='+t,'_blank');
   return false;
 }

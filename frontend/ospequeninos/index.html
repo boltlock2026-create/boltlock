@@ -311,6 +311,7 @@ function enviar(e){
   e.preventDefault();
   const f=e.target;
   const t=`Oi! Quero conhecer a Escola Os Pequeninos.%0A%0ARespons%C3%A1vel: ${encodeURIComponent(f.nome.value)}%0AWhatsApp: ${encodeURIComponent(f.fone.value)}%0ACrian%C3%A7a: ${encodeURIComponent(f.crianca.value)}%0ATurma: ${encodeURIComponent(f.serie.value)}%0AMensagem: ${encodeURIComponent(f.msg.value)}`;
+  try{ fetch('/api/crm/intake',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome:f.nome.value,fone:f.fone.value,escola:'pequeninos',crianca:f.crianca.value,mensagem:f.msg.value,origem:'LP Pequeninos'})}); }catch(_){}
   window.open('https://wa.me/5511947718778?text='+t,'_blank');
   return false;
 }

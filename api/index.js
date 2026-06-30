@@ -215,6 +215,31 @@ const usuarios = {
     role: 'correspondente',
     creditos: 500,
     correspondente: 'CCA Digital'
+  },
+  // ── CRM ESCOLAS ──
+  'pequeninos@boltlock.com': {
+    senha: 'Pequeninos@2026',
+    nome: 'Os Pequeninos',
+    role: 'escola',
+    creditos: 0,
+    correspondente: 'CRM Escolas',
+    escola: 'pequeninos'
+  },
+  'vilareal@boltlock.com': {
+    senha: 'VilaReal@2026',
+    nome: 'Colégio Vila Real',
+    role: 'escola',
+    creditos: 0,
+    correspondente: 'CRM Escolas',
+    escola: 'vilareal'
+  },
+  'secretaria@boltlock.com': {
+    senha: 'Escolas@2026',
+    nome: 'Secretaria Geral',
+    role: 'escola',
+    creditos: 0,
+    correspondente: 'CRM Escolas',
+    escola: 'todas'
   }
 };
 
@@ -667,11 +692,261 @@ app.get('/api/consultas/exportar/:formato', validarToken, async (req, res) => {
 // 10. HEALTH CHECK
 // ═══════════════════════════════════════════════════════════════
 
+// ═══════════════════════════════════════════════════════════════
+// CRM ESCOLAS — leads → matrícula → aluno, pagamentos, portal dos pais
+// ═══════════════════════════════════════════════════════════════
+
+// Store: Realtime DB quando disponível, senão memória (volátil — só dev)
+const memStore = { leads: {}, alunos: {} };
+
+const PIPELINE = ['novo', 'contato', 'visita', 'matricula', 'aluno', 'perdido'];
+
+function uid(prefix) {
+  return (prefix || 'id') + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+function codigoAcesso() {
+  return Math.random().toString(36).slice(2, 6).toUpperCase() + Math.floor(1000 + Math.random() * 9000);
+}
+
+async function storeList(col) {
+  if (firebaseInitialized && db) {
+    const snap = await db.ref('crm/' + col).once('value');
+    const val = snap.val() || {};
+    return Object.keys(val).map(k => ({ id: k, ...val[k] }));
+  }
+  return Object.keys(memStore[col]).map(k => ({ id: k, ...memStore[col][k] }));
+}
+async function storeGet(col, id) {
+  if (firebaseInitialized && db) {
+    const snap = await db.ref('crm/' + col + '/' + id).once('value');
+    const v = snap.val();
+    return v ? { id, ...v } : null;
+  }
+  return memStore[col][id] ? { id, ...memStore[col][id] } : null;
+}
+async function storePut(col, id, obj) {
+  const clean = { ...obj }; delete clean.id;
+  if (firebaseInitialized && db) {
+    await db.ref('crm/' + col + '/' + id).set(clean);
+  } else {
+    memStore[col][id] = clean;
+  }
+  return { id, ...clean };
+}
+async function storeDel(col, id) {
+  if (firebaseInitialized && db) await db.ref('crm/' + col + '/' + id).remove();
+  else delete memStore[col][id];
+}
+function escolaFiltro(req) {
+  const u = usuarios[req.usuario?.email];
+  return u && u.escola && u.escola !== 'todas' ? u.escola : null;
+}
+
+// ── INTAKE PÚBLICO (chamado pelas LPs) ──
+app.post('/api/crm/intake', async (req, res) => {
+  try {
+    const { nome, fone, email, escola, crianca, origem, mensagem } = req.body || {};
+    if (!nome || !fone) return res.status(400).json({ erro: 'Nome e telefone são obrigatórios' });
+    const id = uid('lead');
+    const lead = {
+      nome, fone, email: email || '',
+      escola: escola || 'pequeninos',
+      crianca: crianca || '',
+      origem: origem || 'site',
+      mensagem: mensagem || '',
+      stage: 'novo',
+      criadoEm: new Date().toISOString(),
+      atualizadoEm: new Date().toISOString(),
+      historico: [{ t: new Date().toISOString(), txt: 'Lead capturado via ' + (origem || 'site') }]
+    };
+    await storePut('leads', id, lead);
+    res.json({ ok: true, id });
+  } catch (e) { res.status(500).json({ erro: e.message }); }
+});
+
+// ── LEADS (auth) ──
+app.get('/api/crm/leads', validarToken, async (req, res) => {
+  try {
+    let leads = await storeList('leads');
+    const f = escolaFiltro(req);
+    if (f) leads = leads.filter(l => l.escola === f);
+    leads.sort((a, b) => (b.criadoEm || '').localeCompare(a.criadoEm || ''));
+    res.json({ leads });
+  } catch (e) { res.status(500).json({ erro: e.message }); }
+});
+app.post('/api/crm/leads', validarToken, async (req, res) => {
+  try {
+    const id = uid('lead');
+    const now = new Date().toISOString();
+    const lead = { stage: 'novo', origem: 'manual', criadoEm: now, atualizadoEm: now, historico: [{ t: now, txt: 'Cadastrado manualmente' }], ...req.body };
+    await storePut('leads', id, lead);
+    res.json({ ok: true, id, lead: { id, ...lead } });
+  } catch (e) { res.status(500).json({ erro: e.message }); }
+});
+app.patch('/api/crm/leads/:id', validarToken, async (req, res) => {
+  try {
+    const cur = await storeGet('leads', req.params.id);
+    if (!cur) return res.status(404).json({ erro: 'Lead não encontrado' });
+    const now = new Date().toISOString();
+    const hist = cur.historico || [];
+    if (req.body.stage && req.body.stage !== cur.stage) hist.push({ t: now, txt: 'Movido para ' + req.body.stage });
+    if (req.body.nota) hist.push({ t: now, txt: req.body.nota });
+    const upd = { ...cur, ...req.body, historico: hist, atualizadoEm: now };
+    delete upd.nota;
+    await storePut('leads', req.params.id, upd);
+    res.json({ ok: true, lead: upd });
+  } catch (e) { res.status(500).json({ erro: e.message }); }
+});
+app.delete('/api/crm/leads/:id', validarToken, async (req, res) => {
+  try { await storeDel('leads', req.params.id); res.json({ ok: true }); }
+  catch (e) { res.status(500).json({ erro: e.message }); }
+});
+
+// ── CONVERTER LEAD → ALUNO (matrícula) ──
+app.post('/api/crm/leads/:id/converter', validarToken, async (req, res) => {
+  try {
+    const lead = await storeGet('leads', req.params.id);
+    if (!lead) return res.status(404).json({ erro: 'Lead não encontrado' });
+    const id = uid('aluno');
+    const now = new Date().toISOString();
+    const aluno = {
+      nome: lead.crianca || lead.nome,
+      responsavel: lead.nome,
+      fone: lead.fone,
+      email: lead.email || '',
+      escola: lead.escola,
+      turma: req.body.turma || '',
+      serie: req.body.serie || '',
+      status: 'matriculado',
+      codigo: codigoAcesso(),
+      leadId: req.params.id,
+      matriculadoEm: now,
+      notas: [], pagamentos: [], notificacoes: []
+    };
+    await storePut('alunos', id, aluno);
+    const lh = lead.historico || [];
+    lh.push({ t: now, txt: 'Convertido em aluno (matrícula)' });
+    await storePut('leads', req.params.id, { ...lead, stage: 'aluno', atualizadoEm: now, historico: lh, alunoId: id });
+    res.json({ ok: true, id, aluno: { id, ...aluno } });
+  } catch (e) { res.status(500).json({ erro: e.message }); }
+});
+
+// ── ALUNOS ──
+app.get('/api/crm/alunos', validarToken, async (req, res) => {
+  try {
+    let alunos = await storeList('alunos');
+    const f = escolaFiltro(req);
+    if (f) alunos = alunos.filter(a => a.escola === f);
+    alunos.sort((a, b) => (a.nome || '').localeCompare(b.nome || ''));
+    res.json({ alunos });
+  } catch (e) { res.status(500).json({ erro: e.message }); }
+});
+app.post('/api/crm/alunos', validarToken, async (req, res) => {
+  try {
+    const id = uid('aluno');
+    const aluno = { status: 'matriculado', codigo: codigoAcesso(), matriculadoEm: new Date().toISOString(), notas: [], pagamentos: [], notificacoes: [], ...req.body };
+    await storePut('alunos', id, aluno);
+    res.json({ ok: true, id, aluno: { id, ...aluno } });
+  } catch (e) { res.status(500).json({ erro: e.message }); }
+});
+app.patch('/api/crm/alunos/:id', validarToken, async (req, res) => {
+  try {
+    const cur = await storeGet('alunos', req.params.id);
+    if (!cur) return res.status(404).json({ erro: 'Aluno não encontrado' });
+    const upd = { ...cur, ...req.body };
+    await storePut('alunos', req.params.id, upd);
+    res.json({ ok: true, aluno: upd });
+  } catch (e) { res.status(500).json({ erro: e.message }); }
+});
+app.delete('/api/crm/alunos/:id', validarToken, async (req, res) => {
+  try { await storeDel('alunos', req.params.id); res.json({ ok: true }); }
+  catch (e) { res.status(500).json({ erro: e.message }); }
+});
+
+// ── NOTAS / PAGAMENTOS / NOTIFICAÇÕES (subcoleções do aluno) ──
+async function pushSub(id, campo, item, res) {
+  const aluno = await storeGet('alunos', id);
+  if (!aluno) return res.status(404).json({ erro: 'Aluno não encontrado' });
+  const arr = aluno[campo] || [];
+  arr.unshift(item);
+  await storePut('alunos', id, { ...aluno, [campo]: arr });
+  res.json({ ok: true, item, aluno: { ...aluno, [campo]: arr } });
+}
+app.post('/api/crm/alunos/:id/notas', validarToken, async (req, res) => {
+  try {
+    await pushSub(req.params.id, 'notas', { id: uid('n'), texto: req.body.texto || '', tipo: req.body.tipo || 'geral', em: new Date().toISOString() }, res);
+  } catch (e) { res.status(500).json({ erro: e.message }); }
+});
+app.post('/api/crm/alunos/:id/pagamentos', validarToken, async (req, res) => {
+  try {
+    await pushSub(req.params.id, 'pagamentos', { id: uid('p'), descricao: req.body.descricao || 'Mensalidade', valor: Number(req.body.valor) || 0, vencimento: req.body.vencimento || '', status: req.body.status || 'pendente', em: new Date().toISOString() }, res);
+  } catch (e) { res.status(500).json({ erro: e.message }); }
+});
+app.patch('/api/crm/alunos/:id/pagamentos/:pid', validarToken, async (req, res) => {
+  try {
+    const aluno = await storeGet('alunos', req.params.id);
+    if (!aluno) return res.status(404).json({ erro: 'Aluno não encontrado' });
+    const arr = (aluno.pagamentos || []).map(p => p.id === req.params.pid ? { ...p, ...req.body } : p);
+    await storePut('alunos', req.params.id, { ...aluno, pagamentos: arr });
+    res.json({ ok: true, aluno: { ...aluno, pagamentos: arr } });
+  } catch (e) { res.status(500).json({ erro: e.message }); }
+});
+app.post('/api/crm/alunos/:id/notificacoes', validarToken, async (req, res) => {
+  try {
+    await pushSub(req.params.id, 'notificacoes', { id: uid('av'), titulo: req.body.titulo || 'Aviso', msg: req.body.msg || '', em: new Date().toISOString(), lida: false }, res);
+  } catch (e) { res.status(500).json({ erro: e.message }); }
+});
+
+// ── STATS / DASHBOARD ──
+app.get('/api/crm/stats', validarToken, async (req, res) => {
+  try {
+    const f = escolaFiltro(req);
+    let leads = await storeList('leads');
+    let alunos = await storeList('alunos');
+    if (f) { leads = leads.filter(l => l.escola === f); alunos = alunos.filter(a => a.escola === f); }
+    const funil = {}; PIPELINE.forEach(s => funil[s] = 0);
+    leads.forEach(l => { funil[l.stage] = (funil[l.stage] || 0) + 1; });
+    let receber = 0, recebido = 0, vencidos = 0;
+    alunos.forEach(a => (a.pagamentos || []).forEach(p => {
+      if (p.status === 'pago') recebido += p.valor || 0;
+      else { receber += p.valor || 0; if (p.vencimento && p.vencimento < new Date().toISOString().slice(0, 10)) vencidos++; }
+    }));
+    const totalLeads = leads.length;
+    const ativos = leads.filter(l => l.stage !== 'aluno' && l.stage !== 'perdido').length;
+    const convertidos = leads.filter(l => l.stage === 'aluno').length;
+    res.json({
+      totalLeads, leadsAtivos: ativos, alunos: alunos.length, convertidos,
+      conversao: totalLeads ? Math.round((convertidos / totalLeads) * 100) : 0,
+      funil, financeiro: { receber, recebido, vencidos }
+    });
+  } catch (e) { res.status(500).json({ erro: e.message }); }
+});
+
+// ── PORTAL DOS PAIS (login por código do aluno) ──
+app.post('/api/portal/login', async (req, res) => {
+  try {
+    const codigo = (req.body.codigo || '').trim().toUpperCase();
+    if (!codigo) return res.status(400).json({ erro: 'Informe o código de acesso' });
+    const alunos = await storeList('alunos');
+    const aluno = alunos.find(a => (a.codigo || '').toUpperCase() === codigo);
+    if (!aluno) return res.status(404).json({ erro: 'Código não encontrado' });
+    res.json({
+      ok: true,
+      aluno: {
+        nome: aluno.nome, responsavel: aluno.responsavel, escola: aluno.escola,
+        turma: aluno.turma, serie: aluno.serie, status: aluno.status,
+        notas: aluno.notas || [], pagamentos: aluno.pagamentos || [], notificacoes: aluno.notificacoes || []
+      }
+    });
+  } catch (e) { res.status(500).json({ erro: e.message }); }
+});
+
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'OK',
     timestamp: new Date().toISOString(),
     versao: '1.0.0',
+    crm: firebaseInitialized ? 'persistente (firebase)' : 'memoria (configure FIREBASE_SERVICE_ACCOUNT p/ persistir)',
     apis: {
       'CPF-Light (Serpro)': 'Gratuita (com credenciais)',
       'DICT (Bacen)': 'Gratuita',
