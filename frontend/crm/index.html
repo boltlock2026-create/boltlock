@@ -167,6 +167,14 @@ async function api(path, method='GET', body){
   if(!r.ok) throw new Error(d.erro||'Erro');
   return d;
 }
+// motor de disparo na VPS (Evolution local + TextBee, seguro/estável como o ENVIA)
+const DISPARO='https://enviaai.boltlock.com.br/crmapi';
+async function disp(path, method='GET', body){
+  const r = await fetch(DISPARO+path,{method,headers:{'Content-Type':'application/json',...(TOKEN?{Authorization:'Bearer '+TOKEN}:{})},body:body?JSON.stringify(body):undefined});
+  const d = await r.json().catch(()=>({}));
+  if(!r.ok) throw new Error(d.erro||('Erro '+r.status));
+  return d;
+}
 
 async function entrar(){
   const email=document.getElementById('email').value.trim(), senha=document.getElementById('senha').value;
@@ -262,7 +270,7 @@ function viewWhats(){
 function waTipoMuda(){ const t=document.getElementById('waType').value; document.getElementById('waMediaBox').classList.toggle('hide', t==='text'); document.getElementById('waTxtLabel').textContent = t==='text'?'Mensagem':'Legenda (opcional)'; }
 async function carregarInstancias(){
   try{
-    const d=await api('/crm/wa/instances'); WA_INSTANCES=d.instances||[];
+    const d=await disp('/wa/instances'); WA_INSTANCES=d.instances||[];
     const sel=document.getElementById('waInst'); if(!sel)return;
     const conn=WA_INSTANCES.filter(i=>i.status==='open');
     document.getElementById('waCount').textContent=conn.length;
@@ -273,7 +281,7 @@ async function novaInstancia(){
   const nome=prompt('Nome da nova instância (ex: escola-pequeninos):'); if(!nome)return;
   const qrbox=document.getElementById('waQR'); qrbox.innerHTML='Gerando QR...';
   try{
-    const d=await api('/crm/wa/instances','POST',{name:nome});
+    const d=await disp('/wa/instances','POST',{name:nome});
     if(d.qr){ qrbox.innerHTML=`<img src="${d.qr}" style="max-width:230px;border:6px solid #fff;border-radius:10px"><div style="font-size:12px;color:var(--mut);margin-top:6px">Escaneie no WhatsApp → Aparelhos conectados</div>`; pollState(nome); }
     else if(d.pairingCode){ qrbox.innerHTML='Código: <b>'+esc(d.pairingCode)+'</b>'; }
     else qrbox.innerHTML='<span style="color:var(--amber)">Instância criada. Clique Atualizar.</span>';
@@ -282,10 +290,10 @@ async function novaInstancia(){
 }
 async function pollState(nome){
   for(let i=0;i<20;i++){ await new Promise(r=>setTimeout(r,3000));
-    try{ const s=await api('/crm/wa/state/'+encodeURIComponent(nome)); if(s.state==='open'){ document.getElementById('waQR').innerHTML='<span style="color:var(--green);font-weight:700">✅ Conectado!</span>'; carregarInstancias(); return; } }catch(_){}
+    try{ const s=await disp('/wa/state/'+encodeURIComponent(nome)); if(s.state==='open'){ document.getElementById('waQR').innerHTML='<span style="color:var(--green);font-weight:700">✅ Conectado!</span>'; carregarInstancias(); return; } }catch(_){}
   }
 }
-async function removerInstancia(){ const n=document.getElementById('waInst').value; if(!n||!confirm('Desconectar e remover "'+n+'"?'))return; await api('/crm/wa/instances/'+encodeURIComponent(n),'DELETE'); carregarInstancias(); }
+async function removerInstancia(){ const n=document.getElementById('waInst').value; if(!n||!confirm('Desconectar e remover "'+n+'"?'))return; await disp('/wa/instances/'+encodeURIComponent(n),'DELETE'); carregarInstancias(); }
 function puxarLeadsWa(){ document.getElementById('waNums').value=telefonesCRM().join('\n'); }
 function fileToB64(file){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); }); }
 async function dispararWa(){
@@ -304,7 +312,7 @@ async function dispararWa(){
   }
   btn.disabled=true; btn.textContent='Disparando...'; out.textContent='Enviando para '+numbers.length+' número(s)...';
   try{
-    const d=await api('/crm/wa/send','POST',{instance,type,text,caption:text,media,numbers,delay});
+    const d=await disp('/wa/send','POST',{instance,type,text,caption:text,media,numbers,delay});
     out.innerHTML=`<b style="color:var(--green)">✅ ${d.enviados} enviados</b>${d.falhas?` · <span style="color:var(--red)">${d.falhas} falhas</span>`:''} de ${d.total}`;
   }catch(e){ out.innerHTML='<span style="color:var(--red)">'+esc(e.message)+'</span>'; }
   btn.disabled=false; btn.textContent='Disparar WhatsApp';
@@ -334,7 +342,7 @@ async function dispararSms(){
   if(!numbers.length){out.innerHTML='<span style="color:var(--red)">Informe os números</span>';return;}
   btn.disabled=true; btn.textContent='Disparando...'; out.textContent='Enviando para '+numbers.length+' número(s)...';
   try{
-    const d=await api('/crm/sms/send','POST',{message,numbers,delay});
+    const d=await disp('/sms/send','POST',{message,numbers,delay});
     out.innerHTML=`<b style="color:var(--green)">✅ ${d.enviados} enviados</b>${d.falhas?` · <span style="color:var(--red)">${d.falhas} falhas</span>`:''} de ${d.total}`;
   }catch(e){ out.innerHTML='<span style="color:var(--red)">'+esc(e.message)+'</span>'; }
   btn.disabled=false; btn.textContent='Disparar SMS';
